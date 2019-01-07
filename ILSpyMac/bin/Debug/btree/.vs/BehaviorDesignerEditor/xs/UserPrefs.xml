@@ -1,0 +1,18 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/Properties/AssemblyInfo.cs">
+    <Files>
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/ExternalBehaviorInspector.cs" Line="10" Column="43" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/GraphDesigner.cs" Line="1425" Column="16" />
+      <File FileName="BehaviorDesignerEditor/Properties/AssemblyInfo.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <DisabledProjects>
+    <String>BehaviorDesignerEditor/BehaviorDesigner.csproj</String>
+  </DisabledProjects>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
