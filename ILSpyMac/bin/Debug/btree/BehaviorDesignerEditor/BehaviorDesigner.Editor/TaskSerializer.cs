@@ -11,7 +11,7 @@ namespace BehaviorDesigner.Editor
 
 		public Vector2 offset;
 
-		public List<Object> unityObjects;
+		public List<UnityEngine.Object> unityObjects;
 
 		public List<int> childrenIndex;
 	}

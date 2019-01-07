@@ -5,7 +5,7 @@ using UnityEditor;
 namespace BehaviorDesigner.Editor
 {
 	[CustomEditor(typeof(GlobalVariables))]
-	public class GlobalVariablesInspector : Editor
+	public class GlobalVariablesInspector : UnityEditor.Editor
 	{
 		public override void OnInspectorGUI()
 		{

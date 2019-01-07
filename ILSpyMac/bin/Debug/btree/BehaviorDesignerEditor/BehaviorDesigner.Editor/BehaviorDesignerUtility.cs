@@ -1460,14 +1460,14 @@ namespace BehaviorDesigner.Editor
 			return dictionary != null && dictionary.ContainsKey("RootTask");
 		}
 
-		public static string GetEditorBaseDirectory(Object obj = null)
+		public static string GetEditorBaseDirectory(UnityEngine.Object obj = null)
 		{
 			string codeBase = Assembly.GetExecutingAssembly().get_CodeBase();
 			string text = Uri.UnescapeDataString(new UriBuilder(codeBase).get_Path());
 			return Path.GetDirectoryName(text.Substring(Application.get_dataPath().get_Length() - 6));
 		}
 
-		public static Texture2D LoadTexture(string imageName, bool useSkinColor = true, Object obj = null)
+		public static Texture2D LoadTexture(string imageName, bool useSkinColor = true, UnityEngine.Object obj = null)
 		{
 			if (BehaviorDesignerUtility.textureCache.ContainsKey(imageName))
 			{
@@ -2275,7 +2275,7 @@ namespace BehaviorDesigner.Editor
 			BehaviorDesignerUtility.screenshotBackgroundTexture.Apply();
 		}
 
-		public static void SetObjectDirty(Object obj)
+		public static void SetObjectDirty(UnityEngine.Object obj)
 		{
 			if (EditorApplication.get_isPlaying())
 			{

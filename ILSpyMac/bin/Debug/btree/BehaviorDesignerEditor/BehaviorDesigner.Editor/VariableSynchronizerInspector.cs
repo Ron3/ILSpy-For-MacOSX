@@ -8,7 +8,7 @@ using UnityEngine;
 namespace BehaviorDesigner.Editor
 {
 	[CustomEditor(typeof(VariableSynchronizer))]
-	public class VariableSynchronizerInspector : Editor
+	public class VariableSynchronizerInspector : UnityEditor.Editor
 	{
 		public enum ComponentListType
 		{

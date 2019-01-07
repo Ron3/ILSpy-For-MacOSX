@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BehaviorDesigner.Editor
 {
-	public class TaskCopier : Editor
+	public class TaskCopier : UnityEditor.Editor
 	{
 		public static TaskSerializer CopySerialized(Task task)
 		{

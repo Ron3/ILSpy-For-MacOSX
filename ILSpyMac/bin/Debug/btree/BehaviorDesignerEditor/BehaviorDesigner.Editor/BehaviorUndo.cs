@@ -6,7 +6,7 @@ namespace BehaviorDesigner.Editor
 {
 	public class BehaviorUndo
 	{
-		public static void RegisterUndo(string undoName, Object undoObject)
+		public static void RegisterUndo(string undoName, UnityEngine.Object undoObject)
 		{
 			Undo.RecordObject(undoObject, undoName);
 		}
@@ -16,7 +16,7 @@ namespace BehaviorDesigner.Editor
 			return Undo.AddComponent(undoObject, type);
 		}
 
-		public static void DestroyObject(Object undoObject, bool registerScene)
+		public static void DestroyObject(UnityEngine.Object undoObject, bool registerScene)
 		{
 			Undo.DestroyObjectImmediate(undoObject);
 		}

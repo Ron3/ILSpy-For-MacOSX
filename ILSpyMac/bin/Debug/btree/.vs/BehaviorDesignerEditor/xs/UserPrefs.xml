@@ -1,15 +1,26 @@
-﻿<Properties StartupConfiguration="{85B34701-A618-41B5-9566-EA223EBC4007}|单元测试">
-  <MonoDevelop.Ide.Workbench>
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs">
     <Files>
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/CustomObjectDrawer.cs" Line="15" Column="5" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/CustomObjectDrawer.cs" Line="21" Column="13" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorUndo.cs" Line="19" Column="48" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="2278" Column="49" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableSynchronizerInspector.cs" Line="11" Column="59" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/GlobalVariablesInspector.cs" Line="8" Column="54" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorInspector.cs" Line="10" Column="47" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskCopier.cs" Line="11" Column="40" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskSerializer.cs" Line="14" Column="15" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/JSONSerialization.cs" Line="11" Column="47" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerWindow.cs" Line="131" Column="23" />
+      <File FileName="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs" Line="8" Column="41" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="BehaviorDesignerEditor" expanded="True">
-            <Node name="BehaviorDesignerEditor" expanded="True" selected="True">
+            <Node name="BehaviorDesignerEditor" expanded="True">
               <Node name="References" expanded="True" />
               <Node name="BehaviorDesigner.Editor" expanded="True" />
+              <Node name="SharedNamedVariableDrawer.cs" selected="True" />
             </Node>
           </Node>
         </State>

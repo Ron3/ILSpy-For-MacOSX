@@ -9,6 +9,8 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using Vector2 = UnityEngine.Vector2;
+
 namespace BehaviorDesigner.Editor
 {
 	public class BehaviorDesignerWindow : EditorWindow
@@ -49,11 +51,11 @@ namespace BehaviorDesigner.Editor
 
 		private bool mPropertiesPanelOnLeft = true;
 
-		private Vector2 mCurrentMousePosition = Vector2.get_zero();
+		private Vector2 mCurrentMousePosition = Vector2.zero;
 
 		private Vector2 mGraphScrollPosition = new Vector2(-1f, -1f);
 
-		private Vector2 mGraphOffset = Vector2.get_zero();
+		private Vector2 mGraphOffset = Vector2.zero;
 
 		private float mGraphZoom = 1f;
 
@@ -128,9 +130,9 @@ namespace BehaviorDesigner.Editor
 		private VariableInspector mVariableInspector;
 
 		[SerializeField]
-		private Object mActiveObject;
+		private UnityEngine.Object mActiveObject;
 
-		private Object mPrevActiveObject;
+		private UnityEngine.Object mPrevActiveObject;
 
 		private BehaviorSource mActiveBehaviorSource;
 
@@ -139,7 +141,7 @@ namespace BehaviorDesigner.Editor
 		private int mActiveBehaviorID = -1;
 
 		[SerializeField]
-		private List<Object> mBehaviorSourceHistory = new List<Object>();
+		private List<UnityEngine.Object> mBehaviorSourceHistory = new List<UnityEngine.Object>();
 
 		[SerializeField]
 		private int mBehaviorSourceHistoryIndex = -1;

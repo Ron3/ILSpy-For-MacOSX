@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BehaviorDesigner.Editor
 {
-	public class JSONSerialization : Object
+	public class JSONSerialization : UnityEngine.Object
 	{
 		private static TaskSerializationData taskSerializationData;
 
@@ -68,7 +68,7 @@ namespace BehaviorDesigner.Editor
 			BehaviorDesignerUtility.SetObjectDirty(variables);
 		}
 
-		private static Dictionary<string, object>[] SerializeVariables(List<SharedVariable> variables, ref List<Object> unityObjects)
+		private static Dictionary<string, object>[] SerializeVariables(List<SharedVariable> variables, ref List<UnityEngine.Object> unityObjects)
 		{
 			Dictionary<string, object>[] array = new Dictionary<string, object>[variables.get_Count()];
 			for (int i = 0; i < variables.get_Count(); i++)
@@ -78,7 +78,7 @@ namespace BehaviorDesigner.Editor
 			return array;
 		}
 
-		public static Dictionary<string, object> SerializeTask(Task task, bool serializeChildren, ref List<Object> unityObjects)
+		public static Dictionary<string, object> SerializeTask(Task task, bool serializeChildren, ref List<UnityEngine.Object> unityObjects)
 		{
 			Dictionary<string, object> dictionary = new Dictionary<string, object>();
 			dictionary.Add("Type", task.GetType());
@@ -134,7 +134,7 @@ namespace BehaviorDesigner.Editor
 			return dictionary;
 		}
 
-		private static Dictionary<string, object> SerializeVariable(SharedVariable sharedVariable, ref List<Object> unityObjects)
+		private static Dictionary<string, object> SerializeVariable(SharedVariable sharedVariable, ref List<UnityEngine.Object> unityObjects)
 		{
 			if (sharedVariable == null)
 			{
@@ -168,7 +168,7 @@ namespace BehaviorDesigner.Editor
 			return dictionary;
 		}
 
-		private static void SerializeFields(object obj, ref Dictionary<string, object> dict, ref List<Object> unityObjects)
+		private static void SerializeFields(object obj, ref Dictionary<string, object> dict, ref List<UnityEngine.Object> unityObjects)
 		{
 			FieldInfo[] allFields = TaskUtility.GetAllFields(obj.GetType());
 			for (int i = 0; i < allFields.Length; i++)

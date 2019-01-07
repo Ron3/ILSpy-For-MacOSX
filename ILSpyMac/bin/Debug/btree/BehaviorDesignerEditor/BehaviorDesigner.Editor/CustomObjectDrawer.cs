@@ -2,7 +2,8 @@ using System;
 
 namespace BehaviorDesigner.Editor
 {
-	[AttributeUsage]
+	//[AttributeUsage]
+	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class CustomObjectDrawer : Attribute
 	{
 		private Type type;
