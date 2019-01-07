@@ -1,10 +1,24 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/Properties/AssemblyInfo.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj">
     <Files>
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/ExternalBehaviorInspector.cs" Line="10" Column="43" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/GraphDesigner.cs" Line="1425" Column="16" />
       <File FileName="BehaviorDesignerEditor/Properties/AssemblyInfo.cs" Line="1" Column="1" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/AssetCreationMenus.cs" Line="2" Column="7" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj" Line="35" Column="36" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="BehaviorDesignerEditor" expanded="True">
+            <Node name="BehaviorDesignerEditor" expanded="True" selected="True">
+              <Node name="References" expanded="True" />
+              <Node name="BehaviorDesigner.Editor" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <DisabledProjects>

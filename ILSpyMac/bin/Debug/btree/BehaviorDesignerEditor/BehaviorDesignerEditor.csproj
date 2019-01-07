@@ -8,6 +8,8 @@
     <AssemblyName>BehaviorDesignerEditor</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <WarningLevel>4</WarningLevel>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -25,16 +27,25 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BehaviorDesignerRuntime" />
-    <Reference Include="UnityEditor" />
-    <Reference Include="UnityEngine" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="BehaviorDesignerRuntime">
+      <HintPath>..\BehaviorDesignerRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Applications\Unity\Hub\Editor\2017.4.9f1\Unity.app\Contents\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Applications\Unity\Hub\Editor\2017.4.9f1\Unity.app\Contents\Managed\UnityEngine\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Applications\Unity\Hub\Editor\2017.4.9f1\Unity.app\Contents\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Applications\Unity\Hub\Editor\2017.4.9f1\Unity.app\Contents\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="BehaviorDesignerRuntime" />
-    <Reference Include="UnityEditor" />
-    <Reference Include="UnityEngine" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
