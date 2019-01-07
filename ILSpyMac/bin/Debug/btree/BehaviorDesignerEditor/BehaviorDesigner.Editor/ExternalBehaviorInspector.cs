@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BehaviorDesigner.Editor
 {
 	[CustomEditor(typeof(ExternalBehavior))]
-	public class ExternalBehaviorInspector : Editor
+	public class ExternalBehaviorInspector : UnityEditor.Editor
 	{
 		private bool mShowVariables;
 

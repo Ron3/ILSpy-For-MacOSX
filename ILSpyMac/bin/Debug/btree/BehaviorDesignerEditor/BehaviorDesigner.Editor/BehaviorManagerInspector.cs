@@ -6,7 +6,7 @@ using UnityEngine;
 namespace BehaviorDesigner.Editor
 {
 	[CustomEditor(typeof(BehaviorManager))]
-	public class BehaviorManagerInspector : Editor
+	public class BehaviorManagerInspector : UnityEditor.Editor
 	{
 		public override void OnInspectorGUI()
 		{

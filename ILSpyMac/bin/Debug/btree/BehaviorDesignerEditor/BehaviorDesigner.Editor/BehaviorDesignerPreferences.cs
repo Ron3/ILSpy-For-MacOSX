@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BehaviorDesigner.Editor
 {
-	public class BehaviorDesignerPreferences : Editor
+	public class BehaviorDesignerPreferences : UnityEditor.Editor
 	{
 		private static string[] prefString;
 
