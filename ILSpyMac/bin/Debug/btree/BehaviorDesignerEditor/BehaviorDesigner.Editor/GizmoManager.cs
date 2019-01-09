@@ -65,7 +65,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < instance.BehaviorTrees.Count; i++)
 				{
-					GizmoManager.UpdateGizmo(instance.BehaviorTrees.get_Item(i).behavior);
+					GizmoManager.UpdateGizmo(instance.BehaviorTrees[i].behavior);
 				}
 			}
 		}

@@ -90,18 +90,18 @@ namespace BehaviorDesigner.Editor
 			while (num < length && num2 < length2)
 			{
 				int num5;
-				if (char.IsDigit(text.get_Chars(num)) && char.IsDigit(text.get_Chars(num2)))
+				if (char.IsDigit(text[num]) && char.IsDigit(text[num2]))
 				{
 					string text5 = string.Empty;
-					while (num < length && char.IsDigit(text.get_Chars(num)))
+					while (num < length && char.IsDigit(text[num]))
 					{
-						text5 += text.get_Chars(num);
+						text5 += text[num];
 						num++;
 					}
 					string text6 = string.Empty;
-					while (num2 < length2 && char.IsDigit(text3.get_Chars(num2)))
+					while (num2 < length2 && char.IsDigit(text3[num2]))
 					{
-						text6 += text3.get_Chars(num2);
+						text6 += text3[num2];
 						num2++;
 					}
 					int num3 = 0;
@@ -112,7 +112,7 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					num5 = text.get_Chars(num).CompareTo(text3.get_Chars(num2));
+					num5 = text[num].CompareTo(text3[num2]);
 				}
 				if (num5 != 0)
 				{

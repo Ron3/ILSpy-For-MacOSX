@@ -209,15 +209,15 @@ namespace BehaviorDesigner.Editor
 			int id = 0;
 			for (int k = 0; k < list.Count; k++)
 			{
-				if (list.get_Item(k).IsSubclassOf(typeof(Action)))
+				if (list.Item[k].IsSubclassOf(typeof(Action)))
 				{
 					text = "Actions";
 				}
-				else if (list.get_Item(k).IsSubclassOf(typeof(Composite)))
+				else if (list.Item[k].IsSubclassOf(typeof(Composite)))
 				{
 					text = "Composites";
 				}
-				else if (list.get_Item(k).IsSubclassOf(typeof(Conditional)))
+				else if (list.Item[k].IsSubclassOf(typeof(Conditional)))
 				{
 					text = "Conditionals";
 				}
@@ -226,7 +226,7 @@ namespace BehaviorDesigner.Editor
 					text = "Decorators";
 				}
 				TaskCategoryAttribute[] array;
-				if ((array = (list.get_Item(k).GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
+				if ((array = (list.Item[k].GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
 				{
 					text = text + "/" + array[0].Category;
 				}
@@ -264,7 +264,7 @@ namespace BehaviorDesigner.Editor
 					categoryList = categoryList2;
 				}
 				categoryList2 = dictionary.get_Item(text2);
-				categoryList2.addTask(list.get_Item(k));
+				categoryList2.addTask(list.Item[k]);
 			}
 			this.Search(BehaviorDesignerUtility.SplitCamelCase(this.mSearchString).ToLower().Replace(" ", string.Empty), this.mCategoryList);
 		}
@@ -276,42 +276,42 @@ namespace BehaviorDesigner.Editor
 
 		public void AddConditionalTasksToMenu(ref GenericMenu genericMenu, Type selectedTaskType, string parentName, GenericMenu.MenuFunction2 menuFunction)
 		{
-			if (this.mCategoryList.get_Item(2).Tasks != null)
+			if (this.mCategoryList[2].Tasks != null)
 			{
-				for (int i = 0; i < this.mCategoryList.get_Item(2).Tasks.Count; i++)
+				for (int i = 0; i < this.mCategoryList[2].Tasks.Count; i++)
 				{
 					if (parentName.Equals(string.Empty))
 					{
-						genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}", this.mCategoryList.get_Item(2).Fullpath, this.mCategoryList.get_Item(2).Tasks.get_Item(i).Name.ToString())), this.mCategoryList.get_Item(2).Tasks.get_Item(i).Type.Equals(selectedTaskType), menuFunction, this.mCategoryList.get_Item(2).Tasks.get_Item(i).Type);
+						genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}", this.mCategoryList[2].Fullpath, this.mCategoryList[2].Tasks[i].Name.ToString())), this.mCategoryList[2].Tasks[i].Type.Equals(selectedTaskType), menuFunction, this.mCategoryList[2].Tasks[i].Type);
 					}
 					else
 					{
-						genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}/{2}", parentName, this.mCategoryList.get_Item(22).Fullpath, this.mCategoryList.get_Item(2).Tasks.get_Item(i).Name.ToString())), this.mCategoryList.get_Item(2).Tasks.get_Item(i).Type.Equals(selectedTaskType), menuFunction, this.mCategoryList.get_Item(2).Tasks.get_Item(i).Type);
+						genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}/{2}", parentName, this.mCategoryList.get_Item(22).Fullpath, this.mCategoryList[2].Tasks[i].Name.ToString())), this.mCategoryList[2].Tasks[i].Type.Equals(selectedTaskType), menuFunction, this.mCategoryList[2].Tasks[i].Type);
 					}
 				}
 			}
-			this.AddCategoryTasksToMenu(ref genericMenu, this.mCategoryList.get_Item(2).Subcategories, selectedTaskType, parentName, menuFunction);
+			this.AddCategoryTasksToMenu(ref genericMenu, this.mCategoryList[2].Subcategories, selectedTaskType, parentName, menuFunction);
 		}
 
 		private void AddCategoryTasksToMenu(ref GenericMenu genericMenu, List<TaskList.CategoryList> categoryList, Type selectedTaskType, string parentName, GenericMenu.MenuFunction2 menuFunction)
 		{
 			for (int i = 0; i < categoryList.Count; i++)
 			{
-				if (categoryList.get_Item(i).Subcategories != null)
+				if (categoryList[i].Subcategories != null)
 				{
-					this.AddCategoryTasksToMenu(ref genericMenu, categoryList.get_Item(i).Subcategories, selectedTaskType, parentName, menuFunction);
+					this.AddCategoryTasksToMenu(ref genericMenu, categoryList[i].Subcategories, selectedTaskType, parentName, menuFunction);
 				}
-				if (categoryList.get_Item(i).Tasks != null)
+				if (categoryList[i].Tasks != null)
 				{
-					for (int j = 0; j < categoryList.get_Item(i).Tasks.Count; j++)
+					for (int j = 0; j < categoryList[i].Tasks.Count; j++)
 					{
 						if (parentName.Equals(string.Empty))
 						{
-							genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}", categoryList.get_Item(i).Fullpath, categoryList.get_Item(i).Tasks.get_Item(j).Name.ToString())), categoryList.get_Item(i).Tasks.get_Item(j).Type.Equals(selectedTaskType), menuFunction, categoryList.get_Item(i).Tasks.get_Item(j).Type);
+							genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}", categoryList[i].Fullpath, categoryList[i].Tasks[j].Name.ToString())), categoryList[i].Tasks[j].Type.Equals(selectedTaskType), menuFunction, categoryList[i].Tasks[j].Type);
 						}
 						else
 						{
-							genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}/{2}", parentName, categoryList.get_Item(i).Fullpath, categoryList.get_Item(i).Tasks.get_Item(j).Name.ToString())), categoryList.get_Item(i).Tasks.get_Item(j).Type.Equals(selectedTaskType), menuFunction, categoryList.get_Item(i).Tasks.get_Item(j).Type);
+							genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}/{2}", parentName, categoryList[i].Fullpath, categoryList[i].Tasks[j].Name.ToString())), categoryList[i].Tasks[j].Type.Equals(selectedTaskType), menuFunction, categoryList[i].Tasks[j].Type);
 						}
 					}
 				}
@@ -351,19 +351,19 @@ namespace BehaviorDesigner.Editor
 			GUI.enabled=enabled;
 			if (this.mCategoryList.Count > 1)
 			{
-				this.DrawCategory(window, this.mCategoryList.get_Item(1));
+				this.DrawCategory(window, this.mCategoryList[1]);
 			}
 			if (this.mCategoryList.Count > 3)
 			{
-				this.DrawCategory(window, this.mCategoryList.get_Item(3));
+				this.DrawCategory(window, this.mCategoryList[3]);
 			}
 			if (this.mCategoryList.Count > 0)
 			{
-				this.DrawCategory(window, this.mCategoryList.get_Item(0));
+				this.DrawCategory(window, this.mCategoryList[0]);
 			}
 			if (this.mCategoryList.Count > 2)
 			{
-				this.DrawCategory(window, this.mCategoryList.get_Item(2));
+				this.DrawCategory(window, this.mCategoryList[2]);
 			}
 			GUI.enabled=true;
 			GUILayout.EndScrollView();
@@ -382,15 +382,15 @@ namespace BehaviorDesigner.Editor
 					{
 						for (int i = 0; i < category.Tasks.Count; i++)
 						{
-							if (category.Tasks.get_Item(i).Visible)
+							if (category.Tasks[i].Visible)
 							{
 								GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 								GUILayout.Space((float)(EditorGUI.indentLevel * 16));
 								TaskNameAttribute[] array = null;
-								if (!this.mTaskNameAttribute.TryGetValue(category.Tasks.get_Item(i).Type, ref array))
+								if (!this.mTaskNameAttribute.TryGetValue(category.Tasks[i].Type, ref array))
 								{
-									array = (category.Tasks.get_Item(i).Type.GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[]);
-									this.mTaskNameAttribute.Add(category.Tasks.get_Item(i).Type, array);
+									array = (category.Tasks[i].Type.GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[]);
+									this.mTaskNameAttribute.Add(category.Tasks[i].Type, array);
 								}
 								string name;
 								if (array != null && array.Length > 0)
@@ -399,14 +399,14 @@ namespace BehaviorDesigner.Editor
 								}
 								else
 								{
-									name = category.Tasks.get_Item(i).Name;
+									name = category.Tasks[i].Name;
 								}
 								if (GUILayout.Button(name, EditorStyles.toolbarButton, new GUILayoutOption[]
 								{
 									GUILayout.MaxWidth((float)(300 - EditorGUI.indentLevel * 16 - 24))
 								}))
 								{
-									window.AddTask(category.Tasks.get_Item(i).Type, false);
+									window.AddTask(category.Tasks[i].Type, false);
 								}
 								GUILayout.Space(3f);
 								GUILayout.EndHorizontal();
@@ -426,7 +426,7 @@ namespace BehaviorDesigner.Editor
 		{
 			for (int i = 0; i < categoryList.Count; i++)
 			{
-				this.DrawCategory(window, categoryList.get_Item(i));
+				this.DrawCategory(window, categoryList[i]);
 			}
 		}
 
@@ -436,32 +436,32 @@ namespace BehaviorDesigner.Editor
 			for (int i = 0; i < categoryList.Count; i++)
 			{
 				bool flag = false;
-				categoryList.get_Item(i).Visible = false;
-				if (categoryList.get_Item(i).Subcategories != null && this.Search(searchString, categoryList.get_Item(i).Subcategories))
+				categoryList[i].Visible = false;
+				if (categoryList[i].Subcategories != null && this.Search(searchString, categoryList[i].Subcategories))
 				{
-					categoryList.get_Item(i).Visible = true;
+					categoryList[i].Visible = true;
 					result = true;
 				}
-				if (BehaviorDesignerUtility.SplitCamelCase(categoryList.get_Item(i).Name).ToLower().Replace(" ", string.Empty).Contains(searchString))
+				if (BehaviorDesignerUtility.SplitCamelCase(categoryList[i].Name).ToLower().Replace(" ", string.Empty).Contains(searchString))
 				{
 					result = true;
 					flag = true;
-					categoryList.get_Item(i).Visible = true;
-					if (categoryList.get_Item(i).Subcategories != null)
+					categoryList[i].Visible = true;
+					if (categoryList[i].Subcategories != null)
 					{
-						this.MarkVisible(categoryList.get_Item(i).Subcategories);
+						this.MarkVisible(categoryList[i].Subcategories);
 					}
 				}
-				if (categoryList.get_Item(i).Tasks != null)
+				if (categoryList[i].Tasks != null)
 				{
-					for (int j = 0; j < categoryList.get_Item(i).Tasks.Count; j++)
+					for (int j = 0; j < categoryList[i].Tasks.Count; j++)
 					{
-						categoryList.get_Item(i).Tasks.get_Item(j).Visible = searchString.Equals(string.Empty);
-						if (flag || categoryList.get_Item(i).Tasks.get_Item(j).Name.ToLower().Replace(" ", string.Empty).Contains(searchString))
+						categoryList[i].Tasks[j].Visible = searchString.Equals(string.Empty);
+						if (flag || categoryList[i].Tasks[j].Name.ToLower().Replace(" ", string.Empty).Contains(searchString))
 						{
-							categoryList.get_Item(i).Tasks.get_Item(j).Visible = true;
+							categoryList[i].Tasks[j].Visible = true;
 							result = true;
-							categoryList.get_Item(i).Visible = true;
+							categoryList[i].Visible = true;
 						}
 					}
 				}
@@ -473,16 +473,16 @@ namespace BehaviorDesigner.Editor
 		{
 			for (int i = 0; i < categoryList.Count; i++)
 			{
-				categoryList.get_Item(i).Visible = true;
-				if (categoryList.get_Item(i).Subcategories != null)
+				categoryList[i].Visible = true;
+				if (categoryList[i].Subcategories != null)
 				{
-					this.MarkVisible(categoryList.get_Item(i).Subcategories);
+					this.MarkVisible(categoryList[i].Subcategories);
 				}
-				if (categoryList.get_Item(i).Tasks != null)
+				if (categoryList[i].Tasks != null)
 				{
-					for (int j = 0; j < categoryList.get_Item(i).Tasks.Count; j++)
+					for (int j = 0; j < categoryList[i].Tasks.Count; j++)
 					{
-						categoryList.get_Item(i).Tasks.get_Item(j).Visible = true;
+						categoryList[i].Tasks[j].Visible = true;
 					}
 				}
 			}

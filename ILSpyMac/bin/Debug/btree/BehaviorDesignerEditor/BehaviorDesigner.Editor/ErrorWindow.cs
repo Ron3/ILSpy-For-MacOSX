@@ -45,7 +45,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < this.mErrorDetails.Count; i++)
 				{
-					ErrorDetails errorDetails = this.mErrorDetails.get_Item(i);
+					ErrorDetails errorDetails = this.mErrorDetails[i];
 					if (errorDetails != null && (errorDetails.Type == BehaviorDesigner.Editor.ErrorDetails.ErrorType.InvalidVariableReference || (!(errorDetails.NodeDesigner == null) && errorDetails.NodeDesigner.Task != null)))
 					{
 						string text = string.Empty;

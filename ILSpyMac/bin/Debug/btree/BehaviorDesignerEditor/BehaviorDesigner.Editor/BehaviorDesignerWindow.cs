@@ -592,7 +592,7 @@ namespace BehaviorDesigner.Editor
 			int k = 0;
 			while (k < list.Count)
 			{
-				Object @object = list.get_Item(k).Owner.GetObject();
+				Object @object = list.Item[k].Owner.GetObject();
 				if (menuType != BehaviorDesignerWindow.BreadcrumbMenuType.Behavior)
 				{
 					goto IL_14E;
@@ -626,13 +626,13 @@ namespace BehaviorDesigner.Editor
 					switch (menuType)
 					{
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObjectBehavior:
-						text = list.get_Item(k).ToString();
+						text = list.Item[k].ToString();
 						break;
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObject:
 						text = (@object as Behavior).gameObject.name;
 						break;
 					case BehaviorDesignerWindow.BreadcrumbMenuType.Behavior:
-						text = list.get_Item(k).behaviorName;
+						text = list.Item[k].behaviorName;
 						break;
 					}
 					if (!AssetDatabase.GetAssetPath(@object).Equals(string.Empty))
@@ -642,7 +642,7 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					text = list.get_Item(k).ToString() + " (external)";
+					text = list.Item[k].ToString() + " (external)";
 				}
 				int num = 0;
 				if (dictionary2.TryGetValue(text, ref num))
@@ -654,7 +654,7 @@ namespace BehaviorDesigner.Editor
 				{
 					dictionary2.Add(text, 0);
 				}
-				dictionary.Add(list.get_Item(k), text);
+				dictionary.Add(list.Item[k], text);
 				goto IL_29B;
 			}
 			switch (menuType)
@@ -742,7 +742,7 @@ namespace BehaviorDesigner.Editor
 							this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.NodeData.Collapsed) ? "Collapse" : "Expand"), false, new GenericMenu.MenuFunction2(this.ToggleCollapseState), clickedNode);
 						}
 						this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.NodeData.IsBreakpoint) ? "Set Breakpoint" : "Remove Breakpoint"), false, new GenericMenu.MenuFunction2(this.ToggleBreakpoint), clickedNode);
-						this.mTaskList.AddTasksToMenu(ref this.mRightClickMenu, this.mGraphDesigner.SelectedNodes.get_Item(0).Task.GetType(), "Replace", new GenericMenu.MenuFunction2(this.ReplaceTaskCallback));
+						this.mTaskList.AddTasksToMenu(ref this.mRightClickMenu, this.mGraphDesigner.SelectedNodes.Item[0].Task.GetType(), "Replace", new GenericMenu.MenuFunction2(this.ReplaceTaskCallback));
 					}
 				}
 				if (!EditorApplication.isPlaying && !this.ViewOnlyMode())
@@ -946,10 +946,10 @@ namespace BehaviorDesigner.Editor
 					this.mNodeDesignerTaskMap = new Dictionary<NodeDesigner, Task>();
 					for (int i = 0; i < taskList.Count; i++)
 					{
-						NodeDesigner nodeDesigner = taskList.get_Item(i).NodeData.NodeDesigner as NodeDesigner;
+						NodeDesigner nodeDesigner = taskList[i].NodeData.NodeDesigner as NodeDesigner;
 						if (nodeDesigner != null && !this.mNodeDesignerTaskMap.ContainsKey(nodeDesigner))
 						{
-							this.mNodeDesignerTaskMap.Add(nodeDesigner, taskList.get_Item(i));
+							this.mNodeDesignerTaskMap.Add(nodeDesigner, taskList[i]);
 						}
 					}
 					this.mUpdateNodeTaskMap = false;
@@ -1066,7 +1066,7 @@ namespace BehaviorDesigner.Editor
 					this.mReferencedBehaviorsMenu = new GenericMenu();
 					for (int i = 0; i < list.Count; i++)
 					{
-						this.mReferencedBehaviorsMenu.AddItem(new GUIContent(list.get_Item(i).ToString()), false, new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), list.get_Item(i));
+						this.mReferencedBehaviorsMenu.AddItem(new GUIContent(list[i].ToString()), false, new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), list[i]);
 					}
 					this.mReferencedBehaviorsMenu.ShowAsContext();
 				}
@@ -1296,12 +1296,12 @@ namespace BehaviorDesigner.Editor
 			}
 			else if (this.mBehaviorToolbarSelection == 3)
 			{
-				if (this.mGraphDesigner.SelectedNodes.Count == 1 && !this.mGraphDesigner.SelectedNodes.get_Item(0).IsEntryDisplay)
+				if (this.mGraphDesigner.SelectedNodes.Count == 1 && !this.mGraphDesigner.SelectedNodes.Item[0].IsEntryDisplay)
 				{
-					Task task = this.mGraphDesigner.SelectedNodes.get_Item(0).Task;
+					Task task = this.mGraphDesigner.SelectedNodes.Item[0].Task;
 					if (this.mNodeDesignerTaskMap != null && this.mNodeDesignerTaskMap.Count > 0)
 					{
-						NodeDesigner nodeDesigner = this.mGraphDesigner.SelectedNodes.get_Item(0).Task.NodeData.NodeDesigner as NodeDesigner;
+						NodeDesigner nodeDesigner = this.mGraphDesigner.SelectedNodes.Item[0].Task.NodeData.NodeDesigner as NodeDesigner;
 						if (nodeDesigner != null && this.mNodeDesignerTaskMap.ContainsKey(nodeDesigner))
 						{
 							task = this.mNodeDesignerTaskMap.get_Item(nodeDesigner);
@@ -1433,7 +1433,7 @@ namespace BehaviorDesigner.Editor
 		private void DrawSelectedTaskDescription()
 		{
 			TaskDescriptionAttribute[] array;
-			if (BehaviorDesignerPreferences.GetBool(BDPreferences.ShowTaskDescription) && this.mGraphDesigner.SelectedNodes.Count == 1 && (array = (this.mGraphDesigner.SelectedNodes.get_Item(0).Task.GetType().GetCustomAttributes(typeof(TaskDescriptionAttribute), false) as TaskDescriptionAttribute[])).Length > 0)
+			if (BehaviorDesignerPreferences.GetBool(BDPreferences.ShowTaskDescription) && this.mGraphDesigner.SelectedNodes.Count == 1 && (array = (this.mGraphDesigner.SelectedNodes.Item[0].Task.GetType().GetCustomAttributes(typeof(TaskDescriptionAttribute), false) as TaskDescriptionAttribute[])).Length > 0)
 			{
 				float num;
 				float num2;
@@ -2040,16 +2040,16 @@ namespace BehaviorDesigner.Editor
 				}
 				for (int i = 0; i < list.Count; i++)
 				{
-					if (this.mGraphDesigner.IsSelected(list.get_Item(i)))
+					if (this.mGraphDesigner.IsSelected(list[i]))
 					{
 						if (Event.current.modifiers == 2)
 						{
-							this.mGraphDesigner.Deselect(list.get_Item(i));
+							this.mGraphDesigner.Deselect(list[i]);
 						}
 					}
 					else
 					{
-						this.mGraphDesigner.Select(list.get_Item(i));
+						this.mGraphDesigner.Select(list[i]);
 					}
 				}
 				return true;
@@ -2088,7 +2088,7 @@ namespace BehaviorDesigner.Editor
 					{
 						for (int i = 0; i < list.Count; i++)
 						{
-							this.mGraphDesigner.Select(list.get_Item(i));
+							this.mGraphDesigner.Select(list[i]);
 						}
 					}
 					return true;
@@ -2297,7 +2297,7 @@ namespace BehaviorDesigner.Editor
 		private void ReplaceTaskCallback(object obj)
 		{
 			Type type = (Type)obj;
-			if (this.mGraphDesigner.SelectedNodes.Count != 1 || this.mGraphDesigner.SelectedNodes.get_Item(0).Task.GetType().Equals(type))
+			if (this.mGraphDesigner.SelectedNodes.Count != 1 || this.mGraphDesigner.SelectedNodes.Item[0].Task.GetType().Equals(type))
 			{
 				return;
 			}
@@ -2571,9 +2571,9 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < this.mErrorDetails.Count; i++)
 				{
-					if (this.mErrorDetails.get_Item(i).NodeDesigner != null)
+					if (this.mErrorDetails[i].NodeDesigner != null)
 					{
-						this.mErrorDetails.get_Item(i).NodeDesigner.HasError = false;
+						this.mErrorDetails[i].NodeDesigner.HasError = false;
 					}
 				}
 			}
@@ -2585,9 +2585,9 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int j = 0; j < this.mErrorDetails.Count; j++)
 					{
-						if (!(this.mErrorDetails.get_Item(j).NodeDesigner == null))
+						if (!(this.mErrorDetails[j].NodeDesigner == null))
 						{
-							this.mErrorDetails.get_Item(j).NodeDesigner.HasError = true;
+							this.mErrorDetails[j].NodeDesigner.HasError = true;
 						}
 					}
 				}
@@ -2613,17 +2613,17 @@ namespace BehaviorDesigner.Editor
 			{
 				if (task == null)
 				{
-					if (!(this.mErrorDetails.get_Item(i).NodeDesigner != null))
+					if (!(this.mErrorDetails[i].NodeDesigner != null))
 					{
-						if (this.mErrorDetails.get_Item(i).FieldName == fieldName)
+						if (this.mErrorDetails[i].FieldName == fieldName)
 						{
 							return true;
 						}
 					}
 				}
-				else if (!(this.mErrorDetails.get_Item(i).NodeDesigner == null))
+				else if (!(this.mErrorDetails[i].NodeDesigner == null))
 				{
-					if (this.mErrorDetails.get_Item(i).NodeDesigner.Task == task && this.mErrorDetails.get_Item(i).FieldName == fieldName)
+					if (this.mErrorDetails[i].NodeDesigner.Task == task && this.mErrorDetails[i].FieldName == fieldName)
 					{
 						return true;
 					}

@@ -186,7 +186,7 @@ namespace BehaviorDesigner.Editor
 						int num2 = 0;
 						for (int j = 0; j < list.Count; j++)
 						{
-							if (list.get_Item(i).Equals(text))
+							if (list[i].Equals(text))
 							{
 								num2++;
 							}
@@ -411,7 +411,7 @@ namespace BehaviorDesigner.Editor
 			GUILayout.Space(6f);
 			for (int i = 0; i < variableSynchronizer.SynchronizedVariables.Count; i++)
 			{
-				VariableSynchronizer.SynchronizedVariable synchronizedVariable = variableSynchronizer.SynchronizedVariables.get_Item(i);
+				VariableSynchronizer.SynchronizedVariable synchronizedVariable = variableSynchronizer.SynchronizedVariables[i];
 				if (synchronizedVariable.global)
 				{
 					if (GlobalVariables.Instance.GetVariable(synchronizedVariable.variableName) == null)

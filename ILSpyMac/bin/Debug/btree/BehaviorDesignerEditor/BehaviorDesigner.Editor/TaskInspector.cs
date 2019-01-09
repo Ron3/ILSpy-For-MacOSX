@@ -178,7 +178,7 @@ namespace BehaviorDesigner.Editor
 			bool flag = this.IsReflectionTask(obj.GetType());
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
 					if (!BehaviorDesignerUtility.HasAttribute(fields[j], typeof(NonSerializedAttribute)) && !BehaviorDesignerUtility.HasAttribute(fields[j], typeof(HideInInspector)) && ((!fields[j].IsPrivate && !fields[j].IsFamily) || BehaviorDesignerUtility.HasAttribute(fields[j], typeof(SerializeField))) && (!(obj is ParentTask) || !fields[j].Name.Equals("children")) && (!flag || (!fields[j].FieldType.Equals(typeof(SharedVariable)) && !fields[j].FieldType.IsSubclassOf(typeof(SharedVariable))) || this.CanDrawReflectedField(obj, fields[j])))
@@ -364,10 +364,10 @@ namespace BehaviorDesigner.Editor
 					{
 						for (int i = 0; i < list.Count; i++)
 						{
-							if (list.get_Item(i) is Task)
+							if (list[i] is Task)
 							{
 								EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-								GUILayout.Label((list.get_Item(i) as Task).NodeData.NodeDesigner.ToString(), BehaviorDesignerUtility.TaskInspectorGUIStyle, new GUILayoutOption[]
+								GUILayout.Label((list[i] as Task).NodeData.NodeDesigner.ToString(), BehaviorDesignerUtility.TaskInspectorGUIStyle, new GUILayoutOption[]
 								{
 									GUILayout.Width(232f)
 								});
@@ -376,7 +376,7 @@ namespace BehaviorDesigner.Editor
 									GUILayout.Width(14f)
 								}))
 								{
-									this.ReferenceTasks(parentTask, ((list.get_Item(i) as Task).NodeData.NodeDesigner as NodeDesigner).Task, field);
+									this.ReferenceTasks(parentTask, ((list[i] as Task).NodeData.NodeDesigner as NodeDesigner).Task, field);
 									GUI.changed=true;
 								}
 								GUILayout.Space(3f);
@@ -385,7 +385,7 @@ namespace BehaviorDesigner.Editor
 									GUILayout.Width(14f)
 								}))
 								{
-									this.behaviorDesignerWindow.IdentifyNode((list.get_Item(i) as Task).NodeData.NodeDesigner as NodeDesigner);
+									this.behaviorDesignerWindow.IdentifyNode((list[i] as Task).NodeData.NodeDesigner as NodeDesigner);
 								}
 								EditorGUILayout.EndHorizontal();
 							}
@@ -755,9 +755,9 @@ namespace BehaviorDesigner.Editor
 						for (int j = 0; j < referencedTasks.Count; j++)
 						{
 							FieldInfo field;
-							if ((field = referencedTasks.get_Item(j).GetType().GetField(allFields[i].Name)) != null)
+							if ((field = referencedTasks[j].GetType().GetField(allFields[i].Name)) != null)
 							{
-								field.SetValue(referencedTasks.get_Item(j), allFields[i].GetValue(task));
+								field.SetValue(referencedTasks[j], allFields[i].GetValue(task));
 							}
 						}
 					}
@@ -798,7 +798,7 @@ namespace BehaviorDesigner.Editor
 			BindingFlags bindingFlags = 54;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
 					if (typeof(SharedVariable).IsAssignableFrom(fields[j].FieldType))
@@ -1294,7 +1294,7 @@ namespace BehaviorDesigner.Editor
 		{
 			for (int i = 0; i < sharedVariableTypes.Count; i++)
 			{
-				if (FieldInspector.FriendlySharedVariableName(type).Equals(sharedVariableTypes.get_Item(i)))
+				if (FieldInspector.FriendlySharedVariableName(type).Equals(sharedVariableTypes[i]))
 				{
 					return true;
 				}

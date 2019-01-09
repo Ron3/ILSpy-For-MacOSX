@@ -23,7 +23,7 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 				SharedGenericVariableDrawer.variableNames = new string[list.Count];
 				for (int i = 0; i < list.Count; i++)
 				{
-					SharedGenericVariableDrawer.variableNames[i] = list.get_Item(i).Name.Remove(0, 6);
+					SharedGenericVariableDrawer.variableNames[i] = list[i].Name.Remove(0, 6);
 				}
 			}
 			int num = 0;

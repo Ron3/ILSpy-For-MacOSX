@@ -29,7 +29,7 @@ namespace BehaviorDesigner.Editor
 				for (int i = 0; i < behaviorSource.Variables.Count; i++)
 				{
 					BinarySerialization.taskSerializationData.variableStartIndex.Add(BinarySerialization.fieldSerializationData.startIndex.Count);
-					BinarySerialization.SaveSharedVariable(behaviorSource.Variables.get_Item(i), 0);
+					BinarySerialization.SaveSharedVariable(behaviorSource.Variables[i], 0);
 				}
 			}
 			if (!object.ReferenceEquals(behaviorSource.EntryTask, null))
@@ -44,7 +44,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int j = 0; j < behaviorSource.DetachedTasks.Count; j++)
 				{
-					BinarySerialization.SaveTask(behaviorSource.DetachedTasks.get_Item(j), -1);
+					BinarySerialization.SaveTask(behaviorSource.DetachedTasks[j], -1);
 				}
 			}
 			BinarySerialization.taskSerializationData.Version = "1.5.11";
@@ -71,7 +71,7 @@ namespace BehaviorDesigner.Editor
 			for (int i = 0; i < globalVariables.Variables.Count; i++)
 			{
 				globalVariables.VariableData.variableStartIndex.Add(BinarySerialization.fieldSerializationData.startIndex.Count);
-				BinarySerialization.SaveSharedVariable(globalVariables.Variables.get_Item(i), 0);
+				BinarySerialization.SaveSharedVariable(globalVariables.Variables[i], 0);
 			}
 			globalVariables.Version="1.5.11";
 			BehaviorDesignerUtility.SetObjectDirty(globalVariables);
@@ -95,7 +95,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						BinarySerialization.SaveTask(parentTask.Children.get_Item(i), parentTask.ID);
+						BinarySerialization.SaveTask(parentTask.Children[i], parentTask.ID);
 					}
 				}
 			}
@@ -197,13 +197,13 @@ namespace BehaviorDesigner.Editor
 					{
 						for (int i = 0; i < list.Count; i++)
 						{
-							if (object.ReferenceEquals(list.get_Item(i), null))
+							if (object.ReferenceEquals(list[i], null))
 							{
 								BinarySerialization.AddByteData(BinarySerialization.IntToBytes(-1));
 							}
 							else
 							{
-								BinarySerialization.SaveField(fieldType2, i.ToString(), num / (i + 1), list.get_Item(i), fieldInfo);
+								BinarySerialization.SaveField(fieldType2, i.ToString(), num / (i + 1), list[i], fieldInfo);
 							}
 						}
 					}

@@ -20,7 +20,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					TaskReferences.CheckReferences(behaviorSource, behaviorSource.DetachedTasks.get_Item(i));
+					TaskReferences.CheckReferences(behaviorSource, behaviorSource.DetachedTasks[i]);
 				}
 			}
 		}
@@ -72,7 +72,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
-						TaskReferences.CheckReferences(behaviorSource, parentTask.Children.get_Item(k));
+						TaskReferences.CheckReferences(behaviorSource, parentTask.Children.Item[k]);
 					}
 				}
 			}
@@ -94,7 +94,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					if ((result = TaskReferences.FindReferencedTask(behaviorSource.DetachedTasks.get_Item(i), iD)) != null)
+					if ((result = TaskReferences.FindReferencedTask(behaviorSource.DetachedTasks[i], iD)) != null)
 					{
 						return result;
 					}
@@ -117,7 +117,7 @@ namespace BehaviorDesigner.Editor
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
 						Task result;
-						if ((result = TaskReferences.FindReferencedTask(parentTask.Children.get_Item(i), referencedTaskID)) != null)
+						if ((result = TaskReferences.FindReferencedTask(parentTask.Children[i], referencedTaskID)) != null)
 						{
 							return result;
 						}
@@ -131,7 +131,7 @@ namespace BehaviorDesigner.Editor
 		{
 			for (int i = 0; i < taskList.Count; i++)
 			{
-				TaskReferences.CheckReferences(behavior, taskList.get_Item(i), taskList);
+				TaskReferences.CheckReferences(behavior, taskList[i], taskList);
 			}
 		}
 
@@ -191,9 +191,9 @@ namespace BehaviorDesigner.Editor
 			int referenceID = referencedTask.ReferenceID;
 			for (int i = 0; i < taskList.Count; i++)
 			{
-				if (taskList.get_Item(i).ReferenceID == referenceID)
+				if (taskList[i].ReferenceID == referenceID)
 				{
-					return taskList.get_Item(i);
+					return taskList[i];
 				}
 			}
 			return null;

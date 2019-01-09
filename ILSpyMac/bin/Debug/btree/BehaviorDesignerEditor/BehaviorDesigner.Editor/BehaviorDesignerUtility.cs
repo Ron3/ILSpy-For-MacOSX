@@ -1336,7 +1336,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (BehaviorDesignerUtility.camelCaseSplit.ContainsKey(s))
 			{
-				return BehaviorDesignerUtility.camelCaseSplit.get_Item(s);
+				return BehaviorDesignerUtility.camelCaseSplit[s];
 			}
 			string text = s;
 			s = s.Replace("_uScript", "uScript");
@@ -1345,7 +1345,7 @@ namespace BehaviorDesigner.Editor
 			{
 				s = s.Substring(2);
 			}
-			else if (s.Length > 1 && s.get_Chars(0).CompareTo('_') == 0)
+			else if (s.Length > 1 && s[0].CompareTo('_') == 0)
 			{
 				s = s.Substring(1);
 			}
@@ -1353,7 +1353,7 @@ namespace BehaviorDesigner.Editor
 			s = s.Replace("_", " ");
 			s = s.Replace("u Script", " uScript");
 			s = s.Replace("Play Maker", "PlayMaker");
-			s = (char.ToUpper(s.get_Chars(0)) + s.Substring(1)).Trim();
+			s = (char.ToUpper(s.[0]) + s.Substring(1)).Trim();
 			BehaviorDesignerUtility.camelCaseSplit.Add(text, s);
 			return s;
 		}
@@ -1393,7 +1393,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					BehaviorDesignerUtility.GetAllTasks(behaviorSource.DetachedTasks.get_Item(i), ref result);
+					BehaviorDesignerUtility.GetAllTasks(behaviorSource.DetachedTasks[i], ref result);
 				}
 			}
 			return result;
@@ -1407,7 +1407,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					BehaviorDesignerUtility.GetAllTasks(parentTask.Children.get_Item(i), ref taskList);
+					BehaviorDesignerUtility.GetAllTasks(parentTask.Children[i], ref taskList);
 				}
 			}
 		}
@@ -1422,7 +1422,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					if (BehaviorDesignerUtility.AnyNullTasks(behaviorSource.DetachedTasks.get_Item(i)))
+					if (BehaviorDesignerUtility.AnyNullTasks(behaviorSource.DetachedTasks[i]))
 					{
 						return true;
 					}
@@ -1442,7 +1442,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					if (BehaviorDesignerUtility.AnyNullTasks(parentTask.Children.get_Item(i)))
+					if (BehaviorDesignerUtility.AnyNullTasks(parentTask.Children[i]))
 					{
 						return true;
 					}

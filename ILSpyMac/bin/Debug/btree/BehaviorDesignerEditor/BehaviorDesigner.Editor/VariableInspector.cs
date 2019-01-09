@@ -113,7 +113,7 @@ namespace BehaviorDesigner.Editor
 			VariableInspector.sharedVariableTypesDict = new Dictionary<string, int>();
 			for (int k = 0; k < VariableInspector.sharedVariableTypes.Count; k++)
 			{
-				string text = VariableInspector.sharedVariableTypes.get_Item(k).Name;
+				string text = VariableInspector.sharedVariableTypes.Item[k].Name;
 				VariableInspector.sharedVariableTypesDict.Add(text, k);
 				if (removeShared && text.Length > 6 && text.Substring(0, 6).Equals("Shared"))
 				{
@@ -184,15 +184,15 @@ namespace BehaviorDesigner.Editor
 				int i = 0;
 				while (i < variablePosition.Count)
 				{
-					if (mousePosition.y < variablePosition.get_Item(i) - scrollPosition.y)
+					if (mousePosition.y < variablePosition[i] - scrollPosition.y)
 					{
 						if (i == selectedVariableIndex)
 						{
 							return false;
 						}
 						selectedVariableIndex = i;
-						selectedVariableName = allVariables.get_Item(i).Name;
-						selectedVariableTypeIndex = VariableInspector.sharedVariableTypesDict.get_Item(allVariables.get_Item(i).GetType().Name);
+						selectedVariableName = allVariables[i].Name;
+						selectedVariableTypeIndex = VariableInspector.sharedVariableTypesDict.get_Item(allVariables[i].GetType().Name);
 						return true;
 					}
 					else
@@ -276,19 +276,19 @@ namespace BehaviorDesigner.Editor
 				{
 					if (list.Count - 1 < i)
 					{
-						SharedVariable sharedVariable = Activator.CreateInstance(variables.get_Item(i).GetType()) as SharedVariable;
-						sharedVariable.Name=variables.get_Item(i).Name;
+						SharedVariable sharedVariable = Activator.CreateInstance(variables[i].GetType()) as SharedVariable;
+						sharedVariable.Name=variables[i].Name;
 						sharedVariable.IsShared=true;
-						sharedVariable.SetValue(variables.get_Item(i).GetValue());
+						sharedVariable.SetValue(variables[i].GetValue());
 						list.Add(sharedVariable);
 						result = true;
 					}
-					else if (list.get_Item(i).Name != variables.get_Item(i).Name || list.get_Item(i).GetType() != variables.get_Item(i).GetType())
+					else if (list[i].Name != variables[i].Name || list[i].GetType() != variables[i].GetType())
 					{
-						SharedVariable sharedVariable2 = Activator.CreateInstance(variables.get_Item(i).GetType()) as SharedVariable;
-						sharedVariable2.Name=variables.get_Item(i).Name;
+						SharedVariable sharedVariable2 = Activator.CreateInstance(variables[i].GetType()) as SharedVariable;
+						sharedVariable2.Name=variables[i].Name;
 						sharedVariable2.IsShared=true;
-						sharedVariable2.SetValue(variables.get_Item(i).GetValue());
+						sharedVariable2.SetValue(variables[i].GetValue());
 						list.Item=i, sharedVariable2;
 						result = true;
 					}
@@ -432,7 +432,7 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int i = 0; i < variables.Count; i++)
 			{
-				SharedVariable sharedVariable = variables.get_Item(i);
+				SharedVariable sharedVariable = variables[i];
 				if (sharedVariable != null)
 				{
 					if (canSelect && selectedVariableIndex == i)
@@ -496,7 +496,7 @@ namespace BehaviorDesigner.Editor
 							result = true;
 							break;
 						}
-						if (BehaviorDesignerWindow.instance != null && BehaviorDesignerWindow.instance.ContainsError(null, variables.get_Item(i).Name))
+						if (BehaviorDesignerWindow.instance != null && BehaviorDesignerWindow.instance.ContainsError(null, variables[i].Name))
 						{
 							GUILayout.Box(BehaviorDesignerUtility.ErrorIconTexture, BehaviorDesignerUtility.PlainTextureGUIStyle, new GUILayoutOption[]
 							{
@@ -703,7 +703,7 @@ namespace BehaviorDesigner.Editor
 
 		private static SharedVariable CreateVariable(int index, string name, bool global)
 		{
-			SharedVariable sharedVariable = Activator.CreateInstance(VariableInspector.sharedVariableTypes.get_Item(index)) as SharedVariable;
+			SharedVariable sharedVariable = Activator.CreateInstance(VariableInspector.sharedVariableTypes[index]) as SharedVariable;
 			sharedVariable.Name=name;
 			sharedVariable.IsShared=true;
 			sharedVariable.IsGlobal=global;
@@ -757,15 +757,15 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int k = 0; k < list.Count; k++)
 			{
-				string[] array2 = list.get_Item(k).Split(new char[]
+				string[] array2 = list.Item[k].Split(new char[]
 				{
 					'.'
 				});
-				if (list2.get_Item(k) != null)
+				if (list2.Item[k] != null)
 				{
-					array2[array2.Length - 1] = VariableInspector.GetFullPath(list2.get_Item(k).transform) + "/" + array2[array2.Length - 1];
+					array2[array2.Length - 1] = VariableInspector.GetFullPath(list2.Item[k].transform) + "/" + array2[array2.Length - 1];
 				}
-				VariableInspector.mPropertyMappingMenu.AddItem(new GUIContent(array2[array2.Length - 1]), k == num, new GenericMenu.MenuFunction2(VariableInspector.PropertySelected), new VariableInspector.SelectedPropertyMapping(list.get_Item(k), list2.get_Item(k)));
+				VariableInspector.mPropertyMappingMenu.AddItem(new GUIContent(array2[array2.Length - 1]), k == num, new GenericMenu.MenuFunction2(VariableInspector.PropertySelected), new VariableInspector.SelectedPropertyMapping(list.Item[k], list2.Item[k]));
 			}
 			VariableInspector.mPropertyMappingMenu.ShowAsContext();
 		}

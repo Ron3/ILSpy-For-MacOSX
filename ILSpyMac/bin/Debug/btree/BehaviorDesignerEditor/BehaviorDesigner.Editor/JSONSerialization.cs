@@ -35,7 +35,7 @@ namespace BehaviorDesigner.Editor
 				Dictionary<string, object>[] array = new Dictionary<string, object>[behaviorSource.DetachedTasks.Count];
 				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					array[i] = JSONSerialization.SerializeTask(behaviorSource.DetachedTasks.get_Item(i), true, ref JSONSerialization.fieldSerializationData.unityObjects);
+					array[i] = JSONSerialization.SerializeTask(behaviorSource.DetachedTasks[i], true, ref JSONSerialization.fieldSerializationData.unityObjects);
 				}
 				dictionary.Add("DetachedTasks", array);
 			}
@@ -73,7 +73,7 @@ namespace BehaviorDesigner.Editor
 			Dictionary<string, object>[] array = new Dictionary<string, object>[variables.Count];
 			for (int i = 0; i < variables.Count; i++)
 			{
-				array[i] = JSONSerialization.SerializeVariable(variables.get_Item(i), ref unityObjects);
+				array[i] = JSONSerialization.SerializeVariable(variables[i], ref unityObjects);
 			}
 			return array;
 		}
@@ -99,7 +99,7 @@ namespace BehaviorDesigner.Editor
 					Dictionary<string, object>[] array = new Dictionary<string, object>[parentTask.Children.Count];
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						array[i] = JSONSerialization.SerializeTask(parentTask.Children.get_Item(i), serializeChildren, ref unityObjects);
+						array[i] = JSONSerialization.SerializeTask(parentTask.Children[i], serializeChildren, ref unityObjects);
 					}
 					dictionary.Add("Children", array);
 				}
@@ -186,25 +186,25 @@ namespace BehaviorDesigner.Editor
 								List<object> list2 = new List<object>();
 								for (int j = 0; j < list.Count; j++)
 								{
-									if (list.get_Item(j) == null)
+									if (list[j] == null)
 									{
 										list2.Add(null);
 									}
 									else
 									{
-										Type type = list.get_Item(j).GetType();
-										if (list.get_Item(j) is Task)
+										Type type = list[j].GetType();
+										if (list[j] is Task)
 										{
-											Task task = list.get_Item(j) as Task;
+											Task task = list[j] as Task;
 											list2.Add(task.ID);
 										}
-										else if (list.get_Item(j) is SharedVariable)
+										else if (list[j] is SharedVariable)
 										{
-											list2.Add(JSONSerialization.SerializeVariable(list.get_Item(j) as SharedVariable, ref unityObjects));
+											list2.Add(JSONSerialization.SerializeVariable(list[j] as SharedVariable, ref unityObjects));
 										}
-										else if (list.get_Item(j) is Object)
+										else if (list[j] is Object)
 										{
-											Object @object = list.get_Item(j) as Object;
+											Object @object = list[j] as Object;
 											if (!object.ReferenceEquals(@object, null) && @object != null)
 											{
 												list2.Add(unityObjects.Count);
@@ -213,16 +213,16 @@ namespace BehaviorDesigner.Editor
 										}
 										else if (type.Equals(typeof(LayerMask)))
 										{
-											list2.Add(((LayerMask)list.get_Item(j)).value);
+											list2.Add(((LayerMask)list[j]).value);
 										}
 										else if (type.IsPrimitive || type.IsEnum || type.Equals(typeof(string)) || type.Equals(typeof(Vector2)) || type.Equals(typeof(Vector3)) || type.Equals(typeof(Vector4)) || type.Equals(typeof(Quaternion)) || type.Equals(typeof(Matrix4x4)) || type.Equals(typeof(Color)) || type.Equals(typeof(Rect)))
 										{
-											list2.Add(list.get_Item(j));
+											list2.Add(list[j]);
 										}
 										else
 										{
 											Dictionary<string, object> dictionary = new Dictionary<string, object>();
-											JSONSerialization.SerializeFields(list.get_Item(j), ref dictionary, ref unityObjects);
+											JSONSerialization.SerializeFields(list[j], ref dictionary, ref unityObjects);
 											list2.Add(dictionary);
 										}
 									}

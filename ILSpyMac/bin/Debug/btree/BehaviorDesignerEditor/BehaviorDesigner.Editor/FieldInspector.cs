@@ -67,7 +67,7 @@ namespace BehaviorDesigner.Editor
 			BindingFlags bindingFlags = 54;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
 					if (!BehaviorDesignerUtility.HasAttribute(fields[j], typeof(NonSerializedAttribute)) && !BehaviorDesignerUtility.HasAttribute(fields[j], typeof(HideInInspector)) && ((!fields[j].IsPrivate && !fields[j].IsFamily) || BehaviorDesignerUtility.HasAttribute(fields[j], typeof(SerializeField))) && (!(obj is ParentTask) || !fields[j].Name.Equals("children")))
@@ -270,7 +270,7 @@ namespace BehaviorDesigner.Editor
 				{
 					GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 					guiContent.text="Element " + k;
-					list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.get_Item(k));
+					list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.Item[k]);
 					GUILayout.Space(6f);
 					GUILayout.EndHorizontal();
 				}
@@ -530,13 +530,13 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < variables.Count; i++)
 				{
-					if (variables.get_Item(i) != null)
+					if (variables[i] != null)
 					{
-						Type propertyType = variables.get_Item(i).GetType().GetProperty("Value").PropertyType;
+						Type propertyType = variables[i].GetType().GetProperty("Value").PropertyType;
 						if (valueType == null || getAll || valueType.IsAssignableFrom(propertyType))
 						{
-							list.Add(variables.get_Item(i).Name);
-							if (!isGlobal && variables.get_Item(i).Name.Equals(name))
+							list.Add(variables[i].Name);
+							if (!isGlobal && variables[i].Name.Equals(name))
 							{
 								result = list.Count - 1;
 							}
@@ -553,13 +553,13 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int j = 0; j < variables.Count; j++)
 					{
-						if (variables.get_Item(j) != null)
+						if (variables[j] != null)
 						{
-							Type propertyType2 = variables.get_Item(j).GetType().GetProperty("Value").PropertyType;
+							Type propertyType2 = variables[j].GetType().GetProperty("Value").PropertyType;
 							if (valueType == null || getAll || propertyType2.Equals(valueType))
 							{
-								list.Add("Globals/" + variables.get_Item(j).Name);
-								if (isGlobal && variables.get_Item(j).Name.Equals(name))
+								list.Add("Globals/" + variables[j].Name);
+								if (isGlobal && variables[j].Name.Equals(name))
 								{
 									result = list.Count - 1;
 								}

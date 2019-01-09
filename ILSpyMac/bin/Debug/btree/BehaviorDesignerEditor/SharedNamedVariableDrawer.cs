@@ -1,4 +1,4 @@
-using BehaviorDesigner.Editor;
+﻿using BehaviorDesigner.Editor;
 using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ public class SharedNamedVariableDrawer : ObjectDrawer
 				SharedNamedVariableDrawer.variableNames = new string[list.Count];
 				for (int i = 0; i < list.Count; i++)
 				{
-					SharedNamedVariableDrawer.variableNames[i] = list.get_Item(i).Name.Remove(0, 6);
+					SharedNamedVariableDrawer.variableNames[i] = list[i].Name.Remove(0, 6);
 				}
 			}
 			int num = 0;

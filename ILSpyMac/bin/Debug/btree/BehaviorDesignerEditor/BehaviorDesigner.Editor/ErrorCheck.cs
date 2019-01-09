@@ -38,10 +38,10 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < behaviorSource.Variables.Count; i++)
 				{
-					object value = behaviorSource.Variables.get_Item(i).GetValue();
+					object value = behaviorSource.Variables[i].GetValue();
 					if (value is Object && AssetDatabase.GetAssetPath(value as Object).Length == 0)
 					{
-						ErrorCheck.AddError(ref result, ErrorDetails.ErrorType.InvalidVariableReference, null, behaviorSource.Variables.get_Item(i).Name);
+						ErrorCheck.AddError(ref result, ErrorDetails.ErrorType.InvalidVariableReference, null, behaviorSource.Variables[i].Name);
 					}
 				}
 			}
@@ -80,7 +80,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int j = 0; j < parentTask.Children.Count; j++)
 					{
-						ErrorCheck.CheckTaskForErrors(parentTask.Children.get_Item(j), projectLevelBehavior, ref errorDetails);
+						ErrorCheck.CheckTaskForErrors(parentTask.Children[j], projectLevelBehavior, ref errorDetails);
 					}
 				}
 			}
@@ -160,7 +160,7 @@ namespace BehaviorDesigner.Editor
 				}
 				for (int i = 0; i < list.Count; i++)
 				{
-					if (list.get_Item(i) == null || list.get_Item(i).Equals(null))
+					if (list[i] == null || list[i].Equals(null))
 					{
 						return false;
 					}

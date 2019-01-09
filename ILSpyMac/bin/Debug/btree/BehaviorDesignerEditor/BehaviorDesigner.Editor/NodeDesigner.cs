@@ -267,7 +267,7 @@ namespace BehaviorDesigner.Editor
 			BindingFlags bindingFlags = 54;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
 					if (typeof(SharedVariable).IsAssignableFrom(fields[j].FieldType) && !fields[j].FieldType.IsAbstract)
@@ -293,7 +293,7 @@ namespace BehaviorDesigner.Editor
 					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
 						NodeDesigner nodeDesigner = ScriptableObject.CreateInstance<NodeDesigner>();
-						nodeDesigner.LoadTask(parentTask.Children.get_Item(k), owner, ref id);
+						nodeDesigner.LoadTask(parentTask.Children.Item[k], owner, ref id);
 						NodeConnection nodeConnection = ScriptableObject.CreateInstance<NodeConnection>();
 						nodeConnection.LoadConnection(this, NodeConnectionType.Fixed);
 						this.AddChildNode(nodeDesigner, nodeConnection, true, true, k);
@@ -327,7 +327,7 @@ namespace BehaviorDesigner.Editor
 			BindingFlags bindingFlags = 54;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
 					if (typeof(SharedVariable).IsAssignableFrom(fields[j].FieldType) && !fields[j].FieldType.IsAbstract)
@@ -513,7 +513,7 @@ namespace BehaviorDesigner.Editor
 				string text2 = string.Empty;
 				for (int i = 0; i < this.mTask.NodeData.WatchedFields.Count; i++)
 				{
-					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields.get_Item(i);
+					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields[i];
 					text = text + BehaviorDesignerUtility.SplitCamelCase(fieldInfo.Name) + ": \n";
 					text2 = text2 + ((fieldInfo.GetValue(this.mTask) == null) ? "null" : fieldInfo.GetValue(this.mTask).ToString()) + "\n";
 				}
@@ -576,7 +576,7 @@ namespace BehaviorDesigner.Editor
 			}
 			Rect rect = this.Rectangle(offset, false, false);
 			this.UpdateCache(rect);
-			bool flag = (this.mTask.NodeData.PushTime != -1f && this.mTask.NodeData.PushTime >= this.mTask.NodeData.PopTime) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.NodeData.PushTime != -1f);
+			bool flag = (this.mTask.NodeData.PushTime != -1f && this.mTask.NodeData.PushTime >= this.mTask.NodeData.PopTime) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PushTime != -1f);
 			bool flag2 = this.mIdentifyUpdateCount != -1;
 			bool result = this.prevRunningState != flag;
 			float num = (!BehaviorDesignerPreferences.GetBool(BDPreferences.FadeNodes)) ? 0.01f : 0.5f;
@@ -605,11 +605,11 @@ namespace BehaviorDesigner.Editor
 			{
 				num2 = 1f;
 			}
-			else if ((this.mTask.NodeData.PopTime != -1f && num != 0f && this.mTask.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.mTask.NodeData.PopTime < num) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.NodeData.PopTime != -1f && this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.NodeData.PopTime < num))
+			else if ((this.mTask.NodeData.PopTime != -1f && num != 0f && this.mTask.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.mTask.NodeData.PopTime < num) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime != -1f && this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime < num))
 			{
 				if (this.isEntryDisplay)
 				{
-					num2 = 1f - (Time.realtimeSinceStartup - this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.NodeData.PopTime) / num;
+					num2 = 1f - (Time.realtimeSinceStartup - this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime) / num;
 				}
 				else
 				{
@@ -829,7 +829,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 				{
-					this.outgoingNodeConnections.get_Item(i).DrawConnection(offset, disabled);
+					this.outgoingNodeConnections[i].DrawConnection(offset, disabled);
 				}
 			}
 		}
@@ -849,9 +849,9 @@ namespace BehaviorDesigner.Editor
 					this.prevWatchedFieldsLength.Clear();
 					for (int i = 0; i < this.mTask.NodeData.WatchedFields.Count; i++)
 					{
-						if (this.mTask.NodeData.WatchedFields.get_Item(i) != null)
+						if (this.mTask.NodeData.WatchedFields[i] != null)
 						{
-							object value = this.mTask.NodeData.WatchedFields.get_Item(i).GetValue(this.mTask);
+							object value = this.mTask.NodeData.WatchedFields[i].GetValue(this.mTask);
 							if (value != null)
 							{
 								this.prevWatchedFieldsLength.Add(value.ToString().Length);
@@ -867,15 +867,15 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int j = 0; j < this.mTask.NodeData.WatchedFields.Count; j++)
 					{
-						if (this.mTask.NodeData.WatchedFields.get_Item(j) != null)
+						if (this.mTask.NodeData.WatchedFields[j] != null)
 						{
-							object value2 = this.mTask.NodeData.WatchedFields.get_Item(j).GetValue(this.mTask);
+							object value2 = this.mTask.NodeData.WatchedFields[j].GetValue(this.mTask);
 							int num = 0;
 							if (value2 != null)
 							{
 								num = value2.ToString().Length;
 							}
-							if (num != this.prevWatchedFieldsLength.get_Item(j))
+							if (num != this.prevWatchedFieldsLength[j])
 							{
 								this.mRectIsDirty = true;
 								break;
@@ -894,7 +894,7 @@ namespace BehaviorDesigner.Editor
 				string text2 = string.Empty;
 				for (int k = 0; k < this.mTask.NodeData.WatchedFields.Count; k++)
 				{
-					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields.get_Item(k);
+					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields.Item[k];
 					text = text + BehaviorDesignerUtility.SplitCamelCase(fieldInfo.Name) + ": \n";
 					text2 = text2 + ((fieldInfo.GetValue(this.mTask) == null) ? "null" : fieldInfo.GetValue(this.mTask).ToString()) + "\n";
 				}
@@ -939,9 +939,9 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 			{
-				if (this.outgoingNodeConnections.get_Item(i).Contains(point, offset))
+				if (this.outgoingNodeConnections[i].Contains(point, offset))
 				{
-					nodeConnections.Add(this.outgoingNodeConnections.get_Item(i));
+					nodeConnections.Add(this.outgoingNodeConnections[i]);
 				}
 			}
 		}
@@ -954,7 +954,7 @@ namespace BehaviorDesigner.Editor
 				float num2 = num;
 				for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 				{
-					Rect rect = this.outgoingNodeConnections.get_Item(i).DestinationNodeDesigner.Rectangle(offset, false, false);
+					Rect rect = this.outgoingNodeConnections[i].DestinationNodeDesigner.Rectangle(offset, false, false);
 					if (rect.y < num)
 					{
 						num = rect.y;
@@ -972,7 +972,7 @@ namespace BehaviorDesigner.Editor
 				}
 				for (int j = 0; j < this.outgoingNodeConnections.Count; j++)
 				{
-					this.outgoingNodeConnections.get_Item(j).HorizontalHeight = num;
+					this.outgoingNodeConnections[j].HorizontalHeight = num;
 				}
 			}
 		}
@@ -1076,7 +1076,7 @@ namespace BehaviorDesigner.Editor
 					{
 						for (i = 0; i < parentTask2.Children.Count; i++)
 						{
-							if (childNodeDesigner.GetAbsolutePosition().x < (parentTask2.Children.get_Item(i).NodeData.NodeDesigner as NodeDesigner).GetAbsolutePosition().x)
+							if (childNodeDesigner.GetAbsolutePosition().x < (parentTask2.Children[i].NodeData.NodeDesigner as NodeDesigner).GetAbsolutePosition().x)
 							{
 								break;
 							}
@@ -1110,7 +1110,7 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 			{
-				NodeConnection nodeConnection = this.outgoingNodeConnections.get_Item(i);
+				NodeConnection nodeConnection = this.outgoingNodeConnections[i];
 				if (nodeConnection.DestinationNodeDesigner.Equals(childNodeDesigner) || nodeConnection.OriginatingNodeDesigner.Equals(childNodeDesigner))
 				{
 					this.outgoingNodeConnections.RemoveAt(i);
@@ -1131,7 +1131,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						(parentTask.Children.get_Item(i).NodeData.NodeDesigner as NodeDesigner).SetID(ref id);
+						(parentTask.Children[i].NodeData.NodeDesigner as NodeDesigner).SetID(ref id);
 					}
 				}
 			}
@@ -1146,7 +1146,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						if (parentTask.Children.get_Item(i).Equals(childTask))
+						if (parentTask.Children[i].Equals(childTask))
 						{
 							return i;
 						}
@@ -1167,11 +1167,11 @@ namespace BehaviorDesigner.Editor
 				ParentTask parentTask = this.mTask as ParentTask;
 				if (parentTask.Children != null)
 				{
-					if (index >= parentTask.Children.Count || parentTask.Children.get_Item(index) == null)
+					if (index >= parentTask.Children.Count || parentTask.Children[index] == null)
 					{
 						return null;
 					}
-					return parentTask.Children.get_Item(index).NodeData.NodeDesigner as NodeDesigner;
+					return parentTask.Children[index].NodeData.NodeDesigner as NodeDesigner;
 				}
 			}
 			return null;
@@ -1181,7 +1181,7 @@ namespace BehaviorDesigner.Editor
 		{
 			int num = index + ((!decreaseIndex) ? 1 : -1);
 			ParentTask parentTask = this.mTask as ParentTask;
-			Task task = parentTask.Children.get_Item(index);
+			Task task = parentTask.Children[index];
 			parentTask.Children.Item=index, parentTask.Children.get_Item(num);
 			parentTask.Children.Item=num, task;
 		}
@@ -1190,9 +1190,9 @@ namespace BehaviorDesigner.Editor
 		{
 			for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 			{
-				if (this.outgoingNodeConnections.get_Item(i).DestinationNodeDesigner.Equals(nodeDesigner))
+				if (this.outgoingNodeConnections[i].DestinationNodeDesigner.Equals(nodeDesigner))
 				{
-					NodeConnection nodeConnection = this.outgoingNodeConnections.get_Item(i);
+					NodeConnection nodeConnection = this.outgoingNodeConnections[i];
 					this.outgoingNodeConnections.Item=i, this.outgoingNodeConnections.get_Item(this.outgoingNodeConnections.Count - 1);
 					this.outgoingNodeConnections.Item=this.outgoingNodeConnections.Count - 1, nodeConnection;
 					break;
@@ -1237,7 +1237,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = this.outgoingNodeConnections.Count - 1; i > -1; i--)
 				{
-					Object.DestroyImmediate(this.outgoingNodeConnections.get_Item(i), true);
+					Object.DestroyImmediate(this.outgoingNodeConnections[i], true);
 				}
 			}
 		}

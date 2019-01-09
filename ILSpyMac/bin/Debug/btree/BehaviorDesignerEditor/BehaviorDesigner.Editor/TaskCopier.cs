@@ -39,7 +39,7 @@ namespace BehaviorDesigner.Editor
 							int num = 0;
 							for (int i = 0; i < list.Count; i++)
 							{
-								Task task2 = TaskCopier.TaskWithID(behaviorSource, list.get_Item(i));
+								Task task2 = TaskCopier.TaskWithID(behaviorSource, list[i]);
 								if ((task2 != null && task2.GetType().Equals(fieldType.GetElementType())) || task2.GetType().IsSubclassOf(fieldType.GetElementType()))
 								{
 									num++;
@@ -49,7 +49,7 @@ namespace BehaviorDesigner.Editor
 							int num2 = 0;
 							for (int j = 0; j < list.Count; j++)
 							{
-								Task task3 = TaskCopier.TaskWithID(behaviorSource, list.get_Item(j));
+								Task task3 = TaskCopier.TaskWithID(behaviorSource, list[j]);
 								if ((task3 != null && task3.GetType().Equals(fieldType.GetElementType())) || task3.GetType().IsSubclassOf(fieldType.GetElementType()))
 								{
 									array.SetValue(task3, num2);
@@ -60,7 +60,7 @@ namespace BehaviorDesigner.Editor
 						}
 						else
 						{
-							Task task4 = TaskCopier.TaskWithID(behaviorSource, list.get_Item(0));
+							Task task4 = TaskCopier.TaskWithID(behaviorSource, list.Item[0]);
 							if ((task4 != null && task4.GetType().Equals(current.fieldInfo.FieldType)) || task4.GetType().IsSubclassOf(current.fieldInfo.FieldType))
 							{
 								current.fieldInfo.SetValue(current.task, task4);
@@ -87,7 +87,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						TaskCopier.CheckSharedVariables(behaviorSource, parentTask.Children.get_Item(i));
+						TaskCopier.CheckSharedVariables(behaviorSource, parentTask.Children[i]);
 					}
 				}
 			}
@@ -132,7 +132,7 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					if ((task = TaskCopier.TaskWithID(id, behaviorSource.DetachedTasks.get_Item(i))) != null)
+					if ((task = TaskCopier.TaskWithID(id, behaviorSource.DetachedTasks[i])) != null)
 					{
 						break;
 					}
@@ -158,7 +158,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						Task task2 = TaskCopier.TaskWithID(id, parentTask.Children.get_Item(i));
+						Task task2 = TaskCopier.TaskWithID(id, parentTask.Children[i]);
 						if (task2 != null)
 						{
 							return task2;
