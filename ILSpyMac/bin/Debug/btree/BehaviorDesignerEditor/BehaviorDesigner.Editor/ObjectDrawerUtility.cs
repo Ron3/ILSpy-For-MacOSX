@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -19,7 +19,7 @@ namespace BehaviorDesigner.Editor
 			{
 				return;
 			}
-			Assembly[] assemblies = AppDomain.get_CurrentDomain().GetAssemblies();
+			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 			for (int i = 0; i < assemblies.Length; i++)
 			{
 				Assembly assembly = assemblies[i];
@@ -32,7 +32,7 @@ namespace BehaviorDesigner.Editor
 						{
 							Type type = exportedTypes[j];
 							CustomObjectDrawer[] array;
-							if (typeof(ObjectDrawer).IsAssignableFrom(type) && type.get_IsClass() && !type.get_IsAbstract() && (array = (type.GetCustomAttributes(typeof(CustomObjectDrawer), false) as CustomObjectDrawer[])).Length > 0)
+							if (typeof(ObjectDrawer).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract && (array = (type.GetCustomAttributes(typeof(CustomObjectDrawer), false) as CustomObjectDrawer[])).Length > 0)
 							{
 								ObjectDrawerUtility.objectDrawerTypeMap.Add(array[0].Type, type);
 							}
@@ -65,7 +65,7 @@ namespace BehaviorDesigner.Editor
 		{
 			ObjectDrawer objectDrawer = null;
 			Type type = null;
-			if (!ObjectDrawerUtility.ObjectDrawerForType(field.get_FieldType(), ref objectDrawer, ref type, field.GetHashCode()))
+			if (!ObjectDrawerUtility.ObjectDrawerForType(field.FieldType, ref objectDrawer, ref type, field.GetHashCode()))
 			{
 				return null;
 			}

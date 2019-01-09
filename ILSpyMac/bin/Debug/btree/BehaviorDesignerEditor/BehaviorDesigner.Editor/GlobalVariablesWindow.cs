@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -12,7 +12,7 @@ namespace BehaviorDesigner.Editor
 
 		private int mVariableTypeIndex;
 
-		private Vector2 mScrollPosition = Vector2.get_zero();
+		private Vector2 mScrollPosition = Vector2.zero;
 
 		private bool mFocusNameField;
 
@@ -47,10 +47,10 @@ namespace BehaviorDesigner.Editor
 		public void OnFocus()
 		{
 			GlobalVariablesWindow.instance = this;
-			this.mVariableSource = GlobalVariables.get_Instance();
+			this.mVariableSource = GlobalVariables.Instance;
 			if (this.mVariableSource != null)
 			{
-				this.mVariableSource.CheckForSerialization(!Application.get_isPlaying());
+				this.mVariableSource.CheckForSerialization(!Application.isPlaying);
 			}
 			FieldInspector.Init();
 		}
@@ -59,15 +59,15 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.mVariableSource == null)
 			{
-				this.mVariableSource = GlobalVariables.get_Instance();
+				this.mVariableSource = GlobalVariables.Instance;
 			}
 			if (VariableInspector.DrawVariables(this.mVariableSource, null, ref this.mVariableName, ref this.mFocusNameField, ref this.mVariableTypeIndex, ref this.mScrollPosition, ref this.mVariablePosition, ref this.mVariableStartPosition, ref this.mSelectedVariableIndex, ref this.mSelectedVariableName, ref this.mSelectedVariableTypeIndex))
 			{
 				this.SerializeVariables();
 			}
-			if (Event.get_current().get_type() == null && VariableInspector.LeftMouseDown(this.mVariableSource, null, Event.get_current().get_mousePosition(), this.mVariablePosition, this.mVariableStartPosition, this.mScrollPosition, ref this.mSelectedVariableIndex, ref this.mSelectedVariableName, ref this.mSelectedVariableTypeIndex))
+			if (Event.current.type == null && VariableInspector.LeftMouseDown(this.mVariableSource, null, Event.current.mousePosition, this.mVariablePosition, this.mVariableStartPosition, this.mScrollPosition, ref this.mSelectedVariableIndex, ref this.mSelectedVariableName, ref this.mSelectedVariableTypeIndex))
 			{
-				Event.get_current().Use();
+				Event.current.Use();
 				this.Repaint();
 			}
 		}
@@ -76,7 +76,7 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.mVariableSource == null)
 			{
-				this.mVariableSource = GlobalVariables.get_Instance();
+				this.mVariableSource = GlobalVariables.Instance;
 			}
 			if (BehaviorDesignerPreferences.GetBool(BDPreferences.BinarySerialization))
 			{

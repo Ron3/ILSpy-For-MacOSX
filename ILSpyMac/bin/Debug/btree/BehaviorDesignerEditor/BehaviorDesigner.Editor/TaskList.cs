@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -188,13 +188,13 @@ namespace BehaviorDesigner.Editor
 		{
 			this.mCategoryList = new List<TaskList.CategoryList>();
 			List<Type> list = new List<Type>();
-			Assembly[] assemblies = AppDomain.get_CurrentDomain().GetAssemblies();
+			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 			for (int i = 0; i < assemblies.Length; i++)
 			{
 				Type[] types = assemblies[i].GetTypes();
 				for (int j = 0; j < types.Length; j++)
 				{
-					if (!types[j].Equals(typeof(BehaviorReference)) && !types[j].get_IsAbstract())
+					if (!types[j].Equals(typeof(BehaviorReference)) && !types[j].IsAbstract)
 					{
 						if (types[j].IsSubclassOf(typeof(Action)) || types[j].IsSubclassOf(typeof(Composite)) || types[j].IsSubclassOf(typeof(Conditional)) || types[j].IsSubclassOf(typeof(Decorator)))
 						{
@@ -207,7 +207,7 @@ namespace BehaviorDesigner.Editor
 			Dictionary<string, TaskList.CategoryList> dictionary = new Dictionary<string, TaskList.CategoryList>();
 			string text = string.Empty;
 			int id = 0;
-			for (int k = 0; k < list.get_Count(); k++)
+			for (int k = 0; k < list.Count; k++)
 			{
 				if (list.get_Item(k).IsSubclassOf(typeof(Action)))
 				{
@@ -228,7 +228,7 @@ namespace BehaviorDesigner.Editor
 				TaskCategoryAttribute[] array;
 				if ((array = (list.get_Item(k).GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
 				{
-					text = text + "/" + array[0].get_Category();
+					text = text + "/" + array[0].Category;
 				}
 				string text2 = string.Empty;
 				string[] array2 = text.Split(new char[]
@@ -278,7 +278,7 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.mCategoryList.get_Item(2).Tasks != null)
 			{
-				for (int i = 0; i < this.mCategoryList.get_Item(2).Tasks.get_Count(); i++)
+				for (int i = 0; i < this.mCategoryList.get_Item(2).Tasks.Count; i++)
 				{
 					if (parentName.Equals(string.Empty))
 					{
@@ -295,7 +295,7 @@ namespace BehaviorDesigner.Editor
 
 		private void AddCategoryTasksToMenu(ref GenericMenu genericMenu, List<TaskList.CategoryList> categoryList, Type selectedTaskType, string parentName, GenericMenu.MenuFunction2 menuFunction)
 		{
-			for (int i = 0; i < categoryList.get_Count(); i++)
+			for (int i = 0; i < categoryList.Count; i++)
 			{
 				if (categoryList.get_Item(i).Subcategories != null)
 				{
@@ -303,7 +303,7 @@ namespace BehaviorDesigner.Editor
 				}
 				if (categoryList.get_Item(i).Tasks != null)
 				{
-					for (int j = 0; j < categoryList.get_Item(i).Tasks.get_Count(); j++)
+					for (int j = 0; j < categoryList.get_Item(i).Tasks.Count; j++)
 					{
 						if (parentName.Equals(string.Empty))
 						{
@@ -327,7 +327,7 @@ namespace BehaviorDesigner.Editor
 		{
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 			GUI.SetNextControlName("Search");
-			string text = GUILayout.TextField(this.mSearchString, GUI.get_skin().FindStyle("ToolbarSeachTextField"), new GUILayoutOption[0]);
+			string text = GUILayout.TextField(this.mSearchString, GUI.skin.FindStyle("ToolbarSeachTextField"), new GUILayoutOption[0]);
 			if (this.mFocusSearch)
 			{
 				GUI.FocusControl("Search");
@@ -338,7 +338,7 @@ namespace BehaviorDesigner.Editor
 				this.mSearchString = text;
 				this.Search(BehaviorDesignerUtility.SplitCamelCase(this.mSearchString).ToLower().Replace(" ", string.Empty), this.mCategoryList);
 			}
-			if (GUILayout.Button(string.Empty, (!this.mSearchString.Equals(string.Empty)) ? GUI.get_skin().FindStyle("ToolbarSeachCancelButton") : GUI.get_skin().FindStyle("ToolbarSeachCancelButtonEmpty"), new GUILayoutOption[0]))
+			if (GUILayout.Button(string.Empty, (!this.mSearchString.Equals(string.Empty)) ? GUI.skin.FindStyle("ToolbarSeachCancelButton") : GUI.skin.FindStyle("ToolbarSeachCancelButtonEmpty"), new GUILayoutOption[0]))
 			{
 				this.mSearchString = string.Empty;
 				this.Search(string.Empty, this.mCategoryList);
@@ -349,19 +349,19 @@ namespace BehaviorDesigner.Editor
 			GUILayout.Space(4f);
 			this.mScrollPosition = GUILayout.BeginScrollView(this.mScrollPosition, new GUILayoutOption[0]);
 			GUI.set_enabled(enabled);
-			if (this.mCategoryList.get_Count() > 1)
+			if (this.mCategoryList.Count > 1)
 			{
 				this.DrawCategory(window, this.mCategoryList.get_Item(1));
 			}
-			if (this.mCategoryList.get_Count() > 3)
+			if (this.mCategoryList.Count > 3)
 			{
 				this.DrawCategory(window, this.mCategoryList.get_Item(3));
 			}
-			if (this.mCategoryList.get_Count() > 0)
+			if (this.mCategoryList.Count > 0)
 			{
 				this.DrawCategory(window, this.mCategoryList.get_Item(0));
 			}
-			if (this.mCategoryList.get_Count() > 2)
+			if (this.mCategoryList.Count > 2)
 			{
 				this.DrawCategory(window, this.mCategoryList.get_Item(2));
 			}
@@ -395,13 +395,13 @@ namespace BehaviorDesigner.Editor
 								string name;
 								if (array != null && array.Length > 0)
 								{
-									name = array[0].get_Name();
+									name = array[0].Name;
 								}
 								else
 								{
 									name = category.Tasks.get_Item(i).Name;
 								}
-								if (GUILayout.Button(name, EditorStyles.get_toolbarButton(), new GUILayoutOption[]
+								if (GUILayout.Button(name, EditorStyles.toolbarButton, new GUILayoutOption[]
 								{
 									GUILayout.MaxWidth((float)(300 - EditorGUI.indentLevel * 16 - 24))
 								}))
@@ -424,7 +424,7 @@ namespace BehaviorDesigner.Editor
 
 		private void DrawCategoryTaskList(BehaviorDesignerWindow window, List<TaskList.CategoryList> categoryList)
 		{
-			for (int i = 0; i < categoryList.get_Count(); i++)
+			for (int i = 0; i < categoryList.Count; i++)
 			{
 				this.DrawCategory(window, categoryList.get_Item(i));
 			}
@@ -433,7 +433,7 @@ namespace BehaviorDesigner.Editor
 		private bool Search(string searchString, List<TaskList.CategoryList> categoryList)
 		{
 			bool result = searchString.Equals(string.Empty);
-			for (int i = 0; i < categoryList.get_Count(); i++)
+			for (int i = 0; i < categoryList.Count; i++)
 			{
 				bool flag = false;
 				categoryList.get_Item(i).Visible = false;
@@ -454,7 +454,7 @@ namespace BehaviorDesigner.Editor
 				}
 				if (categoryList.get_Item(i).Tasks != null)
 				{
-					for (int j = 0; j < categoryList.get_Item(i).Tasks.get_Count(); j++)
+					for (int j = 0; j < categoryList.get_Item(i).Tasks.Count; j++)
 					{
 						categoryList.get_Item(i).Tasks.get_Item(j).Visible = searchString.Equals(string.Empty);
 						if (flag || categoryList.get_Item(i).Tasks.get_Item(j).Name.ToLower().Replace(" ", string.Empty).Contains(searchString))
@@ -471,7 +471,7 @@ namespace BehaviorDesigner.Editor
 
 		private void MarkVisible(List<TaskList.CategoryList> categoryList)
 		{
-			for (int i = 0; i < categoryList.get_Count(); i++)
+			for (int i = 0; i < categoryList.Count; i++)
 			{
 				categoryList.get_Item(i).Visible = true;
 				if (categoryList.get_Item(i).Subcategories != null)
@@ -480,7 +480,7 @@ namespace BehaviorDesigner.Editor
 				}
 				if (categoryList.get_Item(i).Tasks != null)
 				{
-					for (int j = 0; j < categoryList.get_Item(i).Tasks.get_Count(); j++)
+					for (int j = 0; j < categoryList.get_Item(i).Tasks.Count; j++)
 					{
 						categoryList.get_Item(i).Tasks.get_Item(j).Visible = true;
 					}

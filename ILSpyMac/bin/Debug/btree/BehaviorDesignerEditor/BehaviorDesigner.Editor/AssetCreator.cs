@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -78,14 +78,14 @@ namespace BehaviorDesigner.Editor
 		public static void CreateAsset(Type type, string name)
 		{
 			ScriptableObject scriptableObject = ScriptableObject.CreateInstance(type);
-			string text = AssetDatabase.GetAssetPath(Selection.get_activeObject());
+			string text = AssetDatabase.GetAssetPath(Selection.activeObject);
 			if (text == string.Empty)
 			{
 				text = "Assets";
 			}
 			else if (Path.GetExtension(text) != string.Empty)
 			{
-				text = text.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.get_activeObject())), string.Empty);
+				text = text.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), string.Empty);
 			}
 			string text2 = AssetDatabase.GenerateUniqueAssetPath(text + "/" + name + ".asset");
 			AssetDatabase.CreateAsset(scriptableObject, text2);
@@ -94,14 +94,14 @@ namespace BehaviorDesigner.Editor
 
 		private static void CreateScript(string name, AssetCreator.AssetClassType classType, bool cSharp)
 		{
-			string text = AssetDatabase.GetAssetPath(Selection.get_activeObject());
+			string text = AssetDatabase.GetAssetPath(Selection.activeObject);
 			if (text == string.Empty)
 			{
 				text = "Assets";
 			}
 			else if (Path.GetExtension(text) != string.Empty)
 			{
-				text = text.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.get_activeObject())), string.Empty);
+				text = text.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), string.Empty);
 			}
 			string text2 = AssetDatabase.GenerateUniqueAssetPath(text + "/" + name + ((!cSharp) ? ".js" : ".cs"));
 			StreamWriter streamWriter = new StreamWriter(text2, false);

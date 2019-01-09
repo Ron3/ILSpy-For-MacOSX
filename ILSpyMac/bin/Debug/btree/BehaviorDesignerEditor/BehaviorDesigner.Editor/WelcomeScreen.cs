@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -116,9 +116,9 @@ namespace BehaviorDesigner.Editor
 			EditorGUIUtility.AddCursorRect(this.m_ContactImageRect, 4);
 			EditorGUIUtility.AddCursorRect(this.m_ContactHeaderRect, 4);
 			EditorGUIUtility.AddCursorRect(this.m_ContactDescriptionRect, 4);
-			if (Event.get_current().get_type() == 1)
+			if (Event.current.type == 1)
 			{
-				Vector2 mousePosition = Event.get_current().get_mousePosition();
+				Vector2 mousePosition = Event.current.mousePosition;
 				if (this.m_SamplesImageRect.Contains(mousePosition) || this.m_SamplesHeaderRect.Contains(mousePosition) || this.m_SamplesDescriptionRect.Contains(mousePosition))
 				{
 					Application.OpenURL("http://www.opsive.com/assets/BehaviorDesigner/samples.php");

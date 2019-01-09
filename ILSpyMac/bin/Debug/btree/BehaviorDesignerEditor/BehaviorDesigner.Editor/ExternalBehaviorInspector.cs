@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -26,11 +26,11 @@ namespace BehaviorDesigner.Editor
 			{
 				return;
 			}
-			if (externalBehavior.get_BehaviorSource().get_Owner() == null)
+			if (externalBehavior.BehaviorSource.Owner == null)
 			{
-				externalBehavior.get_BehaviorSource().set_Owner(externalBehavior);
+				externalBehavior.BehaviorSource.set_Owner(externalBehavior);
 			}
-			if (ExternalBehaviorInspector.DrawInspectorGUI(externalBehavior.get_BehaviorSource(), true, ref this.mShowVariables))
+			if (ExternalBehaviorInspector.DrawInspectorGUI(externalBehavior.BehaviorSource, true, ref this.mShowVariables))
 			{
 				BehaviorDesignerUtility.SetObjectDirty(externalBehavior);
 			}
@@ -38,14 +38,14 @@ namespace BehaviorDesigner.Editor
 
 		public void Reset()
 		{
-			ExternalBehavior externalBehavior = this.get_target() as ExternalBehavior;
+			ExternalBehavior externalBehavior = this.target as ExternalBehavior;
 			if (externalBehavior == null)
 			{
 				return;
 			}
-			if (externalBehavior.get_BehaviorSource().get_Owner() == null)
+			if (externalBehavior.BehaviorSource.Owner == null)
 			{
-				externalBehavior.get_BehaviorSource().set_Owner(externalBehavior);
+				externalBehavior.BehaviorSource.set_Owner(externalBehavior);
 			}
 		}
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -41,9 +41,9 @@ namespace BehaviorDesigner.Editor
 		public void OnGUI()
 		{
 			this.mScrollPosition = EditorGUILayout.BeginScrollView(this.mScrollPosition, new GUILayoutOption[0]);
-			if (this.mErrorDetails != null && this.mErrorDetails.get_Count() > 0)
+			if (this.mErrorDetails != null && this.mErrorDetails.Count > 0)
 			{
-				for (int i = 0; i < this.mErrorDetails.get_Count(); i++)
+				for (int i = 0; i < this.mErrorDetails.Count; i++)
 				{
 					ErrorDetails errorDetails = this.mErrorDetails.get_Item(i);
 					if (errorDetails != null && (errorDetails.Type == BehaviorDesigner.Editor.ErrorDetails.ErrorType.InvalidVariableReference || (!(errorDetails.NodeDesigner == null) && errorDetails.NodeDesigner.Task != null)))
@@ -56,7 +56,7 @@ namespace BehaviorDesigner.Editor
 							{
 								errorDetails.TaskFriendlyName,
 								errorDetails.TaskType,
-								errorDetails.NodeDesigner.Task.get_ID(),
+								errorDetails.NodeDesigner.Task.ID,
 								BehaviorDesignerUtility.SplitCamelCase(errorDetails.FieldName)
 							});
 							break;
@@ -65,22 +65,22 @@ namespace BehaviorDesigner.Editor
 							{
 								errorDetails.TaskFriendlyName,
 								errorDetails.TaskType,
-								errorDetails.NodeDesigner.Task.get_ID(),
+								errorDetails.NodeDesigner.Task.ID,
 								BehaviorDesignerUtility.SplitCamelCase(errorDetails.FieldName)
 							});
 							break;
 						case BehaviorDesigner.Editor.ErrorDetails.ErrorType.MissingChildren:
-							text = string.Format("The {0} task ({1}, index {2}) is a parent task which does not have any children", errorDetails.TaskFriendlyName, errorDetails.TaskType, errorDetails.NodeDesigner.Task.get_ID());
+							text = string.Format("The {0} task ({1}, index {2}) is a parent task which does not have any children", errorDetails.TaskFriendlyName, errorDetails.TaskType, errorDetails.NodeDesigner.Task.ID);
 							break;
 						case BehaviorDesigner.Editor.ErrorDetails.ErrorType.UnknownTask:
-							text = string.Format("The task at index {0} is unknown. Has a task been renamed or deleted?", errorDetails.NodeDesigner.Task.get_ID());
+							text = string.Format("The task at index {0} is unknown. Has a task been renamed or deleted?", errorDetails.NodeDesigner.Task.ID);
 							break;
 						case BehaviorDesigner.Editor.ErrorDetails.ErrorType.InvalidTaskReference:
 							text = string.Format("The task {0} ({1}, index {2}) has a field ({3}) which is referencing an object within the scene. Behavior tree variables at the project level cannot reference objects within a scene.", new object[]
 							{
 								errorDetails.TaskFriendlyName,
 								errorDetails.TaskType,
-								errorDetails.NodeDesigner.Task.get_ID(),
+								errorDetails.NodeDesigner.Task.ID,
 								BehaviorDesignerUtility.SplitCamelCase(errorDetails.FieldName)
 							});
 							break;
@@ -91,7 +91,7 @@ namespace BehaviorDesigner.Editor
 						EditorGUILayout.LabelField(text, (i % 2 != 0) ? BehaviorDesignerUtility.ErrorListDarkBackground : BehaviorDesignerUtility.ErrorListLightBackground, new GUILayoutOption[]
 						{
 							GUILayout.Height(30f),
-							GUILayout.Width((float)(Screen.get_width() - 7))
+							GUILayout.Width((float)(Screen.width - 7))
 						});
 					}
 				}

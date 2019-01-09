@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -13,9 +13,9 @@ namespace BehaviorDesigner.Editor
 
 		static GizmoManager()
 		{
-			GizmoManager.currentScene = SceneManager.GetActiveScene().get_name();
+			GizmoManager.currentScene = SceneManager.GetActiveScene().name;
 			EditorApplication.hierarchyWindowChanged = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.hierarchyWindowChanged, new EditorApplication.CallbackFunction(GizmoManager.HierarchyChange));
-			if (!Application.get_isPlaying())
+			if (!Application.isPlaying)
 			{
 				GizmoManager.UpdateAllGizmos();
 				EditorApplication.playmodeStateChanged = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.playmodeStateChanged, new EditorApplication.CallbackFunction(GizmoManager.UpdateAllGizmos));
@@ -40,7 +40,7 @@ namespace BehaviorDesigner.Editor
 		public static void HierarchyChange()
 		{
 			BehaviorManager instance = BehaviorManager.instance;
-			if (Application.get_isPlaying())
+			if (Application.isPlaying)
 			{
 				if (instance != null)
 				{
@@ -49,7 +49,7 @@ namespace BehaviorDesigner.Editor
 			}
 			else
 			{
-				string name = SceneManager.GetActiveScene().get_name();
+				string name = SceneManager.GetActiveScene().name;
 				if (GizmoManager.currentScene != name)
 				{
 					GizmoManager.currentScene = name;
@@ -63,9 +63,9 @@ namespace BehaviorDesigner.Editor
 			BehaviorManager instance = BehaviorManager.instance;
 			if (instance != null)
 			{
-				for (int i = 0; i < instance.get_BehaviorTrees().get_Count(); i++)
+				for (int i = 0; i < instance.BehaviorTrees.Count; i++)
 				{
-					GizmoManager.UpdateGizmo(instance.get_BehaviorTrees().get_Item(i).behavior);
+					GizmoManager.UpdateGizmo(instance.BehaviorTrees.get_Item(i).behavior);
 				}
 			}
 		}

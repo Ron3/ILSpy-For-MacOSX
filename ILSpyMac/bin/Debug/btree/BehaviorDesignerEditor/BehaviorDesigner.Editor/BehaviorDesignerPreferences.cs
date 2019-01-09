@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -152,7 +152,7 @@ namespace BehaviorDesigner.Editor
 				BehaviorDesignerPreferences.SetInt(BDPreferences.GizmosViewMode, num);
 				callback(BDPreferences.GizmosViewMode, num);
 			}
-			if (GUILayout.Button("Restore to Defaults", EditorStyles.get_miniButtonMid(), new GUILayoutOption[0]))
+			if (GUILayout.Button("Restore to Defaults", EditorStyles.miniButtonMid, new GUILayoutOption[0]))
 			{
 				BehaviorDesignerPreferences.ResetPrefs();
 			}

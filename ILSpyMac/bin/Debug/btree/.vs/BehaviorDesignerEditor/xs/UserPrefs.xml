@@ -1,7 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs">
     <Files>
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="275" Column="23" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj" Line="611" Column="11" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerWindow.cs" Line="2639" Column="61" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="276" Column="127" />
+      <File FileName="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs" Line="26" Column="56" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -1,4 +1,4 @@
-using BehaviorDesigner.Editor;
+﻿using BehaviorDesigner.Editor;
 using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
@@ -20,10 +20,10 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 			if (SharedGenericVariableDrawer.variableNames == null)
 			{
 				List<Type> list = VariableInspector.FindAllSharedVariableTypes(true);
-				SharedGenericVariableDrawer.variableNames = new string[list.get_Count()];
-				for (int i = 0; i < list.get_Count(); i++)
+				SharedGenericVariableDrawer.variableNames = new string[list.Count];
+				for (int i = 0; i < list.Count; i++)
 				{
-					SharedGenericVariableDrawer.variableNames[i] = list.get_Item(i).get_Name().Remove(0, 6);
+					SharedGenericVariableDrawer.variableNames[i] = list.get_Item(i).Name.Remove(0, 6);
 				}
 			}
 			int num = 0;

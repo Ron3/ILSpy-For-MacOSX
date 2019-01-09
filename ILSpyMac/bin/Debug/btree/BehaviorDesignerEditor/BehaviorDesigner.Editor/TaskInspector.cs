@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
@@ -33,7 +33,7 @@ namespace BehaviorDesigner.Editor
 
 		private Task mActiveMenuSelectionTask;
 
-		private Vector2 mScrollPosition = Vector2.get_zero();
+		private Vector2 mScrollPosition = Vector2.zero;
 
 		public Task ActiveReferenceTask
 		{
@@ -63,12 +63,12 @@ namespace BehaviorDesigner.Editor
 
 		public bool HasFocus()
 		{
-			return GUIUtility.get_keyboardControl() != 0;
+			return GUIUtility.keyboardControl != 0;
 		}
 
 		public bool DrawTaskInspector(BehaviorSource behaviorSource, TaskList taskList, Task task, bool enabled)
 		{
-			if (task == null || (task.get_NodeData().get_NodeDesigner() as NodeDesigner).IsEntryDisplay)
+			if (task == null || (task.NodeData.NodeDesigner as NodeDesigner).IsEntryDisplay)
 			{
 				return false;
 			}
@@ -85,12 +85,12 @@ namespace BehaviorDesigner.Editor
 			{
 				GUILayout.Width(90f)
 			});
-			task.set_FriendlyName(EditorGUILayout.TextField(task.get_FriendlyName(), new GUILayoutOption[0]));
+			task.set_FriendlyName(EditorGUILayout.TextField(task.FriendlyName, new GUILayoutOption[0]));
 			if (GUILayout.Button(BehaviorDesignerUtility.DocTexture, BehaviorDesignerUtility.TransparentButtonGUIStyle, new GUILayoutOption[0]))
 			{
 				this.OpenHelpURL(task);
 			}
-			if (GUILayout.Button(BehaviorDesignerUtility.ColorSelectorTexture(task.get_NodeData().get_ColorIndex()), BehaviorDesignerUtility.TransparentButtonOffsetGUIStyle, new GUILayoutOption[0]))
+			if (GUILayout.Button(BehaviorDesignerUtility.ColorSelectorTexture(task.NodeData.ColorIndex), BehaviorDesignerUtility.TransparentButtonOffsetGUIStyle, new GUILayoutOption[0]))
 			{
 				GenericMenu genericMenu = new GenericMenu();
 				this.AddColorMenuItem(ref genericMenu, task, "Default", 0);
@@ -113,8 +113,8 @@ namespace BehaviorDesigner.Editor
 				genericMenu2.ShowAsContext();
 			}
 			GUILayout.EndHorizontal();
-			string text = BehaviorDesignerUtility.SplitCamelCase(task.GetType().get_Name().ToString());
-			if (!task.get_FriendlyName().Equals(text))
+			string text = BehaviorDesignerUtility.SplitCamelCase(task.GetType().Name.ToString());
+			if (!task.FriendlyName.Equals(text))
 			{
 				GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 				EditorGUILayout.LabelField("Type", new GUILayoutOption[]
@@ -132,10 +132,10 @@ namespace BehaviorDesigner.Editor
 			{
 				GUILayout.Width(90f)
 			});
-			task.set_IsInstant(EditorGUILayout.Toggle(task.get_IsInstant(), new GUILayoutOption[0]));
+			task.set_IsInstant(EditorGUILayout.Toggle(task.IsInstant, new GUILayoutOption[0]));
 			GUILayout.EndHorizontal();
 			EditorGUILayout.LabelField("Comment", new GUILayoutOption[0]);
-			task.get_NodeData().set_Comment(EditorGUILayout.TextArea(task.get_NodeData().get_Comment(), BehaviorDesignerUtility.TaskInspectorCommentGUIStyle, new GUILayoutOption[]
+			task.NodeData.set_Comment(EditorGUILayout.TextArea(task.NodeData.Comment, BehaviorDesignerUtility.TaskInspectorCommentGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Height(48f)
 			}));
@@ -147,12 +147,12 @@ namespace BehaviorDesigner.Editor
 			GUILayout.Space(6f);
 			if (this.DrawTaskFields(behaviorSource, taskList, task, enabled))
 			{
-				BehaviorUndo.RegisterUndo("Inspector", behaviorSource.get_Owner().GetObject());
+				BehaviorUndo.RegisterUndo("Inspector", behaviorSource.Owner.GetObject());
 				GUI.set_changed(true);
 			}
 			GUI.set_enabled(true);
 			GUILayout.EndScrollView();
-			return GUI.get_changed();
+			return GUI.changed;
 		}
 
 		private bool DrawTaskFields(BehaviorSource behaviorSource, TaskList taskList, Task task, bool enabled)
@@ -176,15 +176,15 @@ namespace BehaviorDesigner.Editor
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(obj.GetType());
 			BindingFlags bindingFlags = 54;
 			bool flag = this.IsReflectionTask(obj.GetType());
-			for (int i = baseClasses.get_Count() - 1; i > -1; i--)
+			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
 				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
-					if (!BehaviorDesignerUtility.HasAttribute(fields[j], typeof(NonSerializedAttribute)) && !BehaviorDesignerUtility.HasAttribute(fields[j], typeof(HideInInspector)) && ((!fields[j].get_IsPrivate() && !fields[j].get_IsFamily()) || BehaviorDesignerUtility.HasAttribute(fields[j], typeof(SerializeField))) && (!(obj is ParentTask) || !fields[j].get_Name().Equals("children")) && (!flag || (!fields[j].get_FieldType().Equals(typeof(SharedVariable)) && !fields[j].get_FieldType().IsSubclassOf(typeof(SharedVariable))) || this.CanDrawReflectedField(obj, fields[j])))
+					if (!BehaviorDesignerUtility.HasAttribute(fields[j], typeof(NonSerializedAttribute)) && !BehaviorDesignerUtility.HasAttribute(fields[j], typeof(HideInInspector)) && ((!fields[j].IsPrivate && !fields[j].IsFamily) || BehaviorDesignerUtility.HasAttribute(fields[j], typeof(SerializeField))) && (!(obj is ParentTask) || !fields[j].Name.Equals("children")) && (!flag || (!fields[j].FieldType.Equals(typeof(SharedVariable)) && !fields[j].FieldType.IsSubclassOf(typeof(SharedVariable))) || this.CanDrawReflectedField(obj, fields[j])))
 					{
-						string s = fields[j].get_Name();
-						if (flag && (fields[j].get_FieldType().Equals(typeof(SharedVariable)) || fields[j].get_FieldType().IsSubclassOf(typeof(SharedVariable))))
+						string s = fields[j].Name;
+						if (flag && (fields[j].FieldType.Equals(typeof(SharedVariable)) || fields[j].FieldType.IsSubclassOf(typeof(SharedVariable))))
 						{
 							s = this.InvokeParameterName(obj, fields[j]);
 						}
@@ -192,19 +192,19 @@ namespace BehaviorDesigner.Editor
 						GUIContent guiContent;
 						if ((array = (fields[j].GetCustomAttributes(typeof(TooltipAttribute), false) as TooltipAttribute[])).Length > 0)
 						{
-							guiContent = new GUIContent(BehaviorDesignerUtility.SplitCamelCase(s), array[0].get_Tooltip());
+							guiContent = new GUIContent(BehaviorDesignerUtility.SplitCamelCase(s), array[0].Tooltip);
 						}
 						else
 						{
 							guiContent = new GUIContent(BehaviorDesignerUtility.SplitCamelCase(s));
 						}
 						object value = fields[j].GetValue(obj);
-						Type fieldType = fields[j].get_FieldType();
-						if (typeof(Task).IsAssignableFrom(fieldType) || (typeof(IList).IsAssignableFrom(fieldType) && (typeof(Task).IsAssignableFrom(fieldType.GetElementType()) || (fieldType.get_IsGenericType() && typeof(Task).IsAssignableFrom(fieldType.GetGenericArguments()[0])))))
+						Type fieldType = fields[j].FieldType;
+						if (typeof(Task).IsAssignableFrom(fieldType) || (typeof(IList).IsAssignableFrom(fieldType) && (typeof(Task).IsAssignableFrom(fieldType.GetElementType()) || (fieldType.IsGenericType && typeof(Task).IsAssignableFrom(fieldType.GetGenericArguments()[0])))))
 						{
 							EditorGUI.BeginChangeCheck();
 							this.DrawTaskValue(behaviorSource, taskList, fields[j], guiContent, task, value as Task, enabled);
-							if (BehaviorDesignerWindow.instance.ContainsError(task, fields[j].get_Name()))
+							if (BehaviorDesignerWindow.instance.ContainsError(task, fields[j].Name))
 							{
 								GUILayout.Space(-3f);
 								GUILayout.Box(BehaviorDesignerUtility.ErrorIconTexture, BehaviorDesignerUtility.PlainTextureGUIStyle, new GUILayoutOption[]
@@ -226,7 +226,7 @@ namespace BehaviorDesigner.Editor
 								this.DrawWatchedButton(task, fields[j]);
 							}
 							SharedVariable sharedVariable = this.DrawSharedVariableValue(behaviorSource, fields[j], guiContent, task, value as SharedVariable, flag, enabled, drawWatch);
-							if (BehaviorDesignerWindow.instance.ContainsError(task, fields[j].get_Name()))
+							if (BehaviorDesignerWindow.instance.ContainsError(task, fields[j].Name))
 							{
 								GUILayout.Space(-3f);
 								GUILayout.Box(BehaviorDesignerUtility.ErrorIconTexture, BehaviorDesignerUtility.PlainTextureGUIStyle, new GUILayoutOption[]
@@ -251,7 +251,7 @@ namespace BehaviorDesigner.Editor
 								this.DrawWatchedButton(task, fields[j]);
 							}
 							object obj2 = FieldInspector.DrawField(task, guiContent, fields[j], value);
-							if (BehaviorDesignerWindow.instance.ContainsError(task, fields[j].get_Name()))
+							if (BehaviorDesignerWindow.instance.ContainsError(task, fields[j].Name))
 							{
 								GUILayout.Space(-3f);
 								GUILayout.Box(BehaviorDesignerUtility.ErrorIconTexture, BehaviorDesignerUtility.PlainTextureGUIStyle, new GUILayoutOption[]
@@ -283,7 +283,7 @@ namespace BehaviorDesigner.Editor
 		private bool DrawWatchedButton(Task task, FieldInfo field)
 		{
 			GUILayout.Space(3f);
-			bool flag = task.get_NodeData().ContainsWatchedField(field);
+			bool flag = task.NodeData.ContainsWatchedField(field);
 			if (GUILayout.Button((!flag) ? BehaviorDesignerUtility.VariableWatchButtonTexture : BehaviorDesignerUtility.VariableWatchButtonSelectedTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(15f)
@@ -291,11 +291,11 @@ namespace BehaviorDesigner.Editor
 			{
 				if (flag)
 				{
-					task.get_NodeData().RemoveWatchedField(field);
+					task.NodeData.RemoveWatchedField(field);
 				}
 				else
 				{
-					task.get_NodeData().AddWatchedField(field);
+					task.NodeData.AddWatchedField(field);
 				}
 				return true;
 			}
@@ -311,7 +311,7 @@ namespace BehaviorDesigner.Editor
 				{
 					GUILayout.Width(144f)
 				});
-				if (GUILayout.Button((task == null) ? "Select" : BehaviorDesignerUtility.SplitCamelCase(task.GetType().get_Name().ToString()), EditorStyles.get_toolbarPopup(), new GUILayoutOption[]
+				if (GUILayout.Button((task == null) ? "Select" : BehaviorDesignerUtility.SplitCamelCase(task.GetType().Name.ToString()), EditorStyles.toolbarPopup, new GUILayoutOption[]
 				{
 					GUILayout.Width(134f)
 				}))
@@ -335,12 +335,12 @@ namespace BehaviorDesigner.Editor
 					GUILayout.Width(165f)
 				});
 				bool flag = this.behaviorDesignerWindow.IsReferencingField(field);
-				Color backgroundColor = GUI.get_backgroundColor();
+				Color backgroundColor = GUI.backgroundColor;
 				if (flag)
 				{
 					GUI.set_backgroundColor(new Color(0.5f, 1f, 0.5f));
 				}
-				if (GUILayout.Button((!flag) ? "Select" : "Done", EditorStyles.get_miniButtonMid(), new GUILayoutOption[]
+				if (GUILayout.Button((!flag) ? "Select" : "Done", EditorStyles.miniButtonMid, new GUILayoutOption[]
 				{
 					GUILayout.Width(80f)
 				}))
@@ -353,21 +353,21 @@ namespace BehaviorDesigner.Editor
 				}
 				GUI.set_backgroundColor(backgroundColor);
 				EditorGUILayout.EndHorizontal();
-				if (typeof(IList).IsAssignableFrom(field.get_FieldType()))
+				if (typeof(IList).IsAssignableFrom(field.FieldType))
 				{
 					IList list = field.GetValue(parentTask) as IList;
-					if (list == null || list.get_Count() == 0)
+					if (list == null || list.Count == 0)
 					{
 						GUILayout.Label("No Tasks Referenced", BehaviorDesignerUtility.TaskInspectorGUIStyle, new GUILayoutOption[0]);
 					}
 					else
 					{
-						for (int i = 0; i < list.get_Count(); i++)
+						for (int i = 0; i < list.Count; i++)
 						{
 							if (list.get_Item(i) is Task)
 							{
 								EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-								GUILayout.Label((list.get_Item(i) as Task).get_NodeData().get_NodeDesigner().ToString(), BehaviorDesignerUtility.TaskInspectorGUIStyle, new GUILayoutOption[]
+								GUILayout.Label((list.get_Item(i) as Task).NodeData.NodeDesigner.ToString(), BehaviorDesignerUtility.TaskInspectorGUIStyle, new GUILayoutOption[]
 								{
 									GUILayout.Width(232f)
 								});
@@ -376,7 +376,7 @@ namespace BehaviorDesigner.Editor
 									GUILayout.Width(14f)
 								}))
 								{
-									this.ReferenceTasks(parentTask, ((list.get_Item(i) as Task).get_NodeData().get_NodeDesigner() as NodeDesigner).Task, field);
+									this.ReferenceTasks(parentTask, ((list.get_Item(i) as Task).NodeData.NodeDesigner as NodeDesigner).Task, field);
 									GUI.set_changed(true);
 								}
 								GUILayout.Space(3f);
@@ -385,7 +385,7 @@ namespace BehaviorDesigner.Editor
 									GUILayout.Width(14f)
 								}))
 								{
-									this.behaviorDesignerWindow.IdentifyNode((list.get_Item(i) as Task).get_NodeData().get_NodeDesigner() as NodeDesigner);
+									this.behaviorDesignerWindow.IdentifyNode((list.get_Item(i) as Task).NodeData.NodeDesigner as NodeDesigner);
 								}
 								EditorGUILayout.EndHorizontal();
 							}
@@ -396,7 +396,7 @@ namespace BehaviorDesigner.Editor
 				{
 					EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
 					Task task2 = field.GetValue(parentTask) as Task;
-					GUILayout.Label((task2 == null) ? "No Tasks Referenced" : task2.get_NodeData().get_NodeDesigner().ToString(), BehaviorDesignerUtility.TaskInspectorGUIStyle, new GUILayoutOption[]
+					GUILayout.Label((task2 == null) ? "No Tasks Referenced" : task2.NodeData.NodeDesigner.ToString(), BehaviorDesignerUtility.TaskInspectorGUIStyle, new GUILayoutOption[]
 					{
 						GUILayout.Width(232f)
 					});
@@ -416,7 +416,7 @@ namespace BehaviorDesigner.Editor
 							GUILayout.Width(14f)
 						}))
 						{
-							this.behaviorDesignerWindow.IdentifyNode(task2.get_NodeData().get_NodeDesigner() as NodeDesigner);
+							this.behaviorDesignerWindow.IdentifyNode(task2.NodeData.NodeDesigner as NodeDesigner);
 						}
 					}
 					EditorGUILayout.EndHorizontal();
@@ -428,9 +428,9 @@ namespace BehaviorDesigner.Editor
 		{
 			if (isReflectionTask)
 			{
-				if (!field.get_FieldType().Equals(typeof(SharedVariable)) && sharedVariable == null)
+				if (!field.FieldType.Equals(typeof(SharedVariable)) && sharedVariable == null)
 				{
-					sharedVariable = (Activator.CreateInstance(field.get_FieldType()) as SharedVariable);
+					sharedVariable = (Activator.CreateInstance(field.FieldType) as SharedVariable);
 					if (TaskUtility.HasAttribute(field, typeof(RequiredFieldAttribute)) || TaskUtility.HasAttribute(field, typeof(SharedRequiredAttribute)))
 					{
 						sharedVariable.set_IsShared(true);
@@ -438,7 +438,7 @@ namespace BehaviorDesigner.Editor
 					GUI.set_changed(true);
 				}
 				bool drawComponentField;
-				if (sharedVariable.get_IsShared())
+				if (sharedVariable.IsShared)
 				{
 					GUILayout.Label(guiContent, new GUILayoutOption[]
 					{
@@ -446,32 +446,32 @@ namespace BehaviorDesigner.Editor
 					});
 					string[] array = null;
 					int num = -1;
-					int num2 = FieldInspector.GetVariablesOfType(sharedVariable.GetType().GetProperty("Value").get_PropertyType(), sharedVariable.get_IsGlobal(), sharedVariable.get_Name(), behaviorSource, out array, ref num, false);
-					Color backgroundColor = GUI.get_backgroundColor();
+					int num2 = FieldInspector.GetVariablesOfType(sharedVariable.GetType().GetProperty("Value").PropertyType, sharedVariable.IsGlobal, sharedVariable.Name, behaviorSource, out array, ref num, false);
+					Color backgroundColor = GUI.backgroundColor;
 					if (num2 == 0 && !TaskUtility.HasAttribute(field, typeof(SharedRequiredAttribute)))
 					{
-						GUI.set_backgroundColor(Color.get_red());
+						GUI.set_backgroundColor(Color.red);
 					}
 					int num3 = num2;
-					num2 = EditorGUILayout.Popup(num2, array, EditorStyles.get_toolbarPopup(), new GUILayoutOption[0]);
+					num2 = EditorGUILayout.Popup(num2, array, EditorStyles.toolbarPopup, new GUILayoutOption[0]);
 					GUI.set_backgroundColor(backgroundColor);
 					if (num2 != num3)
 					{
 						if (num2 == 0)
 						{
-							if (field.get_FieldType().Equals(typeof(SharedVariable)))
+							if (field.FieldType.Equals(typeof(SharedVariable)))
 							{
-								sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(sharedVariable.GetType().GetProperty("Value").get_PropertyType())) as SharedVariable);
+								sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(sharedVariable.GetType().GetProperty("Value").PropertyType)) as SharedVariable);
 							}
 							else
 							{
-								sharedVariable = (Activator.CreateInstance(field.get_FieldType()) as SharedVariable);
+								sharedVariable = (Activator.CreateInstance(field.FieldType) as SharedVariable);
 							}
 							sharedVariable.set_IsShared(true);
 						}
 						else if (num != -1 && num2 >= num)
 						{
-							sharedVariable = GlobalVariables.get_Instance().GetVariable(array[num2].Substring(8, array[num2].get_Length() - 8));
+							sharedVariable = GlobalVariables.Instance.GetVariable(array[num2].Substring(8, array[num2].Length - 8));
 						}
 						else
 						{
@@ -480,7 +480,7 @@ namespace BehaviorDesigner.Editor
 					}
 					GUILayout.Space(8f);
 				}
-				else if ((drawComponentField = field.get_Name().Equals("componentName")) || field.get_Name().Equals("methodName") || field.get_Name().Equals("fieldName") || field.get_Name().Equals("propertyName"))
+				else if ((drawComponentField = field.Name.Equals("componentName")) || field.Name.Equals("methodName") || field.Name.Equals("fieldName") || field.Name.Equals("propertyName"))
 				{
 					this.DrawReflectionField(task, guiContent, drawComponentField, field);
 				}
@@ -492,14 +492,14 @@ namespace BehaviorDesigner.Editor
 				{
 					sharedVariable = FieldInspector.DrawSharedVariableToggleSharedButton(sharedVariable);
 				}
-				else if (!sharedVariable.get_IsShared())
+				else if (!sharedVariable.IsShared)
 				{
 					sharedVariable.set_IsShared(true);
 				}
 			}
 			else
 			{
-				sharedVariable = FieldInspector.DrawSharedVariable(null, guiContent, field, field.get_FieldType(), sharedVariable);
+				sharedVariable = FieldInspector.DrawSharedVariable(null, guiContent, field, field.FieldType, sharedVariable);
 			}
 			GUILayout.Space(8f);
 			return sharedVariable;
@@ -522,9 +522,9 @@ namespace BehaviorDesigner.Editor
 					FieldInfo[] allFields = TaskUtility.GetAllFields(type);
 					for (int i = 0; i < allFields.Length; i++)
 					{
-						if (allFields[i].get_FieldType().IsSubclassOf(typeof(SharedVariable)) && !BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(HideInInspector)) && !BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(NonSerializedAttribute)) && ((!allFields[i].get_IsPrivate() && !allFields[i].get_IsFamily()) || BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(SerializeField))))
+						if (allFields[i].FieldType.IsSubclassOf(typeof(SharedVariable)) && !BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(HideInInspector)) && !BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(NonSerializedAttribute)) && ((!allFields[i].IsPrivate && !allFields[i].IsFamily) || BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(SerializeField))))
 						{
-							SharedVariable sharedVariable = Activator.CreateInstance(allFields[i].get_FieldType()) as SharedVariable;
+							SharedVariable sharedVariable = Activator.CreateInstance(allFields[i].FieldType) as SharedVariable;
 							sharedVariable.set_IsShared(false);
 							allFields[i].SetValue(task, sharedVariable);
 						}
@@ -553,7 +553,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (referenceTask != null)
 				{
-					(referenceTask.get_NodeData().get_NodeDesigner() as NodeDesigner).ShowReferenceIcon = showReferenceIcon;
+					(referenceTask.NodeData.NodeDesigner as NodeDesigner).ShowReferenceIcon = showReferenceIcon;
 					if (flag)
 					{
 						this.PerformFullSync(this.activeReferenceTask);
@@ -571,12 +571,12 @@ namespace BehaviorDesigner.Editor
 				Task task = sourceFieldInfo.GetValue(sourceTask) as Task;
 				if (task != null)
 				{
-					(task.get_NodeData().get_NodeDesigner() as NodeDesigner).ShowReferenceIcon = false;
+					(task.NodeData.NodeDesigner as NodeDesigner).ShowReferenceIcon = false;
 				}
 				sourceFieldInfo.SetValue(sourceTask, null);
 				return true;
 			}
-			if (referenceTask.Equals(sourceTask) || sourceFieldInfo == null || (!typeof(IList).IsAssignableFrom(sourceFieldInfo.get_FieldType()) && !sourceFieldInfo.get_FieldType().IsAssignableFrom(referenceTask.GetType())) || (typeof(IList).IsAssignableFrom(sourceFieldInfo.get_FieldType()) && ((sourceFieldInfo.get_FieldType().get_IsGenericType() && !sourceFieldInfo.get_FieldType().GetGenericArguments()[0].IsAssignableFrom(referenceTask.GetType())) || (!sourceFieldInfo.get_FieldType().get_IsGenericType() && !sourceFieldInfo.get_FieldType().GetElementType().IsAssignableFrom(referenceTask.GetType())))))
+			if (referenceTask.Equals(sourceTask) || sourceFieldInfo == null || (!typeof(IList).IsAssignableFrom(sourceFieldInfo.FieldType) && !sourceFieldInfo.FieldType.IsAssignableFrom(referenceTask.GetType())) || (typeof(IList).IsAssignableFrom(sourceFieldInfo.FieldType) && ((sourceFieldInfo.FieldType.IsGenericType && !sourceFieldInfo.FieldType.GetGenericArguments()[0].IsAssignableFrom(referenceTask.GetType())) || (!sourceFieldInfo.FieldType.IsGenericType && !sourceFieldInfo.FieldType.GetElementType().IsAssignableFrom(referenceTask.GetType())))))
 			{
 				return false;
 			}
@@ -587,26 +587,26 @@ namespace BehaviorDesigner.Editor
 			if (unreferenceAll)
 			{
 				sourceFieldInfo.SetValue(sourceTask, null);
-				(sourceTask.get_NodeData().get_NodeDesigner() as NodeDesigner).ShowReferenceIcon = false;
+				(sourceTask.NodeData.NodeDesigner as NodeDesigner).ShowReferenceIcon = false;
 			}
 			else
 			{
 				doReference = true;
 				bool flag = false;
-				if (typeof(IList).IsAssignableFrom(sourceFieldInfo.get_FieldType()))
+				if (typeof(IList).IsAssignableFrom(sourceFieldInfo.FieldType))
 				{
 					Task[] array = sourceFieldInfo.GetValue(sourceTask) as Task[];
 					Type type;
-					if (sourceFieldInfo.get_FieldType().get_IsArray())
+					if (sourceFieldInfo.FieldType.IsArray)
 					{
-						type = sourceFieldInfo.get_FieldType().GetElementType();
+						type = sourceFieldInfo.FieldType.GetElementType();
 					}
 					else
 					{
-						Type type2 = sourceFieldInfo.get_FieldType();
-						while (!type2.get_IsGenericType())
+						Type type2 = sourceFieldInfo.FieldType;
+						while (!type2.IsGenericType)
 						{
-							type2 = type2.get_BaseType();
+							type2 = type2.BaseType;
 						}
 						type = type2.GetGenericArguments()[0];
 					}
@@ -634,16 +634,16 @@ namespace BehaviorDesigner.Editor
 						{
 							for (int j = 0; j < array.Length; j++)
 							{
-								TaskInspector.ReferenceTasks(array[j], referenceTask, array[j].GetType().GetField(sourceFieldInfo.get_Name()), ref flag, ref doReference, false, false);
+								TaskInspector.ReferenceTasks(array[j], referenceTask, array[j].GetType().GetField(sourceFieldInfo.Name), ref flag, ref doReference, false, false);
 								if (doReference)
 								{
-									TaskInspector.ReferenceTasks(referenceTask, array[j], referenceTask.GetType().GetField(sourceFieldInfo.get_Name()), ref flag, ref doReference, false, false);
+									TaskInspector.ReferenceTasks(referenceTask, array[j], referenceTask.GetType().GetField(sourceFieldInfo.Name), ref flag, ref doReference, false, false);
 								}
 							}
 						}
 						else if (doReference)
 						{
-							FieldInfo field = referenceTask.GetType().GetField(sourceFieldInfo.get_Name());
+							FieldInfo field = referenceTask.GetType().GetField(sourceFieldInfo.Name);
 							if (field != null)
 							{
 								array = (field.GetValue(referenceTask) as Task[]);
@@ -652,22 +652,22 @@ namespace BehaviorDesigner.Editor
 									for (int k = 0; k < array.Length; k++)
 									{
 										list.Add(array[k]);
-										(array[k].get_NodeData().get_NodeDesigner() as NodeDesigner).ShowReferenceIcon = true;
-										TaskInspector.ReferenceTasks(array[k], sourceTask, array[k].GetType().GetField(sourceFieldInfo.get_Name()), ref doReference, ref flag, false, false);
+										(array[k].NodeData.NodeDesigner as NodeDesigner).ShowReferenceIcon = true;
+										TaskInspector.ReferenceTasks(array[k], sourceTask, array[k].GetType().GetField(sourceFieldInfo.Name), ref doReference, ref flag, false, false);
 									}
 									doReference = true;
 								}
 							}
 						}
-						TaskInspector.ReferenceTasks(referenceTask, sourceTask, referenceTask.GetType().GetField(sourceFieldInfo.get_Name()), ref flag, ref doReference, false, !doReference);
+						TaskInspector.ReferenceTasks(referenceTask, sourceTask, referenceTask.GetType().GetField(sourceFieldInfo.Name), ref flag, ref doReference, false, !doReference);
 					}
 					if (doReference)
 					{
 						list.Add(referenceTask);
 					}
-					if (sourceFieldInfo.get_FieldType().get_IsArray())
+					if (sourceFieldInfo.FieldType.IsArray)
 					{
-						Array array2 = Array.CreateInstance(sourceFieldInfo.get_FieldType().GetElementType(), list.get_Count());
+						Array array2 = Array.CreateInstance(sourceFieldInfo.FieldType.GetElementType(), list.Count);
 						list.CopyTo(array2, 0);
 						sourceFieldInfo.SetValue(sourceTask, array2);
 					}
@@ -682,17 +682,17 @@ namespace BehaviorDesigner.Editor
 					doReference = !referenceTask.Equals(task2);
 					if (TaskInspector.IsFieldLinked(sourceFieldInfo) && task2 != null)
 					{
-						TaskInspector.ReferenceTasks(task2, sourceTask, task2.GetType().GetField(sourceFieldInfo.get_Name()), ref flag, ref doReference, false, true);
+						TaskInspector.ReferenceTasks(task2, sourceTask, task2.GetType().GetField(sourceFieldInfo.Name), ref flag, ref doReference, false, true);
 					}
 					if (synchronize)
 					{
-						TaskInspector.ReferenceTasks(referenceTask, sourceTask, referenceTask.GetType().GetField(sourceFieldInfo.get_Name()), ref flag, ref doReference, false, !doReference);
+						TaskInspector.ReferenceTasks(referenceTask, sourceTask, referenceTask.GetType().GetField(sourceFieldInfo.Name), ref flag, ref doReference, false, !doReference);
 					}
 					sourceFieldInfo.SetValue(sourceTask, (!doReference) ? null : referenceTask);
 				}
 				if (synchronize)
 				{
-					(referenceTask.get_NodeData().get_NodeDesigner() as NodeDesigner).ShowReferenceIcon = doReference;
+					(referenceTask.NodeData.NodeDesigner as NodeDesigner).ShowReferenceIcon = doReference;
 				}
 				fullSync = (doReference && synchronize);
 			}
@@ -701,7 +701,7 @@ namespace BehaviorDesigner.Editor
 
 		public bool IsActiveTaskArray()
 		{
-			return this.activeReferenceTaskFieldInfo.get_FieldType().get_IsArray();
+			return this.activeReferenceTaskFieldInfo.FieldType.IsArray;
 		}
 
 		public bool IsActiveTaskNull()
@@ -720,9 +720,9 @@ namespace BehaviorDesigner.Editor
 			FieldInfo[] allFields = TaskUtility.GetAllFields(task.GetType());
 			for (int i = 0; i < allFields.Length; i++)
 			{
-				if ((!allFields[i].get_IsPrivate() && !allFields[i].get_IsFamily()) || BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(SerializeField)))
+				if ((!allFields[i].IsPrivate && !allFields[i].IsFamily) || BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(SerializeField)))
 				{
-					if (typeof(IList).IsAssignableFrom(allFields[i].get_FieldType()) && (typeof(Task).IsAssignableFrom(allFields[i].get_FieldType().GetElementType()) || (allFields[i].get_FieldType().get_IsGenericType() && typeof(Task).IsAssignableFrom(allFields[i].get_FieldType().GetGenericArguments()[0]))))
+					if (typeof(IList).IsAssignableFrom(allFields[i].FieldType) && (typeof(Task).IsAssignableFrom(allFields[i].FieldType.GetElementType()) || (allFields[i].FieldType.IsGenericType && typeof(Task).IsAssignableFrom(allFields[i].FieldType.GetGenericArguments()[0]))))
 					{
 						Task[] array = allFields[i].GetValue(task) as Task[];
 						if (array != null)
@@ -733,13 +733,13 @@ namespace BehaviorDesigner.Editor
 							}
 						}
 					}
-					else if (allFields[i].get_FieldType().IsSubclassOf(typeof(Task)) && allFields[i].GetValue(task) != null)
+					else if (allFields[i].FieldType.IsSubclassOf(typeof(Task)) && allFields[i].GetValue(task) != null)
 					{
 						list.Add(allFields[i].GetValue(task) as Task);
 					}
 				}
 			}
-			return (list.get_Count() <= 0) ? null : list;
+			return (list.Count <= 0) ? null : list;
 		}
 
 		private void PerformFullSync(Task task)
@@ -752,10 +752,10 @@ namespace BehaviorDesigner.Editor
 				{
 					if (!TaskInspector.IsFieldLinked(allFields[i]))
 					{
-						for (int j = 0; j < referencedTasks.get_Count(); j++)
+						for (int j = 0; j < referencedTasks.Count; j++)
 						{
 							FieldInfo field;
-							if ((field = referencedTasks.get_Item(j).GetType().GetField(allFields[i].get_Name())) != null)
+							if ((field = referencedTasks.get_Item(j).GetType().GetField(allFields[i].Name)) != null)
 							{
 								field.SetValue(referencedTasks.get_Item(j), allFields[i].GetValue(task));
 							}
@@ -796,15 +796,15 @@ namespace BehaviorDesigner.Editor
 			(task as Task).OnReset();
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(task.GetType());
 			BindingFlags bindingFlags = 54;
-			for (int i = baseClasses.get_Count() - 1; i > -1; i--)
+			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
 				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
-					if (typeof(SharedVariable).IsAssignableFrom(fields[j].get_FieldType()))
+					if (typeof(SharedVariable).IsAssignableFrom(fields[j].FieldType))
 					{
 						SharedVariable sharedVariable = fields[j].GetValue(task) as SharedVariable;
-						if (TaskUtility.HasAttribute(fields[j], typeof(RequiredFieldAttribute)) && sharedVariable != null && !sharedVariable.get_IsShared())
+						if (TaskUtility.HasAttribute(fields[j], typeof(RequiredFieldAttribute)) && sharedVariable != null && !sharedVariable.IsShared)
 						{
 							sharedVariable.set_IsShared(true);
 						}
@@ -815,15 +815,15 @@ namespace BehaviorDesigner.Editor
 
 		private void AddColorMenuItem(ref GenericMenu menu, Task task, string color, int index)
 		{
-			menu.AddItem(new GUIContent(color), task.get_NodeData().get_ColorIndex() == index, new GenericMenu.MenuFunction2(this.SetTaskColor), new TaskInspector.TaskColor(task, index));
+			menu.AddItem(new GUIContent(color), task.NodeData.ColorIndex == index, new GenericMenu.MenuFunction2(this.SetTaskColor), new TaskInspector.TaskColor(task, index));
 		}
 
 		private void SetTaskColor(object value)
 		{
 			TaskInspector.TaskColor taskColor = value as TaskInspector.TaskColor;
-			if (taskColor.task.get_NodeData().get_ColorIndex() != taskColor.colorIndex)
+			if (taskColor.task.NodeData.ColorIndex != taskColor.colorIndex)
 			{
-				taskColor.task.get_NodeData().set_ColorIndex(taskColor.colorIndex);
+				taskColor.task.NodeData.set_ColorIndex(taskColor.colorIndex);
 				BehaviorDesignerWindow.instance.SaveBehavior();
 			}
 		}
@@ -833,7 +833,7 @@ namespace BehaviorDesigner.Editor
 			HelpURLAttribute[] array;
 			if ((array = (task.GetType().GetCustomAttributes(typeof(HelpURLAttribute), false) as HelpURLAttribute[])).Length > 0)
 			{
-				Application.OpenURL(array[0].get_URL());
+				Application.OpenURL(array[0].URL);
 			}
 		}
 
@@ -887,7 +887,7 @@ namespace BehaviorDesigner.Editor
 					});
 					text = array[array.Length - 1];
 				}
-				if (GUILayout.Button(text, EditorStyles.get_toolbarPopup(), new GUILayoutOption[]
+				if (GUILayout.Button(text, EditorStyles.toolbarPopup, new GUILayoutOption[]
 				{
 					GUILayout.Width(92f)
 				}))
@@ -897,9 +897,9 @@ namespace BehaviorDesigner.Editor
 					GameObject gameObject = null;
 					if (sharedVariable == null || (GameObject)sharedVariable.GetValue() == null)
 					{
-						if (task.get_Owner() != null)
+						if (task.Owner != null)
 						{
-							gameObject = task.get_Owner().get_gameObject();
+							gameObject = task.Owner.gameObject;
 						}
 					}
 					else
@@ -911,7 +911,7 @@ namespace BehaviorDesigner.Editor
 						Component[] components = gameObject.GetComponents<Component>();
 						for (int i = 0; i < components.Length; i++)
 						{
-							genericMenu.AddItem(new GUIContent(components[i].GetType().get_Name()), components[i].GetType().get_FullName().Equals((string)sharedVariable2.GetValue()), new GenericMenu.MenuFunction2(this.ComponentSelectionCallback), components[i].GetType().get_FullName());
+							genericMenu.AddItem(new GUIContent(components[i].GetType().Name), components[i].GetType().FullName.Equals((string)sharedVariable2.GetValue()), new GenericMenu.MenuFunction2(this.ComponentSelectionCallback), components[i].GetType().FullName);
 						}
 						genericMenu.ShowAsContext();
 						this.mActiveMenuSelectionTask = task;
@@ -940,7 +940,7 @@ namespace BehaviorDesigner.Editor
 				{
 					text3 = (string)sharedVariable4.GetValue();
 				}
-				if (GUILayout.Button(text3, EditorStyles.get_toolbarPopup(), new GUILayoutOption[]
+				if (GUILayout.Button(text3, EditorStyles.toolbarPopup, new GUILayoutOption[]
 				{
 					GUILayout.Width(92f)
 				}) && !string.IsNullOrEmpty((string)sharedVariable3.GetValue()))
@@ -950,9 +950,9 @@ namespace BehaviorDesigner.Editor
 					GameObject gameObject2 = null;
 					if (sharedVariable == null || (GameObject)sharedVariable.GetValue() == null)
 					{
-						if (task.get_Owner() != null)
+						if (task.Owner != null)
 						{
-							gameObject2 = task.get_Owner().get_gameObject();
+							gameObject2 = task.Owner.gameObject;
 						}
 					}
 					else
@@ -968,21 +968,21 @@ namespace BehaviorDesigner.Editor
 							MethodInfo[] methods = component.GetType().GetMethods(20);
 							for (int j = 0; j < methods.Length; j++)
 							{
-								if (!methods[j].get_IsSpecialName() && !methods[j].get_IsGenericMethod() && methods[j].GetParameters().Length <= 4)
+								if (!methods[j].IsSpecialName && !methods[j].IsGenericMethod && methods[j].GetParameters().Length <= 4)
 								{
 									ParameterInfo[] parameters = methods[j].GetParameters();
 									bool flag = true;
 									for (int k = 0; k < parameters.Length; k++)
 									{
-										if (!this.SharedVariableTypeExists(sharedVariableTypes, parameters[k].get_ParameterType()))
+										if (!this.SharedVariableTypeExists(sharedVariableTypes, parameters[k].ParameterType))
 										{
 											flag = false;
 											break;
 										}
 									}
-									if (flag && (methods[j].get_ReturnType().Equals(typeof(void)) || this.SharedVariableTypeExists(sharedVariableTypes, methods[j].get_ReturnType())))
+									if (flag && (methods[j].ReturnType.Equals(typeof(void)) || this.SharedVariableTypeExists(sharedVariableTypes, methods[j].ReturnType)))
 									{
-										genericMenu2.AddItem(new GUIContent(methods[j].get_Name()), methods[j].get_Name().Equals((string)sharedVariable4.GetValue()), new GenericMenu.MenuFunction2(this.SecondaryReflectionSelectionCallback), methods[j]);
+										genericMenu2.AddItem(new GUIContent(methods[j].Name), methods[j].Name.Equals((string)sharedVariable4.GetValue()), new GenericMenu.MenuFunction2(this.SecondaryReflectionSelectionCallback), methods[j]);
 									}
 								}
 							}
@@ -992,11 +992,11 @@ namespace BehaviorDesigner.Editor
 							FieldInfo[] fields = component.GetType().GetFields(20);
 							for (int l = 0; l < fields.Length; l++)
 							{
-								if (!fields[l].get_IsSpecialName())
+								if (!fields[l].IsSpecialName)
 								{
-									if (this.SharedVariableTypeExists(sharedVariableTypes, fields[l].get_FieldType()))
+									if (this.SharedVariableTypeExists(sharedVariableTypes, fields[l].FieldType))
 									{
-										genericMenu2.AddItem(new GUIContent(fields[l].get_Name()), fields[l].get_Name().Equals((string)sharedVariable4.GetValue()), new GenericMenu.MenuFunction2(this.SecondaryReflectionSelectionCallback), fields[l]);
+										genericMenu2.AddItem(new GUIContent(fields[l].Name), fields[l].Name.Equals((string)sharedVariable4.GetValue()), new GenericMenu.MenuFunction2(this.SecondaryReflectionSelectionCallback), fields[l]);
 									}
 								}
 							}
@@ -1006,11 +1006,11 @@ namespace BehaviorDesigner.Editor
 							PropertyInfo[] properties = component.GetType().GetProperties(20);
 							for (int m = 0; m < properties.Length; m++)
 							{
-								if (!properties[m].get_IsSpecialName())
+								if (!properties[m].IsSpecialName)
 								{
-									if (this.SharedVariableTypeExists(sharedVariableTypes, properties[m].get_PropertyType()))
+									if (this.SharedVariableTypeExists(sharedVariableTypes, properties[m].PropertyType))
 									{
-										genericMenu2.AddItem(new GUIContent(properties[m].get_Name()), properties[m].get_Name().Equals((string)sharedVariable4.GetValue()), new GenericMenu.MenuFunction2(this.SecondaryReflectionSelectionCallback), properties[m]);
+										genericMenu2.AddItem(new GUIContent(properties[m].Name), properties[m].Name.Equals((string)sharedVariable4.GetValue()), new GenericMenu.MenuFunction2(this.SecondaryReflectionSelectionCallback), properties[m]);
 									}
 								}
 							}
@@ -1122,7 +1122,7 @@ namespace BehaviorDesigner.Editor
 				else if (this.IsInvokeMethodTask(this.mActiveMenuSelectionTask.GetType()))
 				{
 					MethodInfo methodInfo = (MethodInfo)obj;
-					sharedVariable.SetValue(methodInfo.get_Name());
+					sharedVariable.SetValue(methodInfo.Name);
 					field.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 					ParameterInfo[] parameters = methodInfo.GetParameters();
 					for (int i = 0; i < 4; i++)
@@ -1130,7 +1130,7 @@ namespace BehaviorDesigner.Editor
 						FieldInfo field2 = this.mActiveMenuSelectionTask.GetType().GetField("parameter" + (i + 1));
 						if (i < parameters.Length)
 						{
-							sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(parameters[i].get_ParameterType())) as SharedVariable);
+							sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(parameters[i].ParameterType)) as SharedVariable);
 							field2.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 						}
 						else
@@ -1138,10 +1138,10 @@ namespace BehaviorDesigner.Editor
 							field2.SetValue(this.mActiveMenuSelectionTask, null);
 						}
 					}
-					if (!methodInfo.get_ReturnType().Equals(typeof(void)))
+					if (!methodInfo.ReturnType.Equals(typeof(void)))
 					{
 						FieldInfo field3 = this.mActiveMenuSelectionTask.GetType().GetField("storeResult");
-						sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(methodInfo.get_ReturnType())) as SharedVariable);
+						sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(methodInfo.ReturnType)) as SharedVariable);
 						sharedVariable.set_IsShared(true);
 						field3.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 					}
@@ -1149,28 +1149,28 @@ namespace BehaviorDesigner.Editor
 				else if (this.IsFieldReflectionTask(this.mActiveMenuSelectionTask.GetType()))
 				{
 					FieldInfo fieldInfo = (FieldInfo)obj;
-					sharedVariable.SetValue(fieldInfo.get_Name());
+					sharedVariable.SetValue(fieldInfo.Name);
 					field.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 					FieldInfo field4 = this.mActiveMenuSelectionTask.GetType().GetField("fieldValue");
 					if (field4 == null)
 					{
 						field4 = this.mActiveMenuSelectionTask.GetType().GetField("compareValue");
 					}
-					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(fieldInfo.get_FieldType())) as SharedVariable);
+					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(fieldInfo.FieldType)) as SharedVariable);
 					sharedVariable.set_IsShared(this.IsReflectionGetterTask(this.mActiveMenuSelectionTask.GetType()));
 					field4.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 				}
 				else
 				{
 					PropertyInfo propertyInfo = (PropertyInfo)obj;
-					sharedVariable.SetValue(propertyInfo.get_Name());
+					sharedVariable.SetValue(propertyInfo.Name);
 					field.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 					FieldInfo field5 = this.mActiveMenuSelectionTask.GetType().GetField("propertyValue");
 					if (field5 == null)
 					{
 						field5 = this.mActiveMenuSelectionTask.GetType().GetField("compareValue");
 					}
-					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(propertyInfo.get_PropertyType())) as SharedVariable);
+					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(propertyInfo.PropertyType)) as SharedVariable);
 					sharedVariable.set_IsShared(this.IsReflectionGetterTask(this.mActiveMenuSelectionTask.GetType()));
 					field5.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 				}
@@ -1191,19 +1191,19 @@ namespace BehaviorDesigner.Editor
 
 		private bool CanDrawReflectedField(object task, FieldInfo field)
 		{
-			if (!field.get_Name().Contains("parameter") && !field.get_Name().Contains("storeResult") && !field.get_Name().Contains("fieldValue") && !field.get_Name().Contains("propertyValue") && !field.get_Name().Contains("compareValue"))
+			if (!field.Name.Contains("parameter") && !field.Name.Contains("storeResult") && !field.Name.Contains("fieldValue") && !field.Name.Contains("propertyValue") && !field.Name.Contains("compareValue"))
 			{
 				return true;
 			}
 			if (this.IsInvokeMethodTask(task.GetType()))
 			{
-				if (field.get_Name().Contains("parameter"))
+				if (field.Name.Contains("parameter"))
 				{
-					FieldInfo field2 = task.GetType().GetField(field.get_Name());
+					FieldInfo field2 = task.GetType().GetField(field.Name);
 					return field2.GetValue(task) != null;
 				}
 				MethodInfo invokeMethodInfo;
-				return (invokeMethodInfo = this.GetInvokeMethodInfo(task)) != null && (!field.get_Name().Equals("storeResult") || !invokeMethodInfo.get_ReturnType().Equals(typeof(void)));
+				return (invokeMethodInfo = this.GetInvokeMethodInfo(task)) != null && (!field.Name.Equals("storeResult") || !invokeMethodInfo.ReturnType.Equals(typeof(void)));
 			}
 			else
 			{
@@ -1221,22 +1221,22 @@ namespace BehaviorDesigner.Editor
 
 		private string InvokeParameterName(object task, FieldInfo field)
 		{
-			if (!field.get_Name().Contains("parameter"))
+			if (!field.Name.Contains("parameter"))
 			{
-				return field.get_Name();
+				return field.Name;
 			}
 			MethodInfo invokeMethodInfo;
 			if ((invokeMethodInfo = this.GetInvokeMethodInfo(task)) == null)
 			{
-				return field.get_Name();
+				return field.Name;
 			}
 			ParameterInfo[] parameters = invokeMethodInfo.GetParameters();
-			int num = int.Parse(field.get_Name().Substring(9)) - 1;
+			int num = int.Parse(field.Name.Substring(9)) - 1;
 			if (num < parameters.Length)
 			{
-				return parameters[num].get_Name();
+				return parameters[num].Name;
 			}
-			return field.get_Name();
+			return field.Name;
 		}
 
 		private MethodInfo GetInvokeMethodInfo(object task)
@@ -1246,9 +1246,9 @@ namespace BehaviorDesigner.Editor
 			GameObject gameObject = null;
 			if (sharedVariable == null || (GameObject)sharedVariable.GetValue() == null)
 			{
-				if ((task as Task).get_Owner() != null)
+				if ((task as Task).Owner != null)
 				{
-					gameObject = (task as Task).get_Owner().get_gameObject();
+					gameObject = (task as Task).Owner.gameObject;
 				}
 			}
 			else
@@ -1280,7 +1280,7 @@ namespace BehaviorDesigner.Editor
 				{
 					break;
 				}
-				list.Add(sharedVariable4.GetType().GetProperty("Value").get_PropertyType());
+				list.Add(sharedVariable4.GetType().GetProperty("Value").PropertyType);
 			}
 			Component component = gameObject.GetComponent(TaskUtility.GetTypeWithinAssembly((string)sharedVariable2.GetValue()));
 			if (component == null)
@@ -1292,7 +1292,7 @@ namespace BehaviorDesigner.Editor
 
 		private bool SharedVariableTypeExists(List<Type> sharedVariableTypes, Type type)
 		{
-			for (int i = 0; i < sharedVariableTypes.get_Count(); i++)
+			for (int i = 0; i < sharedVariableTypes.Count; i++)
 			{
 				if (FieldInspector.FriendlySharedVariableName(type).Equals(sharedVariableTypes.get_Item(i)))
 				{

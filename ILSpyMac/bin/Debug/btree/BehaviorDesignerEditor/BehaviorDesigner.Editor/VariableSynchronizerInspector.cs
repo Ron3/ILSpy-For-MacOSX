@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -59,19 +59,19 @@ namespace BehaviorDesigner.Editor
 
 		public override void OnInspectorGUI()
 		{
-			VariableSynchronizer variableSynchronizer = this.get_target() as VariableSynchronizer;
+			VariableSynchronizer variableSynchronizer = this.target as VariableSynchronizer;
 			if (variableSynchronizer == null)
 			{
 				return;
 			}
 			GUILayout.Space(5f);
-			variableSynchronizer.set_UpdateInterval((UpdateIntervalType)EditorGUILayout.EnumPopup("Update Interval", variableSynchronizer.get_UpdateInterval(), new GUILayoutOption[0]));
-			if (variableSynchronizer.get_UpdateInterval() == 1)
+			variableSynchronizer.set_UpdateInterval((UpdateIntervalType)EditorGUILayout.EnumPopup("Update Interval", variableSynchronizer.UpdateInterval, new GUILayoutOption[0]));
+			if (variableSynchronizer.UpdateInterval == 1)
 			{
-				variableSynchronizer.set_UpdateIntervalSeconds(EditorGUILayout.FloatField("Seconds", variableSynchronizer.get_UpdateIntervalSeconds(), new GUILayoutOption[0]));
+				variableSynchronizer.set_UpdateIntervalSeconds(EditorGUILayout.FloatField("Seconds", variableSynchronizer.UpdateIntervalSeconds, new GUILayoutOption[0]));
 			}
 			GUILayout.Space(5f);
-			GUI.set_enabled(!Application.get_isPlaying());
+			GUI.set_enabled(!Application.isPlaying);
 			this.DrawSharedVariableSynchronizer(this.sharedVariableSynchronizer, null);
 			if (string.IsNullOrEmpty(this.sharedVariableSynchronizer.targetName))
 			{
@@ -130,7 +130,7 @@ namespace BehaviorDesigner.Editor
 			if (GUILayout.Button("Add", new GUILayoutOption[0]))
 			{
 				VariableSynchronizer.SynchronizedVariable synchronizedVariable = new VariableSynchronizer.SynchronizedVariable(this.synchronizationType, this.setVariable, this.sharedVariableSynchronizer.component as Behavior, this.sharedVariableSynchronizer.targetName, this.sharedVariableSynchronizer.global, this.targetSynchronizer.component, this.targetSynchronizer.targetName, this.targetSynchronizer.global);
-				variableSynchronizer.get_SynchronizedVariables().Add(synchronizedVariable);
+				variableSynchronizer.SynchronizedVariables.Add(synchronizedVariable);
 				BehaviorDesignerUtility.SetObjectDirty(variableSynchronizer);
 				this.sharedVariableSynchronizer = new VariableSynchronizerInspector.Synchronizer();
 				this.targetSynchronizer = new VariableSynchronizerInspector.Synchronizer();
@@ -180,11 +180,11 @@ namespace BehaviorDesigner.Editor
 					{
 						if (array[i].Equals(synchronizer.component))
 						{
-							num = list.get_Count();
+							num = list.Count;
 						}
-						string text = BehaviorDesignerUtility.SplitCamelCase(array[i].GetType().get_Name());
+						string text = BehaviorDesignerUtility.SplitCamelCase(array[i].GetType().Name);
 						int num2 = 0;
-						for (int j = 0; j < list.get_Count(); j++)
+						for (int j = 0; j < list.Count; j++)
 						{
 							if (list.get_Item(i).Equals(text))
 							{
@@ -253,7 +253,7 @@ namespace BehaviorDesigner.Editor
 				{
 					if (num2 != -1 && num >= num2)
 					{
-						synchronizer.targetName = array[num].Substring(8, array[num].get_Length() - 8);
+						synchronizer.targetName = array[num].Substring(8, array[num].Length - 8);
 						synchronizer.global = true;
 					}
 					else
@@ -266,14 +266,14 @@ namespace BehaviorDesigner.Editor
 						SharedVariable variable;
 						if (synchronizer.global)
 						{
-							variable = GlobalVariables.get_Instance().GetVariable(synchronizer.targetName);
+							variable = GlobalVariables.Instance.GetVariable(synchronizer.targetName);
 						}
 						else
 						{
 							Behavior behavior2 = synchronizer.component as Behavior;
 							variable = behavior2.GetVariable(array[num]);
 						}
-						this.sharedVariableValueTypeName = variable.GetType().GetProperty("Value").get_PropertyType().get_FullName();
+						this.sharedVariableValueTypeName = variable.GetType().GetProperty("Value").PropertyType.FullName;
 						this.sharedVariableValueType = null;
 					}
 				}
@@ -286,7 +286,7 @@ namespace BehaviorDesigner.Editor
 			{
 				GUI.set_enabled(false);
 			}
-			return GUI.get_enabled();
+			return GUI.enabled;
 		}
 
 		private static Behavior GetBehaviorWithGroup(Behavior[] behaviors, int group)
@@ -301,7 +301,7 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int i = 0; i < behaviors.Length; i++)
 			{
-				if (behaviors[i].get_Group() == group)
+				if (behaviors[i].Group == group)
 				{
 					return behaviors[i];
 				}
@@ -320,13 +320,13 @@ namespace BehaviorDesigner.Editor
 				PropertyInfo[] properties = synchronizer.component.GetType().GetProperties(20);
 				for (int i = 0; i < properties.Length; i++)
 				{
-					if (properties[i].get_PropertyType().Equals(valueType) && !properties[i].get_IsSpecialName())
+					if (properties[i].PropertyType.Equals(valueType) && !properties[i].IsSpecialName)
 					{
-						if (properties[i].get_Name().Equals(synchronizer.targetName))
+						if (properties[i].Name.Equals(synchronizer.targetName))
 						{
-							num = list.get_Count();
+							num = list.Count;
 						}
-						list.Add(properties[i].get_Name());
+						list.Add(properties[i].Name);
 					}
 				}
 			}
@@ -398,31 +398,31 @@ namespace BehaviorDesigner.Editor
 		private void DrawSynchronizedVariables(VariableSynchronizer variableSynchronizer)
 		{
 			GUI.set_enabled(true);
-			if (variableSynchronizer.get_SynchronizedVariables() == null || variableSynchronizer.get_SynchronizedVariables().get_Count() == 0)
+			if (variableSynchronizer.SynchronizedVariables == null || variableSynchronizer.SynchronizedVariables.Count == 0)
 			{
 				return;
 			}
 			Rect lastRect = GUILayoutUtility.GetLastRect();
 			lastRect.set_x(-5f);
-			lastRect.set_y(lastRect.get_y() + (lastRect.get_height() + 1f));
+			lastRect.set_y(lastRect.y + (lastRect.height + 1f));
 			lastRect.set_height(2f);
-			lastRect.set_width(lastRect.get_width() + 20f);
+			lastRect.set_width(lastRect.width + 20f);
 			GUI.DrawTexture(lastRect, BehaviorDesignerUtility.LoadTexture("ContentSeparator.png", true, this));
 			GUILayout.Space(6f);
-			for (int i = 0; i < variableSynchronizer.get_SynchronizedVariables().get_Count(); i++)
+			for (int i = 0; i < variableSynchronizer.SynchronizedVariables.Count; i++)
 			{
-				VariableSynchronizer.SynchronizedVariable synchronizedVariable = variableSynchronizer.get_SynchronizedVariables().get_Item(i);
+				VariableSynchronizer.SynchronizedVariable synchronizedVariable = variableSynchronizer.SynchronizedVariables.get_Item(i);
 				if (synchronizedVariable.global)
 				{
-					if (GlobalVariables.get_Instance().GetVariable(synchronizedVariable.variableName) == null)
+					if (GlobalVariables.Instance.GetVariable(synchronizedVariable.variableName) == null)
 					{
-						variableSynchronizer.get_SynchronizedVariables().RemoveAt(i);
+						variableSynchronizer.SynchronizedVariables.RemoveAt(i);
 						break;
 					}
 				}
 				else if (synchronizedVariable.behavior.GetVariable(synchronizedVariable.variableName) == null)
 				{
-					variableSynchronizer.get_SynchronizedVariables().RemoveAt(i);
+					variableSynchronizer.SynchronizedVariables.RemoveAt(i);
 					break;
 				}
 				EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -433,7 +433,7 @@ namespace BehaviorDesigner.Editor
 				if (GUILayout.Button(BehaviorDesignerUtility.LoadTexture((!synchronizedVariable.setVariable) ? "RightArrowButton.png" : "LeftArrowButton.png", true, this), BehaviorDesignerUtility.ButtonGUIStyle, new GUILayoutOption[]
 				{
 					GUILayout.Width(22f)
-				}) && !Application.get_isPlaying())
+				}) && !Application.isPlaying)
 				{
 					synchronizedVariable.setVariable = !synchronizedVariable.setVariable;
 				}
@@ -447,7 +447,7 @@ namespace BehaviorDesigner.Editor
 					GUILayout.Width(22f)
 				}))
 				{
-					variableSynchronizer.get_SynchronizedVariables().RemoveAt(i);
+					variableSynchronizer.SynchronizedVariables.RemoveAt(i);
 					EditorGUILayout.EndHorizontal();
 					break;
 				}
