@@ -3,6 +3,8 @@ using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
+
 namespace BehaviorDesigner.Editor
 {
 	public class AlphanumComparator<T> : IComparer<T>

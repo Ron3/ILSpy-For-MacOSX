@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Editor
 {
 	[InitializeOnLoad]

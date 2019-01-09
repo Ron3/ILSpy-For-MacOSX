@@ -7,6 +7,8 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Editor
 {
 	public static class ErrorCheck

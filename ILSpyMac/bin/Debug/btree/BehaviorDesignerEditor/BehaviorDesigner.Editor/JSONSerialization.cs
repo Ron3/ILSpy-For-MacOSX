@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Editor
 {
 	public class JSONSerialization : UnityEngine.Object
