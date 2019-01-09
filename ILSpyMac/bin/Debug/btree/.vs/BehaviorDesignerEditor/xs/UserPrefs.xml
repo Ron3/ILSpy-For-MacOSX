@@ -1,5 +1,5 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj">
     <Files>
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/CustomObjectDrawer.cs" Line="21" Column="13" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorUndo.cs" Line="19" Column="48" />
@@ -10,22 +10,10 @@
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskCopier.cs" Line="11" Column="40" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskSerializer.cs" Line="14" Column="15" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/JSONSerialization.cs" Line="11" Column="47" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerWindow.cs" Line="131" Column="23" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerWindow.cs" Line="131" Column="1" />
       <File FileName="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs" Line="8" Column="41" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj" Line="267" Column="3" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="BehaviorDesignerEditor" expanded="True">
-            <Node name="BehaviorDesignerEditor" expanded="True">
-              <Node name="References" expanded="True" />
-              <Node name="BehaviorDesigner.Editor" expanded="True" />
-              <Node name="SharedNamedVariableDrawer.cs" selected="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <DisabledProjects>
