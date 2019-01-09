@@ -336,7 +336,7 @@ namespace BehaviorDesigner.Editor
 					Dictionary<string, object> dictionary2 = MiniJSON.Deserialize(unknownTask.JSONSerialization) as Dictionary<string, object>;
 					if (dictionary2.ContainsKey("Type"))
 					{
-						dictionary2.Item="Type", taskType.ToString();
+						dictionary2["Type"] = taskType.ToString();
 					}
 					task = JSONDeserialization.DeserializeTask(behaviorSource, dictionary2, ref dictionary, null);
 				}

@@ -270,7 +270,8 @@ namespace BehaviorDesigner.Editor
 				{
 					GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 					guiContent.text="Element " + k;
-					list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.Item[k]);
+					// list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.Item[k]);
+					list[k] = FieldInspector.DrawField(task, guiContent, fieldInfo, type, list[k]);
 					GUILayout.Space(6f);
 					GUILayout.EndHorizontal();
 				}
@@ -351,7 +352,8 @@ namespace BehaviorDesigner.Editor
 						for (int j = 0; j < 4; j++)
 						{
 							EditorGUI.BeginChangeCheck();
-							matrix4x.Item=i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x.get_Item(i, j), new GUILayoutOption[0]);
+							// matrix4x.Item=i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x.get_Item(i, j), new GUILayoutOption[0]);
+							matrix4x[i, j] = EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x[i, j], new GUILayoutOption[0]);
 							if (EditorGUI.EndChangeCheck())
 							{
 								GUI.changed=true;

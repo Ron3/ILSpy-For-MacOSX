@@ -642,19 +642,19 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					text = list.Item[k].ToString() + " (external)";
+					text = list[k].ToString() + " (external)";
 				}
 				int num = 0;
 				if (dictionary2.TryGetValue(text, ref num))
 				{
-					dictionary2.Item=text, ++num;
+					dictionary2[text] = ++num;
 					text += string.Format(" ({0})", num + 1);
 				}
 				else
 				{
 					dictionary2.Add(text, 0);
 				}
-				dictionary.Add(list.Item[k], text);
+				dictionary.Add(list[k], text);
 				goto IL_29B;
 			}
 			switch (menuType)

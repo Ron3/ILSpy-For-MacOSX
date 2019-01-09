@@ -1064,7 +1064,8 @@ namespace BehaviorDesigner.Editor
 			if (replaceNode)
 			{
 				ParentTask parentTask = this.mTask as ParentTask;
-				parentTask.Children.Item=replaceNodeIndex, childNodeDesigner.Task;
+				//parentTask.Children.Item=replaceNodeIndex, childNodeDesigner.Task;
+				parentTask.Children[replaceNodeIndex] = childNodeDesigner.Task;
 			}
 			else
 			{
@@ -1182,8 +1183,8 @@ namespace BehaviorDesigner.Editor
 			int num = index + ((!decreaseIndex) ? 1 : -1);
 			ParentTask parentTask = this.mTask as ParentTask;
 			Task task = parentTask.Children[index];
-			parentTask.Children.Item=index, parentTask.Children.get_Item(num);
-			parentTask.Children.Item=num, task;
+			parentTask.Children[index] = parentTask.Children[num];
+			parentTask.Children[num] = task;
 		}
 
 		private void BringConnectionToFront(NodeDesigner nodeDesigner)
@@ -1193,8 +1194,11 @@ namespace BehaviorDesigner.Editor
 				if (this.outgoingNodeConnections[i].DestinationNodeDesigner.Equals(nodeDesigner))
 				{
 					NodeConnection nodeConnection = this.outgoingNodeConnections[i];
-					this.outgoingNodeConnections.Item=i, this.outgoingNodeConnections.get_Item(this.outgoingNodeConnections.Count - 1);
-					this.outgoingNodeConnections.Item=this.outgoingNodeConnections.Count - 1, nodeConnection;
+					// this.outgoingNodeConnections.Item=i, this.outgoingNodeConnections.get_Item(this.outgoingNodeConnections.Count - 1);
+					// this.outgoingNodeConnections.Item=this.outgoingNodeConnections.Count - 1, nodeConnection;
+
+					this.outgoingNodeConnections[i] = this.outgoingNodeConnections[this.outgoingNodeConnections.Count - 1];
+					this.outgoingNodeConnections[this.outgoingNodeConnections.Count - 1] = nodeConnection;
 					break;
 				}
 			}

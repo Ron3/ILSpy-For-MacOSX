@@ -289,7 +289,8 @@ namespace BehaviorDesigner.Editor
 						sharedVariable2.Name=variables[i].Name;
 						sharedVariable2.IsShared=true;
 						sharedVariable2.SetValue(variables[i].GetValue());
-						list.Item=i, sharedVariable2;
+						//list.Item=i, sharedVariable2;
+						list[i] = sharedVariable2;
 						result = true;
 					}
 				}
@@ -519,7 +520,8 @@ namespace BehaviorDesigner.Editor
 						}
 						else
 						{
-							variablePosition.Item=i, GUILayoutUtility.GetLastRect().yMax;
+							// variablePosition.Item=i, GUILayoutUtility.GetLastRect().yMax;
+							variablePosition[i] = GUILayoutUtility.GetLastRect().yMax;
 						}
 					}
 				}
@@ -610,9 +612,9 @@ namespace BehaviorDesigner.Editor
 				GUILayout.Width(19f)
 			}))
 			{
-				SharedVariable sharedVariable2 = variables.get_Item(selectedVariableIndex + 1);
-				variables.Item=selectedVariableIndex + 1, variables.get_Item(selectedVariableIndex);
-				variables.Item=selectedVariableIndex, sharedVariable2;
+				SharedVariable sharedVariable2 = variables[selectedVariableIndex + 1];
+				variables[selectedVariableIndex + 1] = variables[selectedVariableIndex];
+				variables[selectedVariableIndex] = sharedVariable2;
 				selectedVariableIndex++;
 				result = true;
 			}
@@ -628,9 +630,9 @@ namespace BehaviorDesigner.Editor
 				GUILayout.Width(20f)
 			}))
 			{
-				SharedVariable sharedVariable3 = variables.get_Item(selectedVariableIndex - 1);
-				variables.Item=selectedVariableIndex - 1, variables.get_Item(selectedVariableIndex);
-				variables.Item=selectedVariableIndex, sharedVariable3;
+				SharedVariable sharedVariable3 = variables[selectedVariableIndex - 1];
+				variables[selectedVariableIndex - 1] = variables[selectedVariableIndex];
+				variables[selectedVariableIndex] = sharedVariable3;
 				selectedVariableIndex--;
 				result = true;
 			}
@@ -654,14 +656,15 @@ namespace BehaviorDesigner.Editor
 			{
 				GUILayout.Width(200f)
 			});
-			if (EditorGUI.EndChangeCheck() && VariableInspector.sharedVariableTypesDict.get_Item(sharedVariable.GetType().Name) != selectedVariableTypeIndex)
+			// if (EditorGUI.EndChangeCheck() && VariableInspector.sharedVariableTypesDict.get_Item(sharedVariable.GetType().Name) != selectedVariableTypeIndex)
+			if (EditorGUI.EndChangeCheck() && VariableInspector.sharedVariableTypesDict[sharedVariable.GetType().Name] != selectedVariableTypeIndex)
 			{
 				if (BehaviorDesignerWindow.instance != null)
 				{
 					BehaviorDesignerWindow.instance.RemoveSharedVariableReferences(sharedVariable);
 				}
 				sharedVariable = VariableInspector.CreateVariable(selectedVariableTypeIndex, sharedVariable.Name, sharedVariable.IsGlobal);
-				variables.Item=selectedVariableIndex, sharedVariable;
+				variables[selectedVariableIndex] = sharedVariable;
 				result = true;
 			}
 			GUILayout.EndHorizontal();

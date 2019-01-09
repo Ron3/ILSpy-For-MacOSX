@@ -1353,7 +1353,7 @@ namespace BehaviorDesigner.Editor
 			s = s.Replace("_", " ");
 			s = s.Replace("u Script", " uScript");
 			s = s.Replace("Play Maker", "PlayMaker");
-			s = (char.ToUpper(s.[0]) + s.Substring(1)).Trim();
+			s = (char.ToUpper(s[0]) + s.Substring(1)).Trim();
 			BehaviorDesignerUtility.camelCaseSplit.Add(text, s);
 			return s;
 		}
@@ -1363,7 +1363,7 @@ namespace BehaviorDesigner.Editor
 			Dictionary<FieldInfo, bool> dictionary = null;
 			if (BehaviorDesignerUtility.attributeFieldCache.ContainsKey(attributeType))
 			{
-				dictionary = BehaviorDesignerUtility.attributeFieldCache.get_Item(attributeType);
+				dictionary = BehaviorDesignerUtility.attributeFieldCache[attributeType];
 			}
 			if (dictionary == null)
 			{
@@ -1371,7 +1371,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (dictionary.ContainsKey(field))
 			{
-				return dictionary.get_Item(field);
+				return dictionary[field];
 			}
 			bool flag = field.GetCustomAttributes(attributeType, false).Length > 0;
 			dictionary.Add(field, flag);
@@ -1472,7 +1472,7 @@ namespace BehaviorDesigner.Editor
 		{
 			if (BehaviorDesignerUtility.textureCache.ContainsKey(imageName))
 			{
-				return BehaviorDesignerUtility.textureCache.get_Item(imageName);
+				return BehaviorDesignerUtility.textureCache[imageName];
 			}
 			Texture2D texture2D = null;
 			string text = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
@@ -1497,7 +1497,7 @@ namespace BehaviorDesigner.Editor
 		{
 			if (BehaviorDesignerUtility.textureCache.ContainsKey(imageName))
 			{
-				return BehaviorDesignerUtility.textureCache.get_Item(imageName);
+				return BehaviorDesignerUtility.textureCache[imageName];
 			}
 			Texture2D texture2D = null;
 			string text = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
@@ -1526,7 +1526,7 @@ namespace BehaviorDesigner.Editor
 		{
 			if (BehaviorDesignerUtility.iconCache.ContainsKey(iconName))
 			{
-				return BehaviorDesignerUtility.iconCache.get_Item(iconName);
+				return BehaviorDesignerUtility.iconCache[iconName];
 			}
 			Texture2D texture2D = null;
 			string text = iconName.Replace("{SkinColor}", (!EditorGUIUtility.isProSkin) ? "Light" : "Dark");
