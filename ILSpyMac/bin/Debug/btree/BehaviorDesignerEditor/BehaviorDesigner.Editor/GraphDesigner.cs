@@ -1467,11 +1467,11 @@ namespace BehaviorDesigner.Editor
 			Task task;
 			Task task2;
 			List<Task> list2;
-			behaviorSource.Load(ref task, ref task2, ref list2);
+			behaviorSource.Load(out task, out task2, out list2);
 			if (BehaviorDesignerUtility.AnyNullTasks(behaviorSource) || (behaviorSource.TaskData != null && BehaviorDesignerUtility.HasRootTask(behaviorSource.TaskData.JSONSerialization) && behaviorSource.RootTask == null))
 			{
 				behaviorSource.CheckForSerialization(true, null);
-				behaviorSource.Load(ref task, ref task2, ref list2);
+				behaviorSource.Load(out task, out task2, out list2);
 			}
 			if (task == null)
 			{

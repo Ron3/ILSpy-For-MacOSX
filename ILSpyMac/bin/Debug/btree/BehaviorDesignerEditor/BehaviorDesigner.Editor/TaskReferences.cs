@@ -47,7 +47,7 @@ namespace BehaviorDesigner.Editor
 					Task[] array = allFields[i].GetValue(task) as Task[];
 					if (array != null)
 					{
-						IList list = Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+						IList list = Activator.CreateInstance(typeof(List<Task>).MakeGenericType(new Type[]
 						{
 							allFields[i].FieldType.GetElementType()
 						})) as IList;
@@ -166,7 +166,7 @@ namespace BehaviorDesigner.Editor
 					Task[] array = allFields[i].GetValue(task) as Task[];
 					if (array != null)
 					{
-						IList list = Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+						IList list = Activator.CreateInstance(typeof(List<Task>).MakeGenericType(new Type[]
 						{
 							allFields[i].FieldType.GetElementType()
 						})) as IList;

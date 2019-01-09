@@ -108,19 +108,19 @@ namespace BehaviorDesigner.Editor
 			}
 			switch (this.synchronizationType)
 			{
-			case 0:
+			case VariableSynchronizer.SynchronizationType.BehaviorDesigner:
 				this.DrawSharedVariableSynchronizer(this.targetSynchronizer, this.sharedVariableValueType);
 				break;
-			case 1:
+			case VariableSynchronizer.SynchronizationType.Property:
 				this.DrawPropertySynchronizer(this.targetSynchronizer, this.sharedVariableValueType);
 				break;
-			case 2:
+			case VariableSynchronizer.SynchronizationType.Animator:
 				this.DrawAnimatorSynchronizer(this.targetSynchronizer);
 				break;
-			case 3:
+			case VariableSynchronizer.SynchronizationType.PlayMaker:
 				this.DrawPlayMakerSynchronizer(this.targetSynchronizer, this.sharedVariableValueType);
 				break;
-			case 4:
+			case VariableSynchronizer.SynchronizationType.uFrame:
 				this.DrawuFrameSynchronizer(this.targetSynchronizer, this.sharedVariableValueType);
 				break;
 			}

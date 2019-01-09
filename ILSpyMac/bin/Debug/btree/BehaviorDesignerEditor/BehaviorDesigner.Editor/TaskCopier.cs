@@ -6,6 +6,8 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Editor
 {
 	public class TaskCopier : UnityEditor.Editor

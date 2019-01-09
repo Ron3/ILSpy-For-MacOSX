@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
+
 namespace BehaviorDesigner.Editor
 {
 	[Serializable]
@@ -468,7 +471,7 @@ namespace BehaviorDesigner.Editor
 			{
 				float num2;
 				float num3;
-				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.NodeData.Comment), ref num2, ref num3);
+				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.NodeData.Comment), out num2, out num3);
 				num3 += 20f;
 				num = ((num <= num3) ? num3 : num);
 			}
@@ -520,9 +523,9 @@ namespace BehaviorDesigner.Editor
 				}
 				float num;
 				float num2;
-				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text), ref num, ref num2);
+				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text), out num, out num2);
 				float num3;
-				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text2), ref num, ref num3);
+				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text2), out num, out num3);
 				float num4 = num2;
 				float num5 = num3;
 				float num6 = Mathf.Min(220f, num2 + num3 + 20f);
@@ -542,7 +545,7 @@ namespace BehaviorDesigner.Editor
 				{
 					float num7;
 					float num8;
-					BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.NodeData.Comment), ref num7, ref num8);
+					BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.NodeData.Comment), out num7, out num8);
 					float num9 = Mathf.Min(220f, num8 + 20f);
 					if (flag)
 					{
@@ -759,13 +762,13 @@ namespace BehaviorDesigner.Editor
 			{
 				switch ((this.mTask as Composite).AbortType)
 				{
-				case 1:
+				case BehaviorDesigner.Runtime.Tasks.AbortType.Self:
 					GUI.DrawTexture(this.conditionalAbortTextureRect, BehaviorDesignerUtility.ConditionalAbortSelfTexture);
 					break;
-				case 2:
+				case BehaviorDesigner.Runtime.Tasks.AbortType.LowerPriority:
 					GUI.DrawTexture(this.conditionalAbortLowerPriorityTextureRect, BehaviorDesignerUtility.ConditionalAbortLowerPriorityTexture);
 					break;
-				case 3:
+				case BehaviorDesigner.Runtime.Tasks.AbortType.Both:
 					GUI.DrawTexture(this.conditionalAbortTextureRect, BehaviorDesignerUtility.ConditionalAbortBothTexture);
 					break;
 				}
@@ -791,14 +794,17 @@ namespace BehaviorDesigner.Editor
 		{
 			if (!this.isEntryDisplay)
 			{
-				GUI.DrawTexture(this.incomingConnectionTextureRect, connectionTopTexture, 2);
+				// GUI.DrawTexture(this.incomingConnectionTextureRect, connectionTopTexture, 2);
+				GUI.DrawTexture(this.incomingConnectionTextureRect, connectionTopTexture, UnityEngine.ScaleMode.ScaleToFit);
 			}
 			if (this.isParent)
 			{
-				GUI.DrawTexture(this.outgoingConnectionTextureRect, connectionBottomTexture, 2);
+				// GUI.DrawTexture(this.outgoingConnectionTextureRect, connectionBottomTexture, 2);
+				GUI.DrawTexture(this.outgoingConnectionTextureRect, connectionBottomTexture, UnityEngine.ScaleMode.ScaleToFit);
 			}
 			GUI.Label(nodeRect, string.Empty, backgroundGUIStyle);
-			if (this.mTask.NodeData.ExecutionStatus == 2)
+			// if (this.mTask.NodeData.ExecutionStatus == 2)
+			if (this.mTask.NodeData.ExecutionStatus == TaskStatus.Success)
 			{
 				if (this.mTask.NodeData.IsReevaluating)
 				{
@@ -809,7 +815,8 @@ namespace BehaviorDesigner.Editor
 					GUI.DrawTexture(this.successExecutionStatusTextureRect, BehaviorDesignerUtility.ExecutionSuccessTexture);
 				}
 			}
-			else if (this.mTask.NodeData.ExecutionStatus == 1)
+			// else if (this.mTask.NodeData.ExecutionStatus == 1)
+			else if (this.mTask.NodeData.ExecutionStatus == TaskStatus.Failure)
 			{
 				GUI.DrawTexture(this.failureExecutionStatusTextureRect, (!this.mTask.NodeData.IsReevaluating) ? BehaviorDesignerUtility.ExecutionFailureTexture : BehaviorDesignerUtility.ExecutionFailureRepeatTexture);
 			}

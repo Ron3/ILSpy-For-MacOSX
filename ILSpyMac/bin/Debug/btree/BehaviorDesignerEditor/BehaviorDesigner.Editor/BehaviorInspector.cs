@@ -70,7 +70,7 @@ namespace BehaviorDesigner.Editor
 				GUILayout.Height(48f)
 			});
 			serializedObject.Update();
-			GUI.enabled=PrefabUtility.GetPrefabType(behavior) != 3 || BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances);
+			GUI.enabled=PrefabUtility.GetPrefabType(behavior) != PrefabType.PrefabInstance || BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances);
 			SerializedProperty serializedProperty = serializedObject.FindProperty("externalBehavior");
 			ExternalBehavior externalBehavior = serializedProperty.objectReferenceValue as ExternalBehavior;
 			EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);

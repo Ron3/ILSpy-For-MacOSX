@@ -1486,7 +1486,8 @@ namespace BehaviorDesigner.Editor
 			}
 			if (manifestResourceStream != null)
 			{
-				texture2D = new Texture2D(0, 0, 4, false, true);
+				//texture2D = new Texture2D(0, 0, 4, false, true);
+				texture2D = new Texture2D(0, 0, UnityEngine.TextureFormat.RGBA32, false, true);
 				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
 				manifestResourceStream.Close();
 			}

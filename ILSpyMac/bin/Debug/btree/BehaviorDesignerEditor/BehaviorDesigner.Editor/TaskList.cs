@@ -390,7 +390,7 @@ namespace BehaviorDesigner.Editor
 								GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 								GUILayout.Space((float)(EditorGUI.indentLevel * 16));
 								TaskNameAttribute[] array = null;
-								if (!this.mTaskNameAttribute.TryGetValue(category.Tasks[i].Type, ref array))
+								if (!this.mTaskNameAttribute.TryGetValue(category.Tasks[i].Type, out array))
 								{
 									array = (category.Tasks[i].Type.GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[]);
 									this.mTaskNameAttribute.Add(category.Tasks[i].Type, array);

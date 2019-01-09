@@ -7,6 +7,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
 using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
 
 

@@ -1885,7 +1885,8 @@ namespace BehaviorDesigner.Editor
 				this.ScrollGraph(zero);
 				if (this.mIsDragging)
 				{
-					this.mGraphDesigner.DragSelectedNodes(-zero / this.mGraphZoom, Event.current.modifiers != 4);
+					//this.mGraphDesigner.DragSelectedNodes(-zero / this.mGraphZoom, Event.current.modifiers != 4);
+					this.mGraphDesigner.DragSelectedNodes(-zero / this.mGraphZoom, Event.current.modifiers != EventModifiers.Alt);
 				}
 				if (this.mIsSelecting)
 				{
@@ -1925,7 +1926,8 @@ namespace BehaviorDesigner.Editor
 				this.Repaint();
 			}
 			NodeDesigner nodeDesigner = this.mGraphDesigner.NodeAt(mousePosition, this.mGraphOffset);
-			if (Event.current.modifiers == 4)
+			//if (Event.current.modifiers == 4)
+			if (Event.current.modifiers == EventModifiers.Alt)
 			{
 				this.mNodeClicked = this.mGraphDesigner.IsSelected(nodeDesigner);
 				return false;
@@ -1963,12 +1965,14 @@ namespace BehaviorDesigner.Editor
 					this.mKeepTasksSelected = false;
 					if (this.mGraphDesigner.IsSelected(nodeDesigner))
 					{
-						if (Event.current.modifiers == 2)
+						//if (Event.current.modifiers == 2)
+						if (Event.current.modifiers == EventModifiers.Control)
 						{
 							this.mKeepTasksSelected = true;
 							this.mGraphDesigner.Deselect(nodeDesigner);
 						}
-						else if (Event.current.modifiers == 1 && nodeDesigner.Task is ParentTask)
+						//else if (Event.current.modifiers == 1 && nodeDesigner.Task is ParentTask)
+						else if (Event.current.modifiers == EventModifiers.Shift && nodeDesigner.Task is ParentTask)
 						{
 							nodeDesigner.Task.NodeData.Collapsed=!nodeDesigner.Task.NodeData.Collapsed;
 							this.mGraphDesigner.DeselectWithParent(nodeDesigner);

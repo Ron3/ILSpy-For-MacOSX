@@ -21,7 +21,7 @@ namespace BehaviorDesigner.Editor
 			behaviorManager.ExecutionsPerTick = ((BehaviorManager.ExecutionsPerTickType)EditorGUILayout.EnumPopup("Task Execution Type", behaviorManager.ExecutionsPerTick, new GUILayoutOption[0]));
 
 			// TODO Ron 这个枚举一会看一下
-			if (behaviorManager.ExecutionsPerTick == ExecutionsPerTickType.Count)
+			if (behaviorManager.ExecutionsPerTick == BehaviorManager.ExecutionsPerTickType.NoDuplicates)
 			{
 				EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 				behaviorManager.MaxTaskExecutionsPerTick = (EditorGUILayout.IntField("Max Execution Count", behaviorManager.MaxTaskExecutionsPerTick, new GUILayoutOption[0]));
