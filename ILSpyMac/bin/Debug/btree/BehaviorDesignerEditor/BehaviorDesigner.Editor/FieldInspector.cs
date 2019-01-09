@@ -7,6 +7,9 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
+
+
 namespace BehaviorDesigner.Editor
 {
 	public static class FieldInspector
@@ -64,7 +67,10 @@ namespace BehaviorDesigner.Editor
 				return null;
 			}
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(obj.GetType());
-			BindingFlags bindingFlags = 54;
+
+			// TODO Ron
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
 				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
@@ -270,7 +276,7 @@ namespace BehaviorDesigner.Editor
 				{
 					GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 					guiContent.text="Element " + k;
-					// list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.Item[k]);
+					// list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list[k]);
 					list[k] = FieldInspector.DrawField(task, guiContent, fieldInfo, type, list[k]);
 					GUILayout.Space(6f);
 					GUILayout.EndHorizontal();

@@ -252,7 +252,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (this.mSelectedNodes.Count == 1)
 			{
-				this.IndicateReferencedTasks(this.mSelectedNodes.Item[0].Task, false);
+				this.IndicateReferencedTasks(this.mSelectedNodes[0].Task, false);
 			}
 			this.mSelectedNodes.Add(nodeDesigner);
 			if (addHash)
@@ -262,7 +262,7 @@ namespace BehaviorDesigner.Editor
 			nodeDesigner.Select();
 			if (this.mSelectedNodes.Count == 1)
 			{
-				this.IndicateReferencedTasks(this.mSelectedNodes.Item[0].Task, true);
+				this.IndicateReferencedTasks(this.mSelectedNodes[0].Task, true);
 			}
 		}
 
@@ -295,7 +295,7 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.mSelectedNodes.Count == 1)
 			{
-				this.IndicateReferencedTasks(this.mSelectedNodes.Item[0].Task, false);
+				this.IndicateReferencedTasks(this.mSelectedNodes[0].Task, false);
 			}
 			for (int i = 0; i < this.mSelectedNodes.Count; i++)
 			{
@@ -319,11 +319,11 @@ namespace BehaviorDesigner.Editor
 		public bool ReplaceSelectedNode(BehaviorSource behaviorSource, Type taskType)
 		{
 			BehaviorUndo.RegisterUndo("Replace", behaviorSource.Owner.GetObject());
-			Vector2 absolutePosition = this.SelectedNodes.Item[0].GetAbsolutePosition();
-			NodeDesigner parentNodeDesigner = this.SelectedNodes.Item[0].ParentNodeDesigner;
-			List<Task> list = (!this.SelectedNodes.Item[0].IsParent) ? null : (this.SelectedNodes.Item[0].Task as ParentTask).Children;
-			UnknownTask unknownTask = this.SelectedNodes.Item[0].Task as UnknownTask;
-			this.RemoveNode(this.SelectedNodes.Item[0]);
+			Vector2 absolutePosition = this.SelectedNodes[0].GetAbsolutePosition();
+			NodeDesigner parentNodeDesigner = this.SelectedNodes[0].ParentNodeDesigner;
+			List<Task> list = (!this.SelectedNodes[0].IsParent) ? null : (this.SelectedNodes[0].Task as ParentTask).Children;
+			UnknownTask unknownTask = this.SelectedNodes[0].Task as UnknownTask;
+			this.RemoveNode(this.SelectedNodes[0]);
 			this.mSelectedNodes.Clear();
 			TaskReferences.CheckReferences(behaviorSource);
 			NodeDesigner nodeDesigner = null;
@@ -355,7 +355,7 @@ namespace BehaviorDesigner.Editor
 					BinaryDeserialization.LoadTask(taskSerializationData, fieldSerializationData, ref list2, ref behaviorSource);
 					if (list2.Count > 0)
 					{
-						task = list2.Item[0];
+						task = list2[0];
 					}
 				}
 				if (task != null)
@@ -440,7 +440,7 @@ namespace BehaviorDesigner.Editor
 			{
 				this.DragNode(this.mSelectedNodes[i], delta, dragChildren);
 			}
-			if (flag && dragChildren && this.mSelectedNodes.Item[0].IsEntryDisplay && this.mRootNode != null)
+			if (flag && dragChildren && this.mSelectedNodes[0].IsEntryDisplay && this.mRootNode != null)
 			{
 				this.DragNode(this.mRootNode, delta, dragChildren);
 			}
@@ -525,7 +525,7 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int k = 0; k < this.mDetachedNodes.Count; k++)
 			{
-				if (this.DrawNodeChildren(this.mDetachedNodes.Item[k], offset, this.mDetachedNodes.Item[k].Task.Disabled))
+				if (this.DrawNodeChildren(this.mDetachedNodes[k], offset, this.mDetachedNodes[k].Task.Disabled))
 				{
 					result = true;
 				}
@@ -708,9 +708,9 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
-						if (parentTask.Children.Item[k] != null)
+						if (parentTask.Children[k] != null)
 						{
-							this.RemoveReferencedTasks(parentTask.Children.Item[k].NodeData.NodeDesigner as NodeDesigner, task);
+							this.RemoveReferencedTasks(parentTask.Children[k].NodeData.NodeDesigner as NodeDesigner, task);
 						}
 					}
 				}
@@ -816,7 +816,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (nodeDesigner.OutgoingNodeConnections.Count == 1)
 				{
-					this.RemoveConnection(nodeDesigner.OutgoingNodeConnections.Item[0]);
+					this.RemoveConnection(nodeDesigner.OutgoingNodeConnections[0]);
 				}
 			}
 			else
@@ -947,9 +947,9 @@ namespace BehaviorDesigner.Editor
 			nodeDesigner.MarkDirty();
 			if (nodeDesigner.IsEntryDisplay)
 			{
-				if (nodeDesigner.OutgoingNodeConnections.Count > 0 && nodeDesigner.OutgoingNodeConnections.Item[0].DestinationNodeDesigner != null)
+				if (nodeDesigner.OutgoingNodeConnections.Count > 0 && nodeDesigner.OutgoingNodeConnections[0].DestinationNodeDesigner != null)
 				{
-					this.MarkNodeDirty(nodeDesigner.OutgoingNodeConnections.Item[0].DestinationNodeDesigner);
+					this.MarkNodeDirty(nodeDesigner.OutgoingNodeConnections[0].DestinationNodeDesigner);
 				}
 			}
 			else if (nodeDesigner.IsParent)
@@ -1075,9 +1075,9 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
-						if (parentTask.Children.Item[k] != null)
+						if (parentTask.Children[k] != null)
 						{
-							this.FindReferencedBehaviors(parentTask.Children.Item[k].NodeData.NodeDesigner as NodeDesigner, ref behaviors);
+							this.FindReferencedBehaviors(parentTask.Children[k].NodeData.NodeDesigner as NodeDesigner, ref behaviors);
 						}
 					}
 				}
@@ -1514,10 +1514,10 @@ namespace BehaviorDesigner.Editor
 			{
 				for (int k = 0; k < list2.Count; k++)
 				{
-					if (list2.Item[k] != null)
+					if (list2[k] != null)
 					{
 						NodeDesigner nodeDesigner = ScriptableObject.CreateInstance<NodeDesigner>();
-						nodeDesigner.LoadTask(list2.Item[k], (behaviorSource.Owner == null) ? null : (behaviorSource.Owner.GetObject() as Behavior), ref this.mNextTaskID);
+						nodeDesigner.LoadTask(list2[k], (behaviorSource.Owner == null) ? null : (behaviorSource.Owner.GetObject() as Behavior), ref this.mNextTaskID);
 						this.mDetachedNodes.Add(nodeDesigner);
 						this.LoadNodeSelection(nodeDesigner);
 					}

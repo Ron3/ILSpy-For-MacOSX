@@ -99,7 +99,8 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.hideFlags=61;
+			//base.hideFlags=61;
+			base.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 		}
 
 		public void LoadConnection(NodeDesigner nodeDesigner, NodeConnectionType nodeConnectionType)

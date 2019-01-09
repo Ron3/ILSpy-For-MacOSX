@@ -86,7 +86,8 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.hideFlags=61;
+			//base.hideFlags=61;
+			base.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 		}
 
 		public static List<Type> FindAllSharedVariableTypes(bool removeShared)
@@ -113,7 +114,7 @@ namespace BehaviorDesigner.Editor
 			VariableInspector.sharedVariableTypesDict = new Dictionary<string, int>();
 			for (int k = 0; k < VariableInspector.sharedVariableTypes.Count; k++)
 			{
-				string text = VariableInspector.sharedVariableTypes.Item[k].Name;
+				string text = VariableInspector.sharedVariableTypes[k].Name;
 				VariableInspector.sharedVariableTypesDict.Add(text, k);
 				if (removeShared && text.Length > 6 && text.Substring(0, 6).Equals("Shared"))
 				{
@@ -760,15 +761,15 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int k = 0; k < list.Count; k++)
 			{
-				string[] array2 = list.Item[k].Split(new char[]
+				string[] array2 = list[k].Split(new char[]
 				{
 					'.'
 				});
-				if (list2.Item[k] != null)
+				if (list2[k] != null)
 				{
-					array2[array2.Length - 1] = VariableInspector.GetFullPath(list2.Item[k].transform) + "/" + array2[array2.Length - 1];
+					array2[array2.Length - 1] = VariableInspector.GetFullPath(list2[k].transform) + "/" + array2[array2.Length - 1];
 				}
-				VariableInspector.mPropertyMappingMenu.AddItem(new GUIContent(array2[array2.Length - 1]), k == num, new GenericMenu.MenuFunction2(VariableInspector.PropertySelected), new VariableInspector.SelectedPropertyMapping(list.Item[k], list2.Item[k]));
+				VariableInspector.mPropertyMappingMenu.AddItem(new GUIContent(array2[array2.Length - 1]), k == num, new GenericMenu.MenuFunction2(VariableInspector.PropertySelected), new VariableInspector.SelectedPropertyMapping(list[k], list2[k]));
 			}
 			VariableInspector.mPropertyMappingMenu.ShowAsContext();
 		}

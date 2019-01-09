@@ -7,6 +7,8 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
+
 namespace BehaviorDesigner.Editor
 {
 	[Serializable]
@@ -53,7 +55,8 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.hideFlags=61;
+			//base.hideFlags=61;
+			base.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 		}
 
 		public void ClearFocus()

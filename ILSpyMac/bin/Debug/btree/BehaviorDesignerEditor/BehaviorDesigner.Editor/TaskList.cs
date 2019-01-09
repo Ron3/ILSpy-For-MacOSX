@@ -181,7 +181,8 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.hideFlags=61;
+			//base.hideFlags=61;
+			base.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 		}
 
 		public void Init()
@@ -209,15 +210,15 @@ namespace BehaviorDesigner.Editor
 			int id = 0;
 			for (int k = 0; k < list.Count; k++)
 			{
-				if (list.Item[k].IsSubclassOf(typeof(Action)))
+				if (list[k].IsSubclassOf(typeof(Action)))
 				{
 					text = "Actions";
 				}
-				else if (list.Item[k].IsSubclassOf(typeof(Composite)))
+				else if (list[k].IsSubclassOf(typeof(Composite)))
 				{
 					text = "Composites";
 				}
-				else if (list.Item[k].IsSubclassOf(typeof(Conditional)))
+				else if (list[k].IsSubclassOf(typeof(Conditional)))
 				{
 					text = "Conditionals";
 				}
@@ -226,7 +227,7 @@ namespace BehaviorDesigner.Editor
 					text = "Decorators";
 				}
 				TaskCategoryAttribute[] array;
-				if ((array = (list.Item[k].GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
+				if ((array = (list[k].GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
 				{
 					text = text + "/" + array[0].Category;
 				}

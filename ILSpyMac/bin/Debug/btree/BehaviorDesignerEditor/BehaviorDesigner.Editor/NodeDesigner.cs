@@ -233,7 +233,8 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.hideFlags=61;
+			//base.hideFlags=61;
+			base.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 		}
 
 		public void LoadTask(Task task, Behavior owner, ref int id)
@@ -293,7 +294,7 @@ namespace BehaviorDesigner.Editor
 					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
 						NodeDesigner nodeDesigner = ScriptableObject.CreateInstance<NodeDesigner>();
-						nodeDesigner.LoadTask(parentTask.Children.Item[k], owner, ref id);
+						nodeDesigner.LoadTask(parentTask.Children[k], owner, ref id);
 						NodeConnection nodeConnection = ScriptableObject.CreateInstance<NodeConnection>();
 						nodeConnection.LoadConnection(this, NodeConnectionType.Fixed);
 						this.AddChildNode(nodeDesigner, nodeConnection, true, true, k);
@@ -576,7 +577,7 @@ namespace BehaviorDesigner.Editor
 			}
 			Rect rect = this.Rectangle(offset, false, false);
 			this.UpdateCache(rect);
-			bool flag = (this.mTask.NodeData.PushTime != -1f && this.mTask.NodeData.PushTime >= this.mTask.NodeData.PopTime) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PushTime != -1f);
+			bool flag = (this.mTask.NodeData.PushTime != -1f && this.mTask.NodeData.PushTime >= this.mTask.NodeData.PopTime) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PushTime != -1f);
 			bool flag2 = this.mIdentifyUpdateCount != -1;
 			bool result = this.prevRunningState != flag;
 			float num = (!BehaviorDesignerPreferences.GetBool(BDPreferences.FadeNodes)) ? 0.01f : 0.5f;
@@ -605,11 +606,11 @@ namespace BehaviorDesigner.Editor
 			{
 				num2 = 1f;
 			}
-			else if ((this.mTask.NodeData.PopTime != -1f && num != 0f && this.mTask.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.mTask.NodeData.PopTime < num) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime != -1f && this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime < num))
+			else if ((this.mTask.NodeData.PopTime != -1f && num != 0f && this.mTask.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.mTask.NodeData.PopTime < num) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime != -1f && this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime < num))
 			{
 				if (this.isEntryDisplay)
 				{
-					num2 = 1f - (Time.realtimeSinceStartup - this.outgoingNodeConnections.Item[0].DestinationNodeDesigner.Task.NodeData.PopTime) / num;
+					num2 = 1f - (Time.realtimeSinceStartup - this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime) / num;
 				}
 				else
 				{
@@ -894,7 +895,7 @@ namespace BehaviorDesigner.Editor
 				string text2 = string.Empty;
 				for (int k = 0; k < this.mTask.NodeData.WatchedFields.Count; k++)
 				{
-					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields.Item[k];
+					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields[k];
 					text = text + BehaviorDesignerUtility.SplitCamelCase(fieldInfo.Name) + ": \n";
 					text2 = text2 + ((fieldInfo.GetValue(this.mTask) == null) ? "null" : fieldInfo.GetValue(this.mTask).ToString()) + "\n";
 				}

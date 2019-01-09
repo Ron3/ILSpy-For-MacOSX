@@ -72,7 +72,7 @@ namespace BehaviorDesigner.Editor
 				{
 					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
-						TaskReferences.CheckReferences(behaviorSource, parentTask.Children.Item[k]);
+						TaskReferences.CheckReferences(behaviorSource, parentTask.Children[k]);
 					}
 				}
 			}

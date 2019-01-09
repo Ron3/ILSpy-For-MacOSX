@@ -66,7 +66,8 @@ namespace BehaviorDesigner.Editor
 			}
 			GUILayout.Space(5f);
 			variableSynchronizer.UpdateInterval=(UpdateIntervalType)EditorGUILayout.EnumPopup("Update Interval", variableSynchronizer.UpdateInterval, new GUILayoutOption[0]);
-			if (variableSynchronizer.UpdateInterval == 1)
+			// if (variableSynchronizer.UpdateInterval == 1)
+			if (variableSynchronizer.UpdateInterval == UpdateIntervalType.SpecifySeconds)
 			{
 				variableSynchronizer.UpdateIntervalSeconds=EditorGUILayout.FloatField("Seconds", variableSynchronizer.UpdateIntervalSeconds, new GUILayoutOption[0]);
 			}

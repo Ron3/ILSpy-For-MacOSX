@@ -1488,7 +1488,9 @@ namespace BehaviorDesigner.Editor
 				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
 				manifestResourceStream.Close();
 			}
-			texture2D.hideFlags=61;
+			// TODO Ron
+			// texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			BehaviorDesignerUtility.textureCache.Add(imageName, texture2D);
 			return texture2D;
 		}
@@ -1517,7 +1519,7 @@ namespace BehaviorDesigner.Editor
 			{
 				Debug.Log(string.Format("{0}/Images/Task Backgrounds/{1}{2}", BehaviorDesignerUtility.GetEditorBaseDirectory(obj), (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName));
 			}
-			texture2D.hideFlags=61;
+			texture2D.hideFlags= HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy; ;
 			BehaviorDesignerUtility.textureCache.Add(imageName, texture2D);
 			return texture2D;
 		}
@@ -1548,7 +1550,8 @@ namespace BehaviorDesigner.Editor
 			}
 			if (texture2D != null)
 			{
-				texture2D.hideFlags=61;
+				//texture2D.hideFlags=61;
+				texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			}
 			BehaviorDesignerUtility.iconCache.Add(iconName, texture2D);
 			return texture2D;
@@ -1789,7 +1792,8 @@ namespace BehaviorDesigner.Editor
 			{
 				texture2D.SetPixel(1, 1, new Color(0.75f, 0.75f, 0.75f));
 			}
-			texture2D.hideFlags=61;
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
 			BehaviorDesignerUtility.taskDescriptionGUIStyle = new GUIStyle(GUI.skin.box);
 			BehaviorDesignerUtility.taskDescriptionGUIStyle.normal.background=texture2D;
@@ -1809,7 +1813,8 @@ namespace BehaviorDesigner.Editor
 			{
 				texture2D.SetPixel(1, 1, new Color(0.3647f, 0.3647f, 0.3647f));
 			}
-			texture2D.hideFlags=61;
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
 			BehaviorDesignerUtility.graphBackgroundGUIStyle = new GUIStyle(GUI.skin.box);
 			BehaviorDesignerUtility.graphBackgroundGUIStyle.normal.background=texture2D;
@@ -1827,7 +1832,8 @@ namespace BehaviorDesigner.Editor
 			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
 			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
 			texture2D.SetPixel(1, 1, color);
-			texture2D.hideFlags=61;
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
 			BehaviorDesignerUtility.selectionGUIStyle = new GUIStyle(GUI.skin.box);
 			BehaviorDesignerUtility.selectionGUIStyle.normal.background=texture2D;
@@ -1982,7 +1988,8 @@ namespace BehaviorDesigner.Editor
 			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
 			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
 			texture2D.SetPixel(1, 1, color);
-			texture2D.hideFlags=61;
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
 			BehaviorDesignerUtility.selectedBackgroundGUIStyle = new GUIStyle();
 			BehaviorDesignerUtility.selectedBackgroundGUIStyle.border=new RectOffset(0, 0, 0, 0);
@@ -1998,7 +2005,8 @@ namespace BehaviorDesigner.Editor
 			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
 			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.706f, 0.706f, 0.706f) : new Color(0.2f, 0.2f, 0.2f, 1f);
 			texture2D.SetPixel(1, 1, color);
-			texture2D.hideFlags=61;
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
 			BehaviorDesignerUtility.errorListDarkBackground = new GUIStyle();
 			BehaviorDesignerUtility.errorListDarkBackground.padding=new RectOffset(2, 0, 2, 0);

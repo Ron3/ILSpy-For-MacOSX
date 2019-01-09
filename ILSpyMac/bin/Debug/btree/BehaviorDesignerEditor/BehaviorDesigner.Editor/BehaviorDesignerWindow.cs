@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 
 using Vector2 = UnityEngine.Vector2;
+using Object = UnityEngine.Object;
 
 namespace BehaviorDesigner.Editor
 {
@@ -592,7 +593,7 @@ namespace BehaviorDesigner.Editor
 			int k = 0;
 			while (k < list.Count)
 			{
-				Object @object = list.Item[k].Owner.GetObject();
+				Object @object = list[k].Owner.GetObject();
 				if (menuType != BehaviorDesignerWindow.BreadcrumbMenuType.Behavior)
 				{
 					goto IL_14E;
@@ -626,13 +627,13 @@ namespace BehaviorDesigner.Editor
 					switch (menuType)
 					{
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObjectBehavior:
-						text = list.Item[k].ToString();
+						text = list[k].ToString();
 						break;
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObject:
 						text = (@object as Behavior).gameObject.name;
 						break;
 					case BehaviorDesignerWindow.BreadcrumbMenuType.Behavior:
-						text = list.Item[k].behaviorName;
+						text = list[k].behaviorName;
 						break;
 					}
 					if (!AssetDatabase.GetAssetPath(@object).Equals(string.Empty))
@@ -742,7 +743,7 @@ namespace BehaviorDesigner.Editor
 							this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.NodeData.Collapsed) ? "Collapse" : "Expand"), false, new GenericMenu.MenuFunction2(this.ToggleCollapseState), clickedNode);
 						}
 						this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.NodeData.IsBreakpoint) ? "Set Breakpoint" : "Remove Breakpoint"), false, new GenericMenu.MenuFunction2(this.ToggleBreakpoint), clickedNode);
-						this.mTaskList.AddTasksToMenu(ref this.mRightClickMenu, this.mGraphDesigner.SelectedNodes.Item[0].Task.GetType(), "Replace", new GenericMenu.MenuFunction2(this.ReplaceTaskCallback));
+						this.mTaskList.AddTasksToMenu(ref this.mRightClickMenu, this.mGraphDesigner.SelectedNodes[0].Task.GetType(), "Replace", new GenericMenu.MenuFunction2(this.ReplaceTaskCallback));
 					}
 				}
 				if (!EditorApplication.isPlaying && !this.ViewOnlyMode())
@@ -1296,12 +1297,12 @@ namespace BehaviorDesigner.Editor
 			}
 			else if (this.mBehaviorToolbarSelection == 3)
 			{
-				if (this.mGraphDesigner.SelectedNodes.Count == 1 && !this.mGraphDesigner.SelectedNodes.Item[0].IsEntryDisplay)
+				if (this.mGraphDesigner.SelectedNodes.Count == 1 && !this.mGraphDesigner.SelectedNodes[0].IsEntryDisplay)
 				{
-					Task task = this.mGraphDesigner.SelectedNodes.Item[0].Task;
+					Task task = this.mGraphDesigner.SelectedNodes[0].Task;
 					if (this.mNodeDesignerTaskMap != null && this.mNodeDesignerTaskMap.Count > 0)
 					{
-						NodeDesigner nodeDesigner = this.mGraphDesigner.SelectedNodes.Item[0].Task.NodeData.NodeDesigner as NodeDesigner;
+						NodeDesigner nodeDesigner = this.mGraphDesigner.SelectedNodes[0].Task.NodeData.NodeDesigner as NodeDesigner;
 						if (nodeDesigner != null && this.mNodeDesignerTaskMap.ContainsKey(nodeDesigner))
 						{
 							task = this.mNodeDesignerTaskMap[nodeDesigner];
@@ -1433,7 +1434,7 @@ namespace BehaviorDesigner.Editor
 		private void DrawSelectedTaskDescription()
 		{
 			TaskDescriptionAttribute[] array;
-			if (BehaviorDesignerPreferences.GetBool(BDPreferences.ShowTaskDescription) && this.mGraphDesigner.SelectedNodes.Count == 1 && (array = (this.mGraphDesigner.SelectedNodes.Item[0].Task.GetType().GetCustomAttributes(typeof(TaskDescriptionAttribute), false) as TaskDescriptionAttribute[])).Length > 0)
+			if (BehaviorDesignerPreferences.GetBool(BDPreferences.ShowTaskDescription) && this.mGraphDesigner.SelectedNodes.Count == 1 && (array = (this.mGraphDesigner.SelectedNodes[0].Task.GetType().GetCustomAttributes(typeof(TaskDescriptionAttribute), false) as TaskDescriptionAttribute[])).Length > 0)
 			{
 				float num;
 				float num2;
@@ -2188,7 +2189,8 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					if (Event.current.modifiers == 1 || this.mKeepTasksSelected)
+					// if (Event.current.modifiers == 1 || this.mKeepTasksSelected)
+					if (Event.current.modifiers == EventModifiers.Shift || this.mKeepTasksSelected)
 					{
 						return false;
 					}
@@ -2263,10 +2265,12 @@ namespace BehaviorDesigner.Editor
 				return false;
 			}
 			Vector2 vector2 = Event.current.delta;
-			if (Event.current.type == 6)
+			// if (Event.current.type == 6)
+			if (Event.current.type == EventType.ScrollWheel)
 			{
 				vector2 *= -1.5f;
-				if (Event.current.modifiers == 2)
+				//  if (Event.current.modifiers == 2)
+				if (Event.current.modifiers == EventModifiers.Control)
 				{
 					vector2.x = vector2.y;
 					vector2.y = 0f;
@@ -2297,7 +2301,7 @@ namespace BehaviorDesigner.Editor
 		private void ReplaceTaskCallback(object obj)
 		{
 			Type type = (Type)obj;
-			if (this.mGraphDesigner.SelectedNodes.Count != 1 || this.mGraphDesigner.SelectedNodes.Item[0].Task.GetType().Equals(type))
+			if (this.mGraphDesigner.SelectedNodes.Count != 1 || this.mGraphDesigner.SelectedNodes[0].Task.GetType().Equals(type))
 			{
 				return;
 			}
@@ -2531,7 +2535,8 @@ namespace BehaviorDesigner.Editor
 				return false;
 			}
 			Behavior behavior = this.mActiveBehaviorSource.Owner.GetObject() as Behavior;
-			return behavior != null && !BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabType(this.mActiveBehaviorSource.Owner.GetObject()) == 3;
+			// return behavior != null && !BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabType(this.mActiveBehaviorSource.Owner.GetObject()) == 3;
+			return behavior != null && !BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabType(this.mActiveBehaviorSource.Owner.GetObject()) == PrefabType.PrefabInstance;
 		}
 
 		private BehaviorSource BehaviorSourceFromIBehaviorHistory(IBehavior behavior)
