@@ -17,24 +17,24 @@ namespace BehaviorDesigner.Editor
 				TaskCategoryAttribute[] array;
 				if ((array = (type.GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
 				{
-					text = text + array[0].get_Category() + "/";
+					text = text + array[0].Category + "/";
 				}
 				TaskNameAttribute[] array2;
 				if ((array2 = (type.GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[])).Length > 0)
 				{
-					text += array2[0].get_Name();
+					text += array2[0].Name;
 				}
 				else
 				{
-					text += BehaviorDesignerUtility.SplitCamelCase(type.get_Name().ToString());
+					text += BehaviorDesignerUtility.SplitCamelCase(type.Name.ToString());
 				}
 			}
 			else if (x.GetType().IsSubclassOf(typeof(SharedVariable)))
 			{
-				string text2 = x.GetType().get_Name();
-				if (text2.get_Length() > 6 && text2.Substring(0, 6).Equals("Shared"))
+				string text2 = x.GetType().Name;
+				if (text2.Length > 6 && text2.Substring(0, 6).Equals("Shared"))
 				{
-					text2 = text2.Substring(6, text2.get_Length() - 6);
+					text2 = text2.Substring(6, text2.Length - 6);
 				}
 				text = BehaviorDesignerUtility.SplitCamelCase(text2);
 			}
@@ -54,24 +54,24 @@ namespace BehaviorDesigner.Editor
 				TaskCategoryAttribute[] array3;
 				if ((array3 = (type2.GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
 				{
-					text3 = text3 + array3[0].get_Category() + "/";
+					text3 = text3 + array3[0].Category + "/";
 				}
 				TaskNameAttribute[] array4;
 				if ((array4 = (type2.GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[])).Length > 0)
 				{
-					text3 += array4[0].get_Name();
+					text3 += array4[0].Name;
 				}
 				else
 				{
-					text3 += BehaviorDesignerUtility.SplitCamelCase(type2.get_Name().ToString());
+					text3 += BehaviorDesignerUtility.SplitCamelCase(type2.Name.ToString());
 				}
 			}
 			else if (y.GetType().IsSubclassOf(typeof(SharedVariable)))
 			{
-				string text4 = y.GetType().get_Name();
-				if (text4.get_Length() > 6 && text4.Substring(0, 6).Equals("Shared"))
+				string text4 = y.GetType().Name;
+				if (text4.Length > 6 && text4.Substring(0, 6).Equals("Shared"))
 				{
-					text4 = text4.Substring(6, text4.get_Length() - 6);
+					text4 = text4.Substring(6, text4.Length - 6);
 				}
 				text3 = BehaviorDesignerUtility.SplitCamelCase(text4);
 			}
@@ -83,8 +83,8 @@ namespace BehaviorDesigner.Editor
 			{
 				return 0;
 			}
-			int length = text.get_Length();
-			int length2 = text3.get_Length();
+			int length = text.Length;
+			int length2 = text3.Length;
 			int num = 0;
 			int num2 = 0;
 			while (num < length && num2 < length2)

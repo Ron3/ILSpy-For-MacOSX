@@ -1,25 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs">
     <Files>
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/CustomObjectDrawer.cs" Line="21" Column="13" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorUndo.cs" Line="19" Column="48" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="2278" Column="49" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableSynchronizerInspector.cs" Line="11" Column="59" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/GlobalVariablesInspector.cs" Line="8" Column="54" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorInspector.cs" Line="10" Column="47" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskCopier.cs" Line="11" Column="40" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskSerializer.cs" Line="14" Column="15" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/JSONSerialization.cs" Line="11" Column="47" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerWindow.cs" Line="131" Column="1" />
-      <File FileName="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs" Line="8" Column="41" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj" Line="267" Column="3" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="275" Column="23" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <DisabledProjects>
     <String>BehaviorDesignerEditor/BehaviorDesigner.csproj</String>
   </DisabledProjects>
-  <MonoDevelop.Ide.ItemProperties.BehaviorDesignerEditor PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

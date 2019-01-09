@@ -58,7 +58,7 @@ namespace BehaviorDesigner.Editor
 			public SearchableType(Type type)
 			{
 				this.mType = type;
-				this.mName = BehaviorDesignerUtility.SplitCamelCase(this.mType.get_Name());
+				this.mName = BehaviorDesignerUtility.SplitCamelCase(this.mType.Name);
 			}
 		}
 
@@ -173,7 +173,7 @@ namespace BehaviorDesigner.Editor
 
 		private Dictionary<Type, TaskNameAttribute[]> mTaskNameAttribute = new Dictionary<Type, TaskNameAttribute[]>();
 
-		private Vector2 mScrollPosition = Vector2.get_zero();
+		private Vector2 mScrollPosition = Vector2.zero;
 
 		private string mSearchString = string.Empty;
 
@@ -377,15 +377,15 @@ namespace BehaviorDesigner.Editor
 				this.SetExpanded(category.ID, category.Expanded);
 				if (category.Expanded)
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 					if (category.Tasks != null)
 					{
-						for (int i = 0; i < category.Tasks.get_Count(); i++)
+						for (int i = 0; i < category.Tasks.Count; i++)
 						{
 							if (category.Tasks.get_Item(i).Visible)
 							{
 								GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-								GUILayout.Space((float)(EditorGUI.get_indentLevel() * 16));
+								GUILayout.Space((float)(EditorGUI.indentLevel * 16));
 								TaskNameAttribute[] array = null;
 								if (!this.mTaskNameAttribute.TryGetValue(category.Tasks.get_Item(i).Type, ref array))
 								{
@@ -403,7 +403,7 @@ namespace BehaviorDesigner.Editor
 								}
 								if (GUILayout.Button(name, EditorStyles.get_toolbarButton(), new GUILayoutOption[]
 								{
-									GUILayout.MaxWidth((float)(300 - EditorGUI.get_indentLevel() * 16 - 24))
+									GUILayout.MaxWidth((float)(300 - EditorGUI.indentLevel * 16 - 24))
 								}))
 								{
 									window.AddTask(category.Tasks.get_Item(i).Type, false);
@@ -417,7 +417,7 @@ namespace BehaviorDesigner.Editor
 					{
 						this.DrawCategoryTaskList(window, category.Subcategories);
 					}
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 			}
 		}

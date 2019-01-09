@@ -16,7 +16,7 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 		EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
 		if (FieldInspector.DrawFoldout(genericVariable.GetHashCode(), label))
 		{
-			EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+			EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 			if (SharedGenericVariableDrawer.variableNames == null)
 			{
 				List<Type> list = VariableInspector.FindAllSharedVariableTypes(true);
@@ -46,7 +46,7 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 			GUILayout.Space(3f);
 			genericVariable.type = "Shared" + SharedGenericVariableDrawer.variableNames[num];
 			genericVariable.value = FieldInspector.DrawSharedVariable(null, new GUIContent("Value"), null, type, genericVariable.value);
-			EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+			EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 		}
 		EditorGUILayout.EndVertical();
 	}

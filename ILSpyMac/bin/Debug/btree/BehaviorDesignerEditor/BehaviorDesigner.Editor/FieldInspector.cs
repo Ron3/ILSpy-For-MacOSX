@@ -201,7 +201,7 @@ namespace BehaviorDesigner.Editor
 			EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
 			if (FieldInspector.DrawFoldout(guiContent.get_text().GetHashCode(), guiContent))
 			{
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+				EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 				bool flag = guiContent.get_text().GetHashCode() == FieldInspector.editingFieldHash;
 				int num = (!flag) ? list.get_Count() : FieldInspector.savedArraySize;
 				int num2 = EditorGUILayout.IntField("Size", num, new GUILayoutOption[0]);
@@ -274,7 +274,7 @@ namespace BehaviorDesigner.Editor
 					GUILayout.Space(6f);
 					GUILayout.EndHorizontal();
 				}
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+				EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 			}
 			EditorGUILayout.EndVertical();
 			return list;
@@ -344,7 +344,7 @@ namespace BehaviorDesigner.Editor
 				GUILayout.BeginVertical(new GUILayoutOption[0]);
 				if (FieldInspector.DrawFoldout(guiContent.get_text().GetHashCode(), guiContent))
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 					Matrix4x4 matrix4x = (Matrix4x4)value;
 					for (int i = 0; i < 4; i++)
 					{
@@ -359,7 +359,7 @@ namespace BehaviorDesigner.Editor
 						}
 					}
 					value = matrix4x;
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 				GUILayout.EndVertical();
 				return value;
@@ -414,9 +414,9 @@ namespace BehaviorDesigner.Editor
 					}
 					if (FieldInspector.DrawFoldout(hashCode, guiContent))
 					{
-						EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+						EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 						value = FieldInspector.DrawFields(task, value);
-						EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+						EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 					}
 					FieldInspector.drawnObjects.Remove(hashCode);
 					GUILayout.EndVertical();

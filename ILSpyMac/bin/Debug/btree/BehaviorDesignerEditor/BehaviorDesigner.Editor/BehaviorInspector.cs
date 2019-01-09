@@ -110,17 +110,17 @@ namespace BehaviorDesigner.Editor
 				text = "BehaviorDesigner.VariablesFoldout." + behavior.GetHashCode();
 				if (showVariables = EditorGUILayout.Foldout(EditorPrefs.GetBool(text, true), "Variables"))
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 					bool flag = false;
 					BehaviorSource behaviorSource = behavior.GetBehaviorSource();
 					List<SharedVariable> allVariables = behaviorSource.GetAllVariables();
-					if (allVariables != null && allVariables.get_Count() > 0)
+					if (allVariables != null && allVariables.Count > 0)
 					{
 						if (VariableInspector.DrawAllVariables(false, behaviorSource, ref allVariables, false, ref BehaviorInspector.variablePosition, ref BehaviorInspector.selectedVariableIndex, ref BehaviorInspector.selectedVariableName, ref BehaviorInspector.selectedVariableTypeIndex, false, true))
 						{
-							if (!EditorApplication.get_isPlayingOrWillChangePlaymode() && behavior.get_ExternalBehavior() != null)
+							if (!EditorApplication.isPlayingOrWillChangePlaymode && behavior.ExternalBehavior != null)
 							{
-								BehaviorSource behaviorSource2 = behavior.get_ExternalBehavior().GetBehaviorSource();
+								BehaviorSource behaviorSource2 = behavior.ExternalBehavior.GetBehaviorSource();
 								behaviorSource2.CheckForSerialization(true, null);
 								if (VariableInspector.SyncVariables(behaviorSource2, allVariables))
 								{
@@ -152,7 +152,7 @@ namespace BehaviorDesigner.Editor
 							JSONSerialization.Save(behaviorSource);
 						}
 					}
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 				EditorPrefs.SetBool(text, showVariables);
 			}
@@ -161,7 +161,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (fromInspector)
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 				}
 				serializedProperty = serializedObject.FindProperty("startWhenEnabled");
 				EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
@@ -175,7 +175,7 @@ namespace BehaviorDesigner.Editor
 				EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
 				if (fromInspector)
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 			}
 			if (fromInspector)

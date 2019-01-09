@@ -16,14 +16,14 @@ public class SharedNamedVariableDrawer : ObjectDrawer
 		EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
 		if (FieldInspector.DrawFoldout(namedVariable.GetHashCode(), label))
 		{
-			EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+			EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 			if (SharedNamedVariableDrawer.variableNames == null)
 			{
 				List<Type> list = VariableInspector.FindAllSharedVariableTypes(true);
-				SharedNamedVariableDrawer.variableNames = new string[list.get_Count()];
-				for (int i = 0; i < list.get_Count(); i++)
+				SharedNamedVariableDrawer.variableNames = new string[list.Count];
+				for (int i = 0; i < list.Count; i++)
 				{
-					SharedNamedVariableDrawer.variableNames[i] = list.get_Item(i).get_Name().Remove(0, 6);
+					SharedNamedVariableDrawer.variableNames[i] = list.get_Item(i).Name.Remove(0, 6);
 				}
 			}
 			int num = 0;
@@ -47,7 +47,7 @@ public class SharedNamedVariableDrawer : ObjectDrawer
 			GUILayout.Space(3f);
 			namedVariable.type = "Shared" + SharedNamedVariableDrawer.variableNames[num];
 			namedVariable.value = FieldInspector.DrawSharedVariable(null, new GUIContent("Value"), null, type, namedVariable.value);
-			EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+			EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 		}
 		EditorGUILayout.EndVertical();
 	}
