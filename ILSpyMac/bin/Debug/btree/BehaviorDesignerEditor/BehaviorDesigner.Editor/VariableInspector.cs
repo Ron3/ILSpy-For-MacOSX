@@ -192,7 +192,7 @@ namespace BehaviorDesigner.Editor
 						}
 						selectedVariableIndex = i;
 						selectedVariableName = allVariables[i].Name;
-						selectedVariableTypeIndex = VariableInspector.sharedVariableTypesDict.get_Item(allVariables[i].GetType().Name);
+						selectedVariableTypeIndex = VariableInspector.sharedVariableTypesDict[allVariables[i].GetType().Name];
 						return true;
 					}
 					else
@@ -656,7 +656,7 @@ namespace BehaviorDesigner.Editor
 			{
 				GUILayout.Width(200f)
 			});
-			// if (EditorGUI.EndChangeCheck() && VariableInspector.sharedVariableTypesDict.get_Item(sharedVariable.GetType().Name) != selectedVariableTypeIndex)
+			// if (EditorGUI.EndChangeCheck() && VariableInspector.sharedVariableTypesDict[sharedVariable.GetType().Name) != selectedVariableTypeIndex)
 			if (EditorGUI.EndChangeCheck() && VariableInspector.sharedVariableTypesDict[sharedVariable.GetType().Name] != selectedVariableTypeIndex)
 			{
 				if (BehaviorDesignerWindow.instance != null)
@@ -685,7 +685,7 @@ namespace BehaviorDesigner.Editor
 			{
 				result = true;
 			}
-			if (BehaviorDesignerWindow.instance != null && BehaviorDesignerWindow.instance.ContainsError(null, variables.get_Item(selectedVariableIndex).Name))
+			if (BehaviorDesignerWindow.instance != null && BehaviorDesignerWindow.instance.ContainsError(null, variables[selectedVariableIndex].Name))
 			{
 				GUILayout.Box(BehaviorDesignerUtility.ErrorIconTexture, BehaviorDesignerUtility.PlainTextureGUIStyle, new GUILayoutOption[]
 				{

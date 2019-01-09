@@ -532,7 +532,7 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int l = 0; l < this.mSelectedNodes.Count; l++)
 			{
-				if (this.mSelectedNodes.get_Item(l).DrawNode(offset, true, this.mSelectedNodes.get_Item(l).IsDisabled()))
+				if (this.mSelectedNodes[l].DrawNode(offset, true, this.mSelectedNodes[l].IsDisabled()))
 				{
 					result = true;
 				}
@@ -543,7 +543,7 @@ namespace BehaviorDesigner.Editor
 			}
 			for (int m = 0; m < this.mDetachedNodes.Count; m++)
 			{
-				this.DrawNodeCommentChildren(this.mDetachedNodes.get_Item(m), offset);
+				this.DrawNodeCommentChildren(this.mDetachedNodes[m], offset);
 			}
 			return result;
 		}
@@ -827,7 +827,7 @@ namespace BehaviorDesigner.Editor
 					NodeConnection nodeConnection = null;
 					for (int i = 0; i < nodeDesigner.OutgoingNodeConnections.Count; i++)
 					{
-						if (nodeDesigner.OutgoingNodeConnections[i].DestinationNodeDesigner.Equals(parentTask.Children.get_Item(parentTask.Children.Count - 1).NodeData.NodeDesigner as NodeDesigner))
+						if (nodeDesigner.OutgoingNodeConnections[i].DestinationNodeDesigner.Equals(parentTask.Children[parentTask.Children.Count - 1].NodeData.NodeDesigner as NodeDesigner))
 						{
 							nodeConnection = nodeDesigner.OutgoingNodeConnections[i];
 							break;
@@ -1184,8 +1184,8 @@ namespace BehaviorDesigner.Editor
 						NodeDesigner nodeDesigner2 = list[j];
 						NodeConnection nodeConnection = ScriptableObject.CreateInstance<NodeConnection>();
 						nodeConnection.LoadConnection(nodeDesigner2, NodeConnectionType.Outgoing);
-						nodeDesigner2.AddChildNode(list.get_Item(taskSerializer2.childrenIndex.Item[k]), nodeConnection, true, false);
-						this.mDetachedNodes.Remove(list.get_Item(taskSerializer2.childrenIndex.Item[k]));
+						nodeDesigner2.AddChildNode(list[taskSerializer2.childrenIndex[k]], nodeConnection, true, false);
+						this.mDetachedNodes.Remove(list[taskSerializer2.childrenIndex[k]]);
 					}
 				}
 			}
@@ -1199,7 +1199,7 @@ namespace BehaviorDesigner.Editor
 				{
 					this.mActiveNodeConnection = ScriptableObject.CreateInstance<NodeConnection>();
 					this.mActiveNodeConnection.LoadConnection(this.mEntryNode, NodeConnectionType.Outgoing);
-					this.ConnectNodes(behaviorSource, this.mDetachedNodes.Item[0]);
+					this.ConnectNodes(behaviorSource, this.mDetachedNodes[0]);
 				}
 			}
 			this.Save(behaviorSource);

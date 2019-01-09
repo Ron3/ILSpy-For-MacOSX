@@ -221,10 +221,10 @@ namespace BehaviorDesigner.Editor
 							{
 								break;
 							}
-							object obj = list.get_Item(num3);
+							object obj = list[num3];
 							if (i >= list.Count && !typeof(Object).IsAssignableFrom(type) && !typeof(string).IsAssignableFrom(type))
 							{
-								obj = Activator.CreateInstance(list.get_Item(num3).GetType(), true);
+								obj = Activator.CreateInstance(list[num3].GetType(), true);
 							}
 							array2.SetValue(obj, i);
 						}
@@ -352,7 +352,7 @@ namespace BehaviorDesigner.Editor
 						for (int j = 0; j < 4; j++)
 						{
 							EditorGUI.BeginChangeCheck();
-							// matrix4x.Item=i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x.get_Item(i, j), new GUILayoutOption[0]);
+							// matrix4x.Item=i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x[i, j), new GUILayoutOption[0]);
 							matrix4x[i, j] = EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x[i, j], new GUILayoutOption[0]);
 							if (EditorGUI.EndChangeCheck())
 							{

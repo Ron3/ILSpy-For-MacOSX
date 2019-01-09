@@ -259,12 +259,12 @@ namespace BehaviorDesigner.Editor
 					}
 					else
 					{
-						categoryList2 = dictionary.get_Item(text2);
+						categoryList2 = dictionary[text2];
 					}
 					categoryList = categoryList2;
 				}
-				categoryList2 = dictionary.get_Item(text2);
-				categoryList2.addTask(list.Item[k]);
+				categoryList2 = dictionary[text2];
+				categoryList2.addTask(list[k]);
 			}
 			this.Search(BehaviorDesignerUtility.SplitCamelCase(this.mSearchString).ToLower().Replace(" ", string.Empty), this.mCategoryList);
 		}
@@ -286,7 +286,7 @@ namespace BehaviorDesigner.Editor
 					}
 					else
 					{
-						genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}/{2}", parentName, this.mCategoryList.get_Item(22).Fullpath, this.mCategoryList[2].Tasks[i].Name.ToString())), this.mCategoryList[2].Tasks[i].Type.Equals(selectedTaskType), menuFunction, this.mCategoryList[2].Tasks[i].Type);
+						genericMenu.AddItem(new GUIContent(string.Format("{0}/{1}/{2}", parentName, this.mCategoryList[22].Fullpath, this.mCategoryList[2].Tasks[i].Name.ToString())), this.mCategoryList[2].Tasks[i].Type.Equals(selectedTaskType), menuFunction, this.mCategoryList[2].Tasks[i].Type);
 					}
 				}
 			}

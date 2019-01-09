@@ -53,10 +53,10 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			objectDrawerType = ObjectDrawerUtility.objectDrawerTypeMap.get_Item(type);
+			objectDrawerType = ObjectDrawerUtility.objectDrawerTypeMap[type];
 			if (ObjectDrawerUtility.objectDrawerMap.ContainsKey(hash))
 			{
-				objectDrawer = ObjectDrawerUtility.objectDrawerMap.get_Item(hash);
+				objectDrawer = ObjectDrawerUtility.objectDrawerMap[hash];
 			}
 			return true;
 		}

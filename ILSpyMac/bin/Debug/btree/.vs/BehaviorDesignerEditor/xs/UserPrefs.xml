@@ -1,16 +1,22 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesigner.Editor/AlphanumComparator.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskInspector.cs">
     <Files>
       <File FileName="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj" Line="611" Column="11" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerWindow.cs" Line="1" Column="1" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="1339" Column="53" />
-      <File FileName="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs" Line="1" Column="1" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/NodeDesigner.cs" Line="1185" Column="64" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/GraphDesigner.cs" Line="1" Column="1" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableInspector.cs" Line="1" Column="1" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/FieldInspector.cs" Line="273" Column="17" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskList.cs" Line="1" Column="1" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/AlphanumComparator.cs" Line="93" Column="36" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerWindow.cs" Line="2798" Column="50" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="1612" Column="58" />
+      <File FileName="BehaviorDesignerEditor/SharedNamedVariableDrawer.cs" Line="41" Column="72" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/NodeDesigner.cs" Line="1197" Column="74" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/GraphDesigner.cs" Line="1189" Column="4" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableInspector.cs" Line="688" Column="135" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/FieldInspector.cs" Line="354" Column="17" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskList.cs" Line="289" Column="105" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/AlphanumComparator.cs" Line="110" Column="29" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/ObjectDrawerUtility.cs" Line="60" Column="2" />
+      <File FileName="BehaviorDesignerEditor/SharedGenericVariableDrawer.cs" Line="40" Column="72" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskCopier.cs" Line="63" Column="63" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableSynchronizerInspector.cs" Line="339" Column="41" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/JSONSerialization.cs" Line="263" Column="8" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskInspector.cs" Line="620" Column="8" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

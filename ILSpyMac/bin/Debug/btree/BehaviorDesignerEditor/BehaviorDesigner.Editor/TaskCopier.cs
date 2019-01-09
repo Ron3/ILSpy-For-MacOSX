@@ -32,7 +32,7 @@ namespace BehaviorDesigner.Editor
 					while (enumerator.MoveNext())
 					{
 						JSONDeserialization.TaskField current = enumerator.Current;
-						List<int> list = JSONDeserialization.TaskIDs.get_Item(current);
+						List<int> list = JSONDeserialization.TaskIDs[current];
 						Type fieldType = current.fieldInfo.FieldType;
 						if (current.fieldInfo.FieldType.IsArray)
 						{
@@ -60,7 +60,7 @@ namespace BehaviorDesigner.Editor
 						}
 						else
 						{
-							Task task4 = TaskCopier.TaskWithID(behaviorSource, list.Item[0]);
+							Task task4 = TaskCopier.TaskWithID(behaviorSource, list[0]);
 							if ((task4 != null && task4.GetType().Equals(current.fieldInfo.FieldType)) || task4.GetType().IsSubclassOf(current.fieldInfo.FieldType))
 							{
 								current.fieldInfo.SetValue(current.task, task4);

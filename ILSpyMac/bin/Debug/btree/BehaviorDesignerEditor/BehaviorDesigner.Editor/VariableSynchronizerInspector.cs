@@ -336,7 +336,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (num != 0)
 				{
-					synchronizer.targetName = list.get_Item(num);
+					synchronizer.targetName = list[num];
 				}
 				else
 				{

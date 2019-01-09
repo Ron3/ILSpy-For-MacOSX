@@ -995,7 +995,7 @@ namespace BehaviorDesigner.Editor
 				while (behaviorSource == null && this.mBehaviorSourceHistory.Count > 0 && this.mBehaviorSourceHistoryIndex > 0)
 				{
 					this.mBehaviorSourceHistoryIndex--;
-					behaviorSource = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior);
+					behaviorSource = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior);
 					if (behaviorSource == null || behaviorSource.Owner == null || behaviorSource.Owner.GetObject() == null)
 					{
 						this.mBehaviorSourceHistory.RemoveAt(this.mBehaviorSourceHistoryIndex);
@@ -1015,7 +1015,7 @@ namespace BehaviorDesigner.Editor
 					this.mBehaviorSourceHistoryIndex++;
 					while (behaviorSource2 == null && this.mBehaviorSourceHistoryIndex < this.mBehaviorSourceHistory.Count && this.mBehaviorSourceHistoryIndex > 0)
 					{
-						behaviorSource2 = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior);
+						behaviorSource2 = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior);
 						if (behaviorSource2 == null || behaviorSource2.Owner == null || behaviorSource2.Owner.GetObject() == null)
 						{
 							this.mBehaviorSourceHistory.RemoveAt(this.mBehaviorSourceHistoryIndex);
@@ -1304,7 +1304,7 @@ namespace BehaviorDesigner.Editor
 						NodeDesigner nodeDesigner = this.mGraphDesigner.SelectedNodes.Item[0].Task.NodeData.NodeDesigner as NodeDesigner;
 						if (nodeDesigner != null && this.mNodeDesignerTaskMap.ContainsKey(nodeDesigner))
 						{
-							task = this.mNodeDesignerTaskMap.get_Item(nodeDesigner);
+							task = this.mNodeDesignerTaskMap[nodeDesigner];
 						}
 					}
 					if (this.mTaskInspector.DrawTaskInspector(this.mActiveBehaviorSource, this.mTaskList, task, !this.ViewOnlyMode()) && !Application.isPlaying)
@@ -2795,7 +2795,11 @@ namespace BehaviorDesigner.Editor
 			this.mActiveBehaviorSource.BehaviorID=this.mActiveBehaviorSource.Owner.GetInstanceID();
 			this.mActiveBehaviorID = this.mActiveBehaviorSource.BehaviorID;
 			this.mPrevActiveObject = Selection.activeObject;
-			if (this.mBehaviorSourceHistory.Count == 0 || this.mBehaviorSourceHistoryIndex >= this.mBehaviorSourceHistory.Count || this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) == null || ((this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior).GetBehaviorSource() != null && !this.mActiveBehaviorSource.BehaviorID.Equals((this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior).GetBehaviorSource().BehaviorID)))
+			if (this.mBehaviorSourceHistory.Count == 0 || 
+			this.mBehaviorSourceHistoryIndex >= this.mBehaviorSourceHistory.Count || 
+				this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] == null || 
+			((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource() != null && 
+				!this.mActiveBehaviorSource.BehaviorID.Equals((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource().BehaviorID)))
 			{
 				for (int i = this.mBehaviorSourceHistory.Count - 1; i > this.mBehaviorSourceHistoryIndex; i--)
 				{

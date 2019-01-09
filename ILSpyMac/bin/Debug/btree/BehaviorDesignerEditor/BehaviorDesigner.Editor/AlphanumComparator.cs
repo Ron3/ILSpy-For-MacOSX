@@ -105,9 +105,9 @@ namespace BehaviorDesigner.Editor
 						num2++;
 					}
 					int num3 = 0;
-					int.TryParse(text5, ref num3);
+					int.TryParse(text5, out num3);
 					int num4 = 0;
-					int.TryParse(text6, ref num4);
+					int.TryParse(text6, out num4);
 					num5 = num3.CompareTo(num4);
 				}
 				else

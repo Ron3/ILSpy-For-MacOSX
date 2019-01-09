@@ -37,7 +37,7 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 				}
 			}
 			int num2 = EditorGUILayout.Popup("Type", num, SharedGenericVariableDrawer.variableNames, BehaviorDesignerUtility.SharedVariableToolbarPopup, new GUILayoutOption[0]);
-			Type type = VariableInspector.FindAllSharedVariableTypes(true).get_Item(num2);
+			Type type = VariableInspector.FindAllSharedVariableTypes(true)[num2];
 			if (num2 != num)
 			{
 				num = num2;

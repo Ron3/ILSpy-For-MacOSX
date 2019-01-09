@@ -1194,7 +1194,7 @@ namespace BehaviorDesigner.Editor
 				if (this.outgoingNodeConnections[i].DestinationNodeDesigner.Equals(nodeDesigner))
 				{
 					NodeConnection nodeConnection = this.outgoingNodeConnections[i];
-					// this.outgoingNodeConnections.Item=i, this.outgoingNodeConnections.get_Item(this.outgoingNodeConnections.Count - 1);
+					// this.outgoingNodeConnections.Item=i, this.outgoingNodeConnections[this.outgoingNodeConnections.Count - 1);
 					// this.outgoingNodeConnections.Item=this.outgoingNodeConnections.Count - 1, nodeConnection;
 
 					this.outgoingNodeConnections[i] = this.outgoingNodeConnections[this.outgoingNodeConnections.Count - 1];

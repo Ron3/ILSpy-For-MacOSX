@@ -38,7 +38,7 @@ public class SharedNamedVariableDrawer : ObjectDrawer
 			}
 			namedVariable.name = EditorGUILayout.TextField("Name", namedVariable.name, new GUILayoutOption[0]);
 			int num2 = EditorGUILayout.Popup("Type", num, SharedNamedVariableDrawer.variableNames, BehaviorDesignerUtility.SharedVariableToolbarPopup, new GUILayoutOption[0]);
-			Type type = VariableInspector.FindAllSharedVariableTypes(true).get_Item(num2);
+			Type type = VariableInspector.FindAllSharedVariableTypes(true)[num2];
 			if (num2 != num)
 			{
 				num = num2;
