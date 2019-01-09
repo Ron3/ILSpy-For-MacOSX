@@ -23,7 +23,7 @@ namespace BehaviorDesigner.Editor
         string str2 = this.TypePrefix(t) + "/";
         TaskCategoryAttribute[] customAttributes1;
         if ((customAttributes1 = t.GetCustomAttributes(typeof (TaskCategoryAttribute), false) as TaskCategoryAttribute[]).Length > 0)
-          str2 = str2 + customAttributes1[0].get_Category() + "/";
+          str2 = str2 + customAttributes1[0].Category + "/";
         TaskNameAttribute[] customAttributes2;
         str1 = (customAttributes2 = t.GetCustomAttributes(typeof (TaskNameAttribute), false) as TaskNameAttribute[]).Length <= 0 ? str2 + BehaviorDesignerUtility.SplitCamelCase(t.Name.ToString()) : str2 + customAttributes2[0].get_Name();
       }

@@ -218,6 +218,9 @@
  <Reference Include="BehaviorDesignerRuntime">
  <HintPath>/Users/ron/Desktop/BTree/Assets/Behavior Designer/Runtime/BehaviorDesignerRuntime.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor">
+   <HintPath>..\..\..\..\..\..\..\..\Applications\Unity\Hub\Editor\2017.4.9f1\Unity.app\Contents\Managed\UnityEditor.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SharedGenericVariableDrawer.cs" />
