@@ -181,7 +181,7 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.set_hideFlags(61);
+			base.hideFlags=61;
 		}
 
 		public void Init()
@@ -348,7 +348,7 @@ namespace BehaviorDesigner.Editor
 			BehaviorDesignerUtility.DrawContentSeperator(2);
 			GUILayout.Space(4f);
 			this.mScrollPosition = GUILayout.BeginScrollView(this.mScrollPosition, new GUILayoutOption[0]);
-			GUI.set_enabled(enabled);
+			GUI.enabled=enabled;
 			if (this.mCategoryList.Count > 1)
 			{
 				this.DrawCategory(window, this.mCategoryList.get_Item(1));
@@ -365,7 +365,7 @@ namespace BehaviorDesigner.Editor
 			{
 				this.DrawCategory(window, this.mCategoryList.get_Item(2));
 			}
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			GUILayout.EndScrollView();
 		}
 

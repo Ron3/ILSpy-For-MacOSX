@@ -53,12 +53,12 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.set_hideFlags(61);
+			base.hideFlags=61;
 		}
 
 		public void ClearFocus()
 		{
-			GUIUtility.set_keyboardControl(0);
+			GUIUtility.keyboardControl=0;
 		}
 
 		public bool HasFocus()
@@ -73,19 +73,19 @@ namespace BehaviorDesigner.Editor
 				return false;
 			}
 			this.mScrollPosition = GUILayout.BeginScrollView(this.mScrollPosition, new GUILayoutOption[0]);
-			GUI.set_enabled(enabled);
+			GUI.enabled=enabled;
 			if (this.behaviorDesignerWindow == null)
 			{
 				this.behaviorDesignerWindow = BehaviorDesignerWindow.instance;
 			}
-			EditorGUIUtility.set_labelWidth(150f);
+			EditorGUIUtility.labelWidth=150f;
 			EditorGUI.BeginChangeCheck();
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 			EditorGUILayout.LabelField("Name", new GUILayoutOption[]
 			{
 				GUILayout.Width(90f)
 			});
-			task.set_FriendlyName(EditorGUILayout.TextField(task.FriendlyName, new GUILayoutOption[0]));
+			task.FriendlyName=EditorGUILayout.TextField(task.FriendlyName, new GUILayoutOption[0]);
 			if (GUILayout.Button(BehaviorDesignerUtility.DocTexture, BehaviorDesignerUtility.TransparentButtonGUIStyle, new GUILayoutOption[0]))
 			{
 				this.OpenHelpURL(task);
@@ -132,7 +132,7 @@ namespace BehaviorDesigner.Editor
 			{
 				GUILayout.Width(90f)
 			});
-			task.set_IsInstant(EditorGUILayout.Toggle(task.IsInstant, new GUILayoutOption[0]));
+			task.IsInstant=EditorGUILayout.Toggle(task.IsInstant, new GUILayoutOption[0]);
 			GUILayout.EndHorizontal();
 			EditorGUILayout.LabelField("Comment", new GUILayoutOption[0]);
 			task.NodeData.set_Comment(EditorGUILayout.TextArea(task.NodeData.Comment, BehaviorDesignerUtility.TaskInspectorCommentGUIStyle, new GUILayoutOption[]
@@ -141,16 +141,16 @@ namespace BehaviorDesigner.Editor
 			}));
 			if (EditorGUI.EndChangeCheck())
 			{
-				GUI.set_changed(true);
+				GUI.changed=true;
 			}
 			BehaviorDesignerUtility.DrawContentSeperator(2);
 			GUILayout.Space(6f);
 			if (this.DrawTaskFields(behaviorSource, taskList, task, enabled))
 			{
 				BehaviorUndo.RegisterUndo("Inspector", behaviorSource.Owner.GetObject());
-				GUI.set_changed(true);
+				GUI.changed=true;
 			}
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			GUILayout.EndScrollView();
 			return GUI.changed;
 		}
@@ -214,7 +214,7 @@ namespace BehaviorDesigner.Editor
 							}
 							if (EditorGUI.EndChangeCheck())
 							{
-								GUI.set_changed(true);
+								GUI.changed=true;
 							}
 						}
 						else if (fieldType.Equals(typeof(SharedVariable)) || fieldType.IsSubclassOf(typeof(SharedVariable)))
@@ -239,7 +239,7 @@ namespace BehaviorDesigner.Editor
 							if (EditorGUI.EndChangeCheck())
 							{
 								fields[j].SetValue(obj, sharedVariable);
-								GUI.set_changed(true);
+								GUI.changed=true;
 							}
 						}
 						else
@@ -262,7 +262,7 @@ namespace BehaviorDesigner.Editor
 							if (EditorGUI.EndChangeCheck())
 							{
 								fields[j].SetValue(obj, obj2);
-								GUI.set_changed(true);
+								GUI.changed=true;
 							}
 							if (TaskUtility.HasAttribute(fields[j], typeof(RequiredFieldAttribute)) && !ErrorCheck.IsRequiredFieldValid(fieldType, value))
 							{
@@ -338,7 +338,7 @@ namespace BehaviorDesigner.Editor
 				Color backgroundColor = GUI.backgroundColor;
 				if (flag)
 				{
-					GUI.set_backgroundColor(new Color(0.5f, 1f, 0.5f));
+					GUI.backgroundColor=new Color(0.5f, 1f, 0.5f);
 				}
 				if (GUILayout.Button((!flag) ? "Select" : "Done", EditorStyles.miniButtonMid, new GUILayoutOption[]
 				{
@@ -351,7 +351,7 @@ namespace BehaviorDesigner.Editor
 					}
 					this.behaviorDesignerWindow.ToggleReferenceTasks(parentTask, field);
 				}
-				GUI.set_backgroundColor(backgroundColor);
+				GUI.backgroundColor=backgroundColor;
 				EditorGUILayout.EndHorizontal();
 				if (typeof(IList).IsAssignableFrom(field.FieldType))
 				{
@@ -377,7 +377,7 @@ namespace BehaviorDesigner.Editor
 								}))
 								{
 									this.ReferenceTasks(parentTask, ((list.get_Item(i) as Task).NodeData.NodeDesigner as NodeDesigner).Task, field);
-									GUI.set_changed(true);
+									GUI.changed=true;
 								}
 								GUILayout.Space(3f);
 								if (GUILayout.Button(BehaviorDesignerUtility.IdentifyButtonTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
@@ -408,7 +408,7 @@ namespace BehaviorDesigner.Editor
 						}))
 						{
 							this.ReferenceTasks(parentTask, null, field);
-							GUI.set_changed(true);
+							GUI.changed=true;
 						}
 						GUILayout.Space(3f);
 						if (GUILayout.Button(BehaviorDesignerUtility.IdentifyButtonTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
@@ -433,9 +433,9 @@ namespace BehaviorDesigner.Editor
 					sharedVariable = (Activator.CreateInstance(field.FieldType) as SharedVariable);
 					if (TaskUtility.HasAttribute(field, typeof(RequiredFieldAttribute)) || TaskUtility.HasAttribute(field, typeof(SharedRequiredAttribute)))
 					{
-						sharedVariable.set_IsShared(true);
+						sharedVariable.IsShared=true;
 					}
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				bool drawComponentField;
 				if (sharedVariable.IsShared)
@@ -450,11 +450,11 @@ namespace BehaviorDesigner.Editor
 					Color backgroundColor = GUI.backgroundColor;
 					if (num2 == 0 && !TaskUtility.HasAttribute(field, typeof(SharedRequiredAttribute)))
 					{
-						GUI.set_backgroundColor(Color.red);
+						GUI.backgroundColor=Color.red;
 					}
 					int num3 = num2;
 					num2 = EditorGUILayout.Popup(num2, array, EditorStyles.toolbarPopup, new GUILayoutOption[0]);
-					GUI.set_backgroundColor(backgroundColor);
+					GUI.backgroundColor=backgroundColor;
 					if (num2 != num3)
 					{
 						if (num2 == 0)
@@ -467,7 +467,7 @@ namespace BehaviorDesigner.Editor
 							{
 								sharedVariable = (Activator.CreateInstance(field.FieldType) as SharedVariable);
 							}
-							sharedVariable.set_IsShared(true);
+							sharedVariable.IsShared=true;
 						}
 						else if (num != -1 && num2 >= num)
 						{
@@ -494,7 +494,7 @@ namespace BehaviorDesigner.Editor
 				}
 				else if (!sharedVariable.IsShared)
 				{
-					sharedVariable.set_IsShared(true);
+					sharedVariable.IsShared=true;
 				}
 			}
 			else
@@ -525,7 +525,7 @@ namespace BehaviorDesigner.Editor
 						if (allFields[i].FieldType.IsSubclassOf(typeof(SharedVariable)) && !BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(HideInInspector)) && !BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(NonSerializedAttribute)) && ((!allFields[i].IsPrivate && !allFields[i].IsFamily) || BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(SerializeField))))
 						{
 							SharedVariable sharedVariable = Activator.CreateInstance(allFields[i].FieldType) as SharedVariable;
-							sharedVariable.set_IsShared(false);
+							sharedVariable.IsShared=false;
 							allFields[i].SetValue(task, sharedVariable);
 						}
 					}
@@ -785,7 +785,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (array[i] != null && array[i].GetClass() != null && array[i].GetClass().Equals(task.GetType()))
 				{
-					Selection.set_activeObject(array[i]);
+					Selection.activeObject=array[i];
 					break;
 				}
 			}
@@ -806,7 +806,7 @@ namespace BehaviorDesigner.Editor
 						SharedVariable sharedVariable = fields[j].GetValue(task) as SharedVariable;
 						if (TaskUtility.HasAttribute(fields[j], typeof(RequiredFieldAttribute)) && sharedVariable != null && !sharedVariable.IsShared)
 						{
-							sharedVariable.set_IsShared(true);
+							sharedVariable.IsShared=true;
 						}
 					}
 				}
@@ -823,7 +823,7 @@ namespace BehaviorDesigner.Editor
 			TaskInspector.TaskColor taskColor = value as TaskInspector.TaskColor;
 			if (taskColor.task.NodeData.ColorIndex != taskColor.colorIndex)
 			{
-				taskColor.task.NodeData.set_ColorIndex(taskColor.colorIndex);
+				taskColor.task.NodeData.ColorIndex=taskColor.colorIndex;
 				BehaviorDesignerWindow.instance.SaveBehavior();
 			}
 		}
@@ -1142,7 +1142,7 @@ namespace BehaviorDesigner.Editor
 					{
 						FieldInfo field3 = this.mActiveMenuSelectionTask.GetType().GetField("storeResult");
 						sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(methodInfo.ReturnType)) as SharedVariable);
-						sharedVariable.set_IsShared(true);
+						sharedVariable.IsShared=true;
 						field3.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 					}
 				}
@@ -1157,7 +1157,7 @@ namespace BehaviorDesigner.Editor
 						field4 = this.mActiveMenuSelectionTask.GetType().GetField("compareValue");
 					}
 					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(fieldInfo.FieldType)) as SharedVariable);
-					sharedVariable.set_IsShared(this.IsReflectionGetterTask(this.mActiveMenuSelectionTask.GetType()));
+					sharedVariable.IsShared=this.IsReflectionGetterTask(this.mActiveMenuSelectionTask.GetType());
 					field4.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 				}
 				else
@@ -1171,7 +1171,7 @@ namespace BehaviorDesigner.Editor
 						field5 = this.mActiveMenuSelectionTask.GetType().GetField("compareValue");
 					}
 					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(propertyInfo.PropertyType)) as SharedVariable);
-					sharedVariable.set_IsShared(this.IsReflectionGetterTask(this.mActiveMenuSelectionTask.GetType()));
+					sharedVariable.IsShared=this.IsReflectionGetterTask(this.mActiveMenuSelectionTask.GetType());
 					field5.SetValue(this.mActiveMenuSelectionTask, sharedVariable);
 				}
 			}

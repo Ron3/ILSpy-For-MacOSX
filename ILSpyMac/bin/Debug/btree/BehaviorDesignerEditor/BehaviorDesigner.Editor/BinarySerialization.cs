@@ -48,7 +48,7 @@ namespace BehaviorDesigner.Editor
 				}
 			}
 			BinarySerialization.taskSerializationData.Version = "1.5.11";
-			behaviorSource.set_TaskData(BinarySerialization.taskSerializationData);
+			behaviorSource.TaskData=BinarySerialization.taskSerializationData;
 			if (behaviorSource.Owner != null && !behaviorSource.Owner.Equals(null))
 			{
 				BehaviorDesignerUtility.SetObjectDirty(behaviorSource.Owner.GetObject());
@@ -62,7 +62,7 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			BinarySerialization.fieldIndex = 0;
-			globalVariables.set_VariableData(new VariableSerializationData());
+			globalVariables.VariableData=new VariableSerializationData();
 			if (globalVariables.Variables == null || globalVariables.Variables.Count == 0)
 			{
 				return;
@@ -73,7 +73,7 @@ namespace BehaviorDesigner.Editor
 				globalVariables.VariableData.variableStartIndex.Add(BinarySerialization.fieldSerializationData.startIndex.Count);
 				BinarySerialization.SaveSharedVariable(globalVariables.Variables.get_Item(i), 0);
 			}
-			globalVariables.set_Version("1.5.11");
+			globalVariables.Version="1.5.11";
 			BehaviorDesignerUtility.SetObjectDirty(globalVariables);
 		}
 

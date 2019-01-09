@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
@@ -647,7 +647,7 @@ namespace BehaviorDesigner.Editor
 				int num = 0;
 				if (dictionary2.TryGetValue(text, ref num))
 				{
-					dictionary2.set_Item(text, ++num);
+					dictionary2.Item=text, ++num;
 					text += string.Format(" ({0})", num + 1);
 				}
 				else
@@ -822,7 +822,7 @@ namespace BehaviorDesigner.Editor
 				if (this.mBehaviorManager.BreakpointTree != null && this.mEditorAtBreakpoint)
 				{
 					this.mEditorAtBreakpoint = false;
-					this.mBehaviorManager.set_BreakpointTree(null);
+					this.mBehaviorManager.BreakpointTree=null;
 				}
 			}
 			else if (EditorApplication.isPlaying && EditorApplication.isPaused)
@@ -841,7 +841,7 @@ namespace BehaviorDesigner.Editor
 					else
 					{
 						this.mEditorAtBreakpoint = false;
-						this.mBehaviorManager.set_BreakpointTree(null);
+						this.mBehaviorManager.BreakpointTree=null;
 					}
 				}
 			}
@@ -859,13 +859,13 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			BehaviorManager expr_23 = this.mBehaviorManager;
-			expr_23.set_OnTaskBreakpoint((BehaviorManager.BehaviorManagerHandler)Delegate.Combine(expr_23.OnTaskBreakpoint, new BehaviorManager.BehaviorManagerHandler(this.OnTaskBreakpoint)));
+			expr_23.OnTaskBreakpoint=(BehaviorManager.BehaviorManagerHandler)Delegate.Combine(expr_23.OnTaskBreakpoint, new BehaviorManager.BehaviorManagerHandler(this.OnTaskBreakpoint));
 			this.mUpdateNodeTaskMap = true;
 		}
 
 		public void OnTaskBreakpoint()
 		{
-			EditorApplication.set_isPaused(true);
+			EditorApplication.isPaused=true;
 			this.Repaint();
 		}
 
@@ -910,7 +910,7 @@ namespace BehaviorDesigner.Editor
 				}
 				if (this.mBehaviorManager.BreakpointTree != null)
 				{
-					this.mBehaviorManager.set_BreakpointTree(null);
+					this.mBehaviorManager.BreakpointTree=null;
 				}
 				this.Repaint();
 			}
@@ -924,7 +924,7 @@ namespace BehaviorDesigner.Editor
 				{
 					this.LoadBehavior(this.mActiveBehaviorSource, true, false);
 				}
-				this.mBehaviorManager.set_Dirty(false);
+				this.mBehaviorManager.Dirty=false;
 			}
 			if (!EditorApplication.isPlaying && this.mIsPlaying)
 			{
@@ -962,8 +962,8 @@ namespace BehaviorDesigner.Editor
 			bool result = false;
 			Color color = GUI.color;
 			Color backgroundColor = GUI.backgroundColor;
-			GUI.set_color(Color.white);
-			GUI.set_backgroundColor(Color.white);
+			GUI.color=Color.white;
+			GUI.backgroundColor=Color.white;
 			this.DrawFileToolbar();
 			this.DrawDebugToolbar();
 			this.DrawPropertiesBox();
@@ -976,8 +976,8 @@ namespace BehaviorDesigner.Editor
 			{
 				GUI.DrawTexture(new Rect(0f, 0f, base.position.width, base.position.height + 22f), BehaviorDesignerUtility.ScreenshotBackgroundTexture, 0, false);
 			}
-			GUI.set_color(color);
-			GUI.set_backgroundColor(backgroundColor);
+			GUI.color=color;
+			GUI.backgroundColor=backgroundColor;
 			return result;
 		}
 
@@ -1121,7 +1121,7 @@ namespace BehaviorDesigner.Editor
 					EditorUtility.DisplayDialog("Unable to Lock GameObject", "No GameObject is selected.", "OK");
 				}
 			}
-			GUI.set_enabled(this.mActiveBehaviorSource == null || this.mExternalParent == null);
+			GUI.enabled=this.mActiveBehaviorSource == null || this.mExternalParent == null;
 			if (GUILayout.Button("Export", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(46f)
@@ -1143,7 +1143,7 @@ namespace BehaviorDesigner.Editor
 					EditorUtility.DisplayDialog("Unable to Save Behavior Tree", "Select a behavior tree from within the scene.", "OK");
 				}
 			}
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			if (GUILayout.Button("Take Screenshot", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(96f)
@@ -1179,14 +1179,14 @@ namespace BehaviorDesigner.Editor
 				GUILayout.Width(40f)
 			}))
 			{
-				EditorApplication.set_isPlaying(!EditorApplication.isPlaying);
+				EditorApplication.isPlaying=!EditorApplication.isPlaying;
 			}
 			if (GUILayout.Button(BehaviorDesignerUtility.PauseTexture, (!EditorApplication.isPaused) ? EditorStyles.toolbarButton : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(40f)
 			}))
 			{
-				EditorApplication.set_isPaused(!EditorApplication.isPaused);
+				EditorApplication.isPaused=!EditorApplication.isPaused;
 			}
 			if (GUILayout.Button(BehaviorDesignerUtility.StepTexture, EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
@@ -1969,7 +1969,7 @@ namespace BehaviorDesigner.Editor
 						}
 						else if (Event.current.modifiers == 1 && nodeDesigner.Task is ParentTask)
 						{
-							nodeDesigner.Task.NodeData.set_Collapsed(!nodeDesigner.Task.NodeData.Collapsed);
+							nodeDesigner.Task.NodeData.Collapsed=!nodeDesigner.Task.NodeData.Collapsed;
 							this.mGraphDesigner.DeselectWithParent(nodeDesigner);
 						}
 						else if (clickCount == 2)
@@ -2792,7 +2792,7 @@ namespace BehaviorDesigner.Editor
 			{
 				this.mActiveObject = behaviorSource.Owner.GetObject();
 			}
-			this.mActiveBehaviorSource.set_BehaviorID(this.mActiveBehaviorSource.Owner.GetInstanceID());
+			this.mActiveBehaviorSource.BehaviorID=this.mActiveBehaviorSource.Owner.GetInstanceID();
 			this.mActiveBehaviorID = this.mActiveBehaviorSource.BehaviorID;
 			this.mPrevActiveObject = Selection.activeObject;
 			if (this.mBehaviorSourceHistory.Count == 0 || this.mBehaviorSourceHistoryIndex >= this.mBehaviorSourceHistory.Count || this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) == null || ((this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior).GetBehaviorSource() != null && !this.mActiveBehaviorSource.BehaviorID.Equals((this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior).GetBehaviorSource().BehaviorID)))

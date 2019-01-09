@@ -90,7 +90,7 @@ namespace BehaviorDesigner.Editor
 						if (EditorGUI.EndChangeCheck())
 						{
 							fields[j].SetValue(obj, obj2);
-							GUI.set_changed(true);
+							GUI.changed=true;
 						}
 						guiContent = null;
 					}
@@ -124,7 +124,7 @@ namespace BehaviorDesigner.Editor
 				if (objectDrawer.Value != value)
 				{
 					value = objectDrawer.Value;
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				return value;
 			}
@@ -140,7 +140,7 @@ namespace BehaviorDesigner.Editor
 				if (objectDrawer.Value != value)
 				{
 					value = objectDrawer.Value;
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				return value;
 			}
@@ -192,7 +192,7 @@ namespace BehaviorDesigner.Editor
 					list.CopyTo(array, 0);
 					list = array;
 				}
-				GUI.set_changed(true);
+				GUI.changed=true;
 			}
 			else
 			{
@@ -254,7 +254,7 @@ namespace BehaviorDesigner.Editor
 					FieldInspector.editingArray = false;
 					FieldInspector.savedArraySize = -1;
 					FieldInspector.editingFieldHash = -1;
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				else if (num2 != num)
 				{
@@ -269,8 +269,8 @@ namespace BehaviorDesigner.Editor
 				for (int k = 0; k < list.Count; k++)
 				{
 					GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-					guiContent.set_text("Element " + k);
-					list.set_Item(k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.get_Item(k)));
+					guiContent.text="Element " + k;
+					list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.get_Item(k));
 					GUILayout.Space(6f);
 					GUILayout.EndHorizontal();
 				}
@@ -351,10 +351,10 @@ namespace BehaviorDesigner.Editor
 						for (int j = 0; j < 4; j++)
 						{
 							EditorGUI.BeginChangeCheck();
-							matrix4x.set_Item(i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x.get_Item(i, j), new GUILayoutOption[0]));
+							matrix4x.Item=i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x.get_Item(i, j), new GUILayoutOption[0]);
 							if (EditorGUI.EndChangeCheck())
 							{
-								GUI.set_changed(true);
+								GUI.changed=true;
 							}
 						}
 					}
@@ -369,7 +369,7 @@ namespace BehaviorDesigner.Editor
 				if (value == null)
 				{
 					value = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				return EditorGUILayout.CurveField(guiContent, (AnimationCurve)value, new GUILayoutOption[0]);
 			}
@@ -442,9 +442,9 @@ namespace BehaviorDesigner.Editor
 				sharedVariable = (Activator.CreateInstance(fieldType, true) as SharedVariable);
 				if (TaskUtility.HasAttribute(fieldInfo, typeof(RequiredFieldAttribute)) || TaskUtility.HasAttribute(fieldInfo, typeof(SharedRequiredAttribute)))
 				{
-					sharedVariable.set_IsShared(true);
+					sharedVariable.IsShared=true;
 				}
-				GUI.set_changed(true);
+				GUI.changed=true;
 			}
 			if (sharedVariable == null || sharedVariable.IsShared)
 			{
@@ -455,11 +455,11 @@ namespace BehaviorDesigner.Editor
 				Color backgroundColor = GUI.backgroundColor;
 				if (num2 == 0 && !TaskUtility.HasAttribute(fieldInfo, typeof(SharedRequiredAttribute)))
 				{
-					GUI.set_backgroundColor(Color.red);
+					GUI.backgroundColor=Color.red;
 				}
 				int num3 = num2;
 				num2 = EditorGUILayout.Popup(guiContent.text, num2, array, BehaviorDesignerUtility.SharedVariableToolbarPopup, new GUILayoutOption[0]);
-				GUI.set_backgroundColor(backgroundColor);
+				GUI.backgroundColor=backgroundColor;
 				if (num2 != num3)
 				{
 					if (num2 == 0)
@@ -471,7 +471,7 @@ namespace BehaviorDesigner.Editor
 						else
 						{
 							sharedVariable = (Activator.CreateInstance(fieldType, true) as SharedVariable);
-							sharedVariable.set_IsShared(true);
+							sharedVariable.IsShared=true;
 						}
 					}
 					else if (num != -1 && num2 >= num)
@@ -482,7 +482,7 @@ namespace BehaviorDesigner.Editor
 					{
 						sharedVariable = FieldInspector.behaviorSource.GetVariable(array[num2]);
 					}
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				if (!fieldType.Equals(typeof(SharedVariable)) && !TaskUtility.HasAttribute(fieldInfo, typeof(RequiredFieldAttribute)) && !TaskUtility.HasAttribute(fieldInfo, typeof(SharedRequiredAttribute)))
 				{
@@ -592,7 +592,7 @@ namespace BehaviorDesigner.Editor
 				{
 					sharedVariable = (Activator.CreateInstance(sharedVariable.GetType(), true) as SharedVariable);
 				}
-				sharedVariable.set_IsShared(isShared);
+				sharedVariable.IsShared=isShared;
 			}
 			return sharedVariable;
 		}
@@ -659,7 +659,7 @@ namespace BehaviorDesigner.Editor
 						num |= FieldInspector.maskValues[j];
 					}
 				}
-				layerMask.set_value(num);
+				layerMask.value=num;
 			}
 			return layerMask;
 		}

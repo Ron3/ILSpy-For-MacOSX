@@ -22,7 +22,7 @@ namespace BehaviorDesigner.Editor
 		public static Task PasteTask(BehaviorSource behaviorSource, TaskSerializer serializer)
 		{
 			Dictionary<int, Task> dictionary = new Dictionary<int, Task>();
-			JSONDeserialization.set_TaskIDs(new Dictionary<JSONDeserialization.TaskField, List<int>>());
+			JSONDeserialization.TaskIDs=new Dictionary<JSONDeserialization.TaskField, List<int>>();
 			Task task = JSONDeserialization.DeserializeTask(behaviorSource, MiniJSON.Deserialize(serializer.serialization) as Dictionary<string, object>, ref dictionary, serializer.unityObjects);
 			TaskCopier.CheckSharedVariables(behaviorSource, task);
 			if (JSONDeserialization.TaskIDs.Count > 0)
@@ -68,7 +68,7 @@ namespace BehaviorDesigner.Editor
 						}
 					}
 				}
-				JSONDeserialization.set_TaskIDs(null);
+				JSONDeserialization.TaskIDs=null;
 			}
 			return task;
 		}

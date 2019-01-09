@@ -18,14 +18,14 @@ namespace BehaviorDesigner.Editor
 		public static Rect ScaleSizeBy(this Rect rect, float scale, Vector2 pivotPoint)
 		{
 			Rect result = rect;
-			result.set_x(result.x - pivotPoint.x);
-			result.set_y(result.y - pivotPoint.y);
-			result.set_xMin(result.xMin * scale);
-			result.set_xMax(result.xMax * scale);
-			result.set_yMin(result.yMin * scale);
-			result.set_yMax(result.yMax * scale);
-			result.set_x(result.x + pivotPoint.x);
-			result.set_y(result.y + pivotPoint.y);
+			result.x=result.x - pivotPoint.x;
+			result.y=result.y - pivotPoint.y;
+			result.xMin=result.xMin * scale;
+			result.xMax=result.xMax * scale;
+			result.yMin=result.yMin * scale;
+			result.yMax=result.yMax * scale;
+			result.x=result.x + pivotPoint.x;
+			result.y=result.y + pivotPoint.y;
 			return result;
 		}
 	}

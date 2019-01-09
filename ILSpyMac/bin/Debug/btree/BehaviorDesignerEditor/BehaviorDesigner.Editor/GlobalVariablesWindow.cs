@@ -39,9 +39,9 @@ namespace BehaviorDesigner.Editor
 		public static void ShowWindow()
 		{
 			GlobalVariablesWindow window = EditorWindow.GetWindow<GlobalVariablesWindow>(false, "Global Variables");
-			window.set_minSize(new Vector2(300f, 410f));
-			window.set_maxSize(new Vector2(300f, 3.40282347E+38f));
-			window.set_wantsMouseMove(true);
+			window.minSize=new Vector2(300f, 410f);
+			window.maxSize=new Vector2(300f, 3.40282347E+38f);
+			window.wantsMouseMove=true;
 		}
 
 		public void OnFocus()

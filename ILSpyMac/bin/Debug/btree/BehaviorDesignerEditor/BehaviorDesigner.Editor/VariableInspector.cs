@@ -86,7 +86,7 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.set_hideFlags(61);
+			base.hideFlags=61;
 		}
 
 		public static List<Type> FindAllSharedVariableTypes(bool removeShared)
@@ -126,7 +126,7 @@ namespace BehaviorDesigner.Editor
 
 		public bool ClearFocus(bool addVariable, BehaviorSource behaviorSource)
 		{
-			GUIUtility.set_keyboardControl(0);
+			GUIUtility.keyboardControl=0;
 			bool result = false;
 			if (addVariable && !string.IsNullOrEmpty(this.mVariableName) && VariableInspector.VariableNameValid(behaviorSource, this.mVariableName))
 			{
@@ -165,7 +165,7 @@ namespace BehaviorDesigner.Editor
 						behaviorSource2.CheckForSerialization(true, null);
 						allVariables = behaviorSource2.GetAllVariables();
 						ExternalBehavior externalBehavior = behavior.ExternalBehavior;
-						externalBehavior.BehaviorSource.set_Owner(externalBehavior);
+						externalBehavior.BehaviorSource.Owner=externalBehavior;
 						externalBehavior.BehaviorSource.CheckForSerialization(true, behaviorSource);
 					}
 					else
@@ -227,7 +227,7 @@ namespace BehaviorDesigner.Editor
 			list = ((variableSource == null) ? null : variableSource.GetAllVariables());
 			if (list != null && list.Count > 0)
 			{
-				GUI.set_enabled(!flag2);
+				GUI.enabled=!flag2;
 				if (VariableInspector.DrawAllVariables(true, variableSource, ref list, true, ref variablePosition, ref selectedVariableIndex, ref selectedVariableName, ref selectedVariableTypeIndex, true, true))
 				{
 					flag = true;
@@ -237,7 +237,7 @@ namespace BehaviorDesigner.Editor
 			{
 				variableSource.SetAllVariables(list);
 			}
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			GUILayout.EndScrollView();
 			if (flag && !EditorApplication.isPlayingOrWillChangePlaymode && behaviorSource != null && behaviorSource.Owner is Behavior)
 			{
@@ -277,8 +277,8 @@ namespace BehaviorDesigner.Editor
 					if (list.Count - 1 < i)
 					{
 						SharedVariable sharedVariable = Activator.CreateInstance(variables.get_Item(i).GetType()) as SharedVariable;
-						sharedVariable.set_Name(variables.get_Item(i).Name);
-						sharedVariable.set_IsShared(true);
+						sharedVariable.Name=variables.get_Item(i).Name;
+						sharedVariable.IsShared=true;
 						sharedVariable.SetValue(variables.get_Item(i).GetValue());
 						list.Add(sharedVariable);
 						result = true;
@@ -286,10 +286,10 @@ namespace BehaviorDesigner.Editor
 					else if (list.get_Item(i).Name != variables.get_Item(i).Name || list.get_Item(i).GetType() != variables.get_Item(i).GetType())
 					{
 						SharedVariable sharedVariable2 = Activator.CreateInstance(variables.get_Item(i).GetType()) as SharedVariable;
-						sharedVariable2.set_Name(variables.get_Item(i).Name);
-						sharedVariable2.set_IsShared(true);
+						sharedVariable2.Name=variables.get_Item(i).Name;
+						sharedVariable2.IsShared=true;
 						sharedVariable2.SetValue(variables.get_Item(i).GetValue());
-						list.set_Item(i, sharedVariable2);
+						list.Item=i, sharedVariable2;
 						result = true;
 					}
 				}
@@ -314,7 +314,7 @@ namespace BehaviorDesigner.Editor
 			{
 				VariableInspector.FindAllSharedVariableTypes(true);
 			}
-			EditorGUIUtility.set_labelWidth(150f);
+			EditorGUIUtility.labelWidth=150f;
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 			GUILayout.Space(4f);
 			EditorGUILayout.LabelField("Name", new GUILayoutOption[]
@@ -347,7 +347,7 @@ namespace BehaviorDesigner.Editor
 			bool flag = false;
 			bool flag2 = VariableInspector.VariableNameValid(variableSource, variableName);
 			bool enabled = GUI.enabled;
-			GUI.set_enabled(flag2 && enabled);
+			GUI.enabled=flag2 && enabled;
 			GUI.SetNextControlName("Add");
 			if (GUILayout.Button("Add", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
@@ -383,7 +383,7 @@ namespace BehaviorDesigner.Editor
 			GUILayout.EndHorizontal();
 			if (!fromGlobalVariablesWindow)
 			{
-				GUI.set_enabled(true);
+				GUI.enabled=true;
 				GUILayout.Space(3f);
 				GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 				GUILayout.Space(5f);
@@ -402,7 +402,7 @@ namespace BehaviorDesigner.Editor
 			{
 				variableStartPosition = GUILayoutUtility.GetLastRect().yMax;
 			}
-			GUI.set_enabled(enabled);
+			GUI.enabled=enabled;
 			return flag;
 		}
 
@@ -519,7 +519,7 @@ namespace BehaviorDesigner.Editor
 						}
 						else
 						{
-							variablePosition.set_Item(i, GUILayoutUtility.GetLastRect().yMax);
+							variablePosition.Item=i, GUILayoutUtility.GetLastRect().yMax;
 						}
 					}
 				}
@@ -533,7 +533,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (showFooter && variables.Count > 0)
 			{
-				GUI.set_enabled(true);
+				GUI.enabled=true;
 				GUILayout.Label("Select a variable to change its properties.", BehaviorDesignerUtility.LabelWrapGUIStyle, new GUILayoutOption[0]);
 			}
 			return result;
@@ -604,37 +604,37 @@ namespace BehaviorDesigner.Editor
 			}
 			GUILayout.Space(10f);
 			bool enabled = GUI.enabled;
-			GUI.set_enabled(enabled && selectedVariableIndex < variables.Count - 1);
+			GUI.enabled=enabled && selectedVariableIndex < variables.Count - 1;
 			if (GUILayout.Button(BehaviorDesignerUtility.DownArrowButtonTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(19f)
 			}))
 			{
 				SharedVariable sharedVariable2 = variables.get_Item(selectedVariableIndex + 1);
-				variables.set_Item(selectedVariableIndex + 1, variables.get_Item(selectedVariableIndex));
-				variables.set_Item(selectedVariableIndex, sharedVariable2);
+				variables.Item=selectedVariableIndex + 1, variables.get_Item(selectedVariableIndex);
+				variables.Item=selectedVariableIndex, sharedVariable2;
 				selectedVariableIndex++;
 				result = true;
 			}
-			GUI.set_enabled(enabled && (selectedVariableIndex < variables.Count - 1 || selectedVariableIndex != 0));
+			GUI.enabled=enabled && (selectedVariableIndex < variables.Count - 1 || selectedVariableIndex != 0);
 			GUILayout.Box(string.Empty, BehaviorDesignerUtility.ArrowSeparatorGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(1f),
 				GUILayout.Height(18f)
 			});
-			GUI.set_enabled(enabled && selectedVariableIndex != 0);
+			GUI.enabled=enabled && selectedVariableIndex != 0;
 			if (GUILayout.Button(BehaviorDesignerUtility.UpArrowButtonTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(20f)
 			}))
 			{
 				SharedVariable sharedVariable3 = variables.get_Item(selectedVariableIndex - 1);
-				variables.set_Item(selectedVariableIndex - 1, variables.get_Item(selectedVariableIndex));
-				variables.set_Item(selectedVariableIndex, sharedVariable3);
+				variables.Item=selectedVariableIndex - 1, variables.get_Item(selectedVariableIndex);
+				variables.Item=selectedVariableIndex, sharedVariable3;
 				selectedVariableIndex--;
 				result = true;
 			}
-			GUI.set_enabled(enabled);
+			GUI.enabled=enabled;
 			if (GUILayout.Button(BehaviorDesignerUtility.VariableDeleteButtonTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(19f)
@@ -661,22 +661,22 @@ namespace BehaviorDesigner.Editor
 					BehaviorDesignerWindow.instance.RemoveSharedVariableReferences(sharedVariable);
 				}
 				sharedVariable = VariableInspector.CreateVariable(selectedVariableTypeIndex, sharedVariable.Name, sharedVariable.IsGlobal);
-				variables.set_Item(selectedVariableIndex, sharedVariable);
+				variables.Item=selectedVariableIndex, sharedVariable;
 				result = true;
 			}
 			GUILayout.EndHorizontal();
 			EditorGUI.BeginChangeCheck();
 			GUILayout.Space(4f);
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			GUI.set_enabled(VariableInspector.CanNetworkSync(sharedVariable.GetType().GetProperty("Value").PropertyType));
+			GUI.enabled=VariableInspector.CanNetworkSync(sharedVariable.GetType().GetProperty("Value").PropertyType);
 			EditorGUI.BeginChangeCheck();
-			sharedVariable.set_NetworkSync(EditorGUILayout.Toggle(new GUIContent("Network Sync", "Sync this variable over the network. Requires Unity 5.1 or greator. A NetworkIdentity must be attached to the behavior tree GameObject."), sharedVariable.NetworkSync, new GUILayoutOption[0]));
+			sharedVariable.NetworkSync=EditorGUILayout.Toggle(new GUIContent("Network Sync", "Sync this variable over the network. Requires Unity 5.1 or greator. A NetworkIdentity must be attached to the behavior tree GameObject."), sharedVariable.NetworkSync, new GUILayoutOption[0]);
 			if (EditorGUI.EndChangeCheck())
 			{
 				result = true;
 			}
 			GUILayout.EndHorizontal();
-			GUI.set_enabled(enabled);
+			GUI.enabled=enabled;
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 			if (VariableInspector.DrawSharedVariable(variableSource, sharedVariable, true))
 			{
@@ -704,9 +704,9 @@ namespace BehaviorDesigner.Editor
 		private static SharedVariable CreateVariable(int index, string name, bool global)
 		{
 			SharedVariable sharedVariable = Activator.CreateInstance(VariableInspector.sharedVariableTypes.get_Item(index)) as SharedVariable;
-			sharedVariable.set_Name(name);
-			sharedVariable.set_IsShared(true);
-			sharedVariable.set_IsGlobal(global);
+			sharedVariable.Name=name;
+			sharedVariable.IsShared=true;
+			sharedVariable.IsGlobal=global;
 			return sharedVariable;
 		}
 
@@ -815,13 +815,13 @@ namespace BehaviorDesigner.Editor
 			VariableInspector.SelectedPropertyMapping selectedPropertyMapping = selected as VariableInspector.SelectedPropertyMapping;
 			if (selectedPropertyMapping.Property.Equals("None"))
 			{
-				VariableInspector.mPropertyMappingVariable.set_PropertyMapping(string.Empty);
-				VariableInspector.mPropertyMappingVariable.set_PropertyMappingOwner(null);
+				VariableInspector.mPropertyMappingVariable.PropertyMapping=string.Empty;
+				VariableInspector.mPropertyMappingVariable.PropertyMappingOwner=null;
 			}
 			else
 			{
-				VariableInspector.mPropertyMappingVariable.set_PropertyMapping(selectedPropertyMapping.Property);
-				VariableInspector.mPropertyMappingVariable.set_PropertyMappingOwner(selectedPropertyMapping.GameObject);
+				VariableInspector.mPropertyMappingVariable.PropertyMapping=selectedPropertyMapping.Property;
+				VariableInspector.mPropertyMappingVariable.PropertyMappingOwner=selectedPropertyMapping.GameObject;
 			}
 			if (BehaviorDesignerPreferences.GetBool(BDPreferences.BinarySerialization))
 			{

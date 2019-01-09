@@ -28,7 +28,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (externalBehavior.BehaviorSource.Owner == null)
 			{
-				externalBehavior.BehaviorSource.set_Owner(externalBehavior);
+				externalBehavior.BehaviorSource.Owner=externalBehavior;
 			}
 			if (ExternalBehaviorInspector.DrawInspectorGUI(externalBehavior.BehaviorSource, true, ref this.mShowVariables))
 			{
@@ -45,7 +45,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (externalBehavior.BehaviorSource.Owner == null)
 			{
-				externalBehavior.BehaviorSource.set_Owner(externalBehavior);
+				externalBehavior.BehaviorSource.Owner=externalBehavior;
 			}
 		}
 

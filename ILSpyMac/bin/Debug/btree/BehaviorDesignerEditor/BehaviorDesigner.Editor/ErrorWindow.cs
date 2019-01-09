@@ -25,8 +25,8 @@ namespace BehaviorDesigner.Editor
 		public static void ShowWindow()
 		{
 			ErrorWindow window = EditorWindow.GetWindow<ErrorWindow>(false, "Error List");
-			window.set_minSize(new Vector2(400f, 200f));
-			window.set_wantsMouseMove(true);
+			window.minSize=new Vector2(400f, 200f);
+			window.wantsMouseMove=true;
 		}
 
 		public void OnFocus()

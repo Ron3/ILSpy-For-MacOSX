@@ -99,7 +99,7 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.set_hideFlags(61);
+			base.hideFlags=61;
 		}
 
 		public void LoadConnection(NodeDesigner nodeDesigner, NodeConnectionType nodeConnectionType)
@@ -166,7 +166,7 @@ namespace BehaviorDesigner.Editor
 				}
 				color = Color.Lerp(Color.white, white, num2);
 			}
-			Handles.set_color(color);
+			Handles.color=color;
 			if (this.horizontalDirty)
 			{
 				this.startHorizontalBreak = new Vector2(source.x, this.horizontalHeight);

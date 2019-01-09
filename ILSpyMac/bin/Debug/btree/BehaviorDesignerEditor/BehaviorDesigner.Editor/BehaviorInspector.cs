@@ -70,7 +70,7 @@ namespace BehaviorDesigner.Editor
 				GUILayout.Height(48f)
 			});
 			serializedObject.Update();
-			GUI.set_enabled(PrefabUtility.GetPrefabType(behavior) != 3 || BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances));
+			GUI.enabled=PrefabUtility.GetPrefabType(behavior) != 3 || BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances);
 			SerializedProperty serializedProperty = serializedObject.FindProperty("externalBehavior");
 			ExternalBehavior externalBehavior = serializedProperty.objectReferenceValue as ExternalBehavior;
 			EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
@@ -79,17 +79,17 @@ namespace BehaviorDesigner.Editor
 			{
 				if (!object.ReferenceEquals(behavior.ExternalBehavior, null))
 				{
-					behavior.ExternalBehavior.BehaviorSource.set_Owner(behavior.ExternalBehavior);
+					behavior.ExternalBehavior.BehaviorSource.Owner=behavior.ExternalBehavior;
 					behavior.ExternalBehavior.BehaviorSource.CheckForSerialization(true, behavior.GetBehaviorSource());
 				}
 				else
 				{
-					behavior.GetBehaviorSource().set_EntryTask(null);
-					behavior.GetBehaviorSource().set_RootTask(null);
-					behavior.GetBehaviorSource().set_DetachedTasks(null);
-					behavior.GetBehaviorSource().set_Variables(null);
+					behavior.GetBehaviorSource().EntryTask=null;
+					behavior.GetBehaviorSource().RootTask=null;
+					behavior.GetBehaviorSource().DetachedTasks=null;
+					behavior.GetBehaviorSource().Variables=null;
 					behavior.GetBehaviorSource().CheckForSerialization(true, null);
-					behavior.GetBehaviorSource().set_Variables(null);
+					behavior.GetBehaviorSource().Variables=null;
 					if (BehaviorDesignerPreferences.GetBool(BDPreferences.BinarySerialization))
 					{
 						BinarySerialization.Save(behavior.GetBehaviorSource());
@@ -101,7 +101,7 @@ namespace BehaviorDesigner.Editor
 				}
 				externalModification = true;
 			}
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			serializedProperty = serializedObject.FindProperty("group");
 			EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
 			string text;

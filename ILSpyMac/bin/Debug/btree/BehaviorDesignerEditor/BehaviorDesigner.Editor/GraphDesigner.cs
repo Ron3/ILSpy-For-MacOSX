@@ -94,7 +94,7 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.set_hideFlags(61);
+			base.hideFlags=61;
 		}
 
 		public NodeDesigner AddNode(BehaviorSource behaviorSource, Type type, Vector2 position)
@@ -122,7 +122,7 @@ namespace BehaviorDesigner.Editor
 			TaskNameAttribute[] array;
 			if ((array = (task.GetType().GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[])).Length > 0)
 			{
-				task.set_FriendlyName(array[0].Name);
+				task.FriendlyName=array[0].Name;
 			}
 			if (this.mEntryNode.OutgoingNodeConnections.Count == 0)
 			{
@@ -336,7 +336,7 @@ namespace BehaviorDesigner.Editor
 					Dictionary<string, object> dictionary2 = MiniJSON.Deserialize(unknownTask.JSONSerialization) as Dictionary<string, object>;
 					if (dictionary2.ContainsKey("Type"))
 					{
-						dictionary2.set_Item("Type", taskType.ToString());
+						dictionary2.Item="Type", taskType.ToString();
 					}
 					task = JSONDeserialization.DeserializeTask(behaviorSource, dictionary2, ref dictionary, null);
 				}
@@ -637,7 +637,7 @@ namespace BehaviorDesigner.Editor
 				{
 					NodeDesigner destinationNodeDesigner = nodeDesigner.OutgoingNodeConnections.get_Item(i).DestinationNodeDesigner;
 					this.mDetachedNodes.Add(destinationNodeDesigner);
-					destinationNodeDesigner.Task.NodeData.set_Offset(destinationNodeDesigner.GetAbsolutePosition());
+					destinationNodeDesigner.Task.NodeData.Offset=destinationNodeDesigner.GetAbsolutePosition();
 					destinationNodeDesigner.ParentNodeDesigner = null;
 				}
 			}
@@ -883,7 +883,7 @@ namespace BehaviorDesigner.Editor
 
 		public void RemoveConnection(NodeConnection nodeConnection)
 		{
-			nodeConnection.DestinationNodeDesigner.Task.NodeData.set_Offset(nodeConnection.DestinationNodeDesigner.GetAbsolutePosition());
+			nodeConnection.DestinationNodeDesigner.Task.NodeData.Offset=nodeConnection.DestinationNodeDesigner.GetAbsolutePosition();
 			this.mDetachedNodes.Add(nodeConnection.DestinationNodeDesigner);
 			nodeConnection.OriginatingNodeDesigner.RemoveChildNode(nodeConnection.DestinationNodeDesigner);
 			if (nodeConnection.OriginatingNodeDesigner.IsEntryDisplay)
@@ -1020,7 +1020,7 @@ namespace BehaviorDesigner.Editor
 											behaviorSource = (list.get_Item(j) as ExternalBehavior).BehaviorSource;
 											if (behaviorSource.Owner == null)
 											{
-												behaviorSource.set_Owner(list.get_Item(j) as ExternalBehavior);
+												behaviorSource.Owner=list.get_Item(j) as ExternalBehavior;
 											}
 										}
 										else
@@ -1028,7 +1028,7 @@ namespace BehaviorDesigner.Editor
 											behaviorSource = (list.get_Item(j) as Behavior).GetBehaviorSource();
 											if (behaviorSource.Owner == null)
 											{
-												behaviorSource.set_Owner(list.get_Item(j) as Behavior);
+												behaviorSource.Owner=list.get_Item(j) as Behavior;
 											}
 										}
 										behaviors.Add(behaviorSource);
@@ -1052,7 +1052,7 @@ namespace BehaviorDesigner.Editor
 							behaviorSource2 = (value as ExternalBehavior).BehaviorSource;
 							if (behaviorSource2.Owner == null)
 							{
-								behaviorSource2.set_Owner(value as ExternalBehavior);
+								behaviorSource2.Owner=value as ExternalBehavior;
 							}
 							behaviors.Add(behaviorSource2);
 						}
@@ -1061,7 +1061,7 @@ namespace BehaviorDesigner.Editor
 							behaviorSource2 = (value as Behavior).GetBehaviorSource();
 							if (behaviorSource2.Owner == null)
 							{
-								behaviorSource2.set_Owner(value as Behavior);
+								behaviorSource2.Owner=value as Behavior;
 							}
 						}
 						behaviors.Add(behaviorSource2);
@@ -1169,7 +1169,7 @@ namespace BehaviorDesigner.Editor
 				Task task = TaskCopier.PasteTask(behaviorSource, taskSerializer);
 				NodeDesigner nodeDesigner = ScriptableObject.CreateInstance<NodeDesigner>();
 				nodeDesigner.LoadTask(task, (behaviorSource.Owner == null) ? null : (behaviorSource.Owner.GetObject() as Behavior), ref this.mNextTaskID);
-				nodeDesigner.Task.NodeData.set_Offset(taskSerializer.offset / graphZoom - graphOffset);
+				nodeDesigner.Task.NodeData.Offset=taskSerializer.offset / graphZoom - graphOffset;
 				list.Add(nodeDesigner);
 				this.mDetachedNodes.Add(nodeDesigner);
 				this.Select(nodeDesigner);
@@ -1278,7 +1278,7 @@ namespace BehaviorDesigner.Editor
 						if (!allFields[i].FieldType.IsAbstract)
 						{
 							sharedVariable2 = (Activator.CreateInstance(allFields[i].FieldType) as SharedVariable);
-							sharedVariable2.set_IsShared(true);
+							sharedVariable2.IsShared=true;
 							allFields[i].SetValue(nodeDesigner.Task, sharedVariable2);
 						}
 						result = true;
@@ -1332,10 +1332,10 @@ namespace BehaviorDesigner.Editor
 				return default(Rect);
 			}
 			Rect result = default(Rect);
-			result.set_xMin(3.40282347E+38f);
-			result.set_xMax(-3.40282347E+38f);
-			result.set_yMin(3.40282347E+38f);
-			result.set_yMax(-3.40282347E+38f);
+			result.xMin=3.40282347E+38f;
+			result.xMax=-3.40282347E+38f;
+			result.yMin=3.40282347E+38f;
+			result.yMax=-3.40282347E+38f;
 			this.GetNodeMinMax(offset, this.mEntryNode, ref result);
 			if (this.mRootNode != null)
 			{
@@ -1353,19 +1353,19 @@ namespace BehaviorDesigner.Editor
 			Rect rect = nodeDesigner.Rectangle(offset, true, true);
 			if (rect.xMin < minMaxRect.xMin)
 			{
-				minMaxRect.set_xMin(rect.xMin);
+				minMaxRect.xMin=rect.xMin;
 			}
 			if (rect.yMin < minMaxRect.yMin)
 			{
-				minMaxRect.set_yMin(rect.yMin);
+				minMaxRect.yMin=rect.yMin;
 			}
 			if (rect.xMax > minMaxRect.xMax)
 			{
-				minMaxRect.set_xMax(rect.xMax);
+				minMaxRect.xMax=rect.xMax;
 			}
 			if (rect.yMax > minMaxRect.yMax)
 			{
-				minMaxRect.set_yMax(rect.yMax);
+				minMaxRect.yMax=rect.yMax;
 			}
 			if (nodeDesigner.IsParent)
 			{
@@ -1419,11 +1419,11 @@ namespace BehaviorDesigner.Editor
 				{
 					behaviorSource.CheckForSerialization(true, null);
 					list = behaviorSource.GetAllVariables();
-					(behaviorSource.Owner as Behavior).set_HasInheritedVariables(true);
+					(behaviorSource.Owner as Behavior).HasInheritedVariables=true;
 					flag = true;
 				}
 				ExternalBehavior externalBehavior = (behaviorSource.Owner as Behavior).ExternalBehavior;
-				externalBehavior.BehaviorSource.set_Owner(externalBehavior);
+				externalBehavior.BehaviorSource.Owner=externalBehavior;
 				externalBehavior.BehaviorSource.CheckForSerialization(flag, behaviorSource);
 				if (list != null)
 				{
@@ -1476,7 +1476,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (task2 != null || (list2 != null && list2.Count > 0))
 				{
-					behaviorSource.set_EntryTask(task = (Activator.CreateInstance(TaskUtility.GetTypeWithinAssembly("BehaviorDesigner.Runtime.Tasks.EntryTask"), true) as Task));
+					behaviorSource.EntryTask=task = (Activator.CreateInstance(TaskUtility.GetTypeWithinAssembly("BehaviorDesigner.Runtime.Tasks.EntryTask"), true) as Task);
 					this.mEntryNode = ScriptableObject.CreateInstance<NodeDesigner>();
 					if (task2 != null)
 					{
@@ -1539,11 +1539,11 @@ namespace BehaviorDesigner.Editor
 		public void SetStartOffset(Vector2 offset)
 		{
 			Vector2 vector = offset - this.mEntryNode.Task.NodeData.Offset;
-			this.mEntryNode.Task.NodeData.set_Offset(offset);
+			this.mEntryNode.Task.NodeData.Offset=offset;
 			for (int i = 0; i < this.mDetachedNodes.Count; i++)
 			{
 				NodeData expr_4F = this.mDetachedNodes.get_Item(i).Task.NodeData;
-				expr_4F.set_Offset(expr_4F.Offset + vector);
+				expr_4F.Offset=expr_4F.Offset + vector;
 			}
 		}
 

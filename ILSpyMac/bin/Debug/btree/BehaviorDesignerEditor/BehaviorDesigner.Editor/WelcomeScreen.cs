@@ -62,8 +62,8 @@ namespace BehaviorDesigner.Editor
 			WelcomeScreen window = EditorWindow.GetWindow<WelcomeScreen>(true, "Welcome to Behavior Designer");
 			EditorWindow arg_25_0 = window;
 			Vector2 vector = new Vector2(340f, 410f);
-			window.set_maxSize(vector);
-			arg_25_0.set_minSize(vector);
+			window.maxSize=vector;
+			arg_25_0.minSize=vector;
 		}
 
 		public void OnEnable()

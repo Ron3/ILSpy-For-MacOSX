@@ -53,8 +53,8 @@ namespace BehaviorDesigner.Editor
 			AssetCreator window = EditorWindow.GetWindow<AssetCreator>(true, "Asset Name");
 			EditorWindow arg_25_0 = window;
 			Vector2 vector = new Vector2(300f, 55f);
-			window.set_maxSize(vector);
-			arg_25_0.set_minSize(vector);
+			window.maxSize=vector;
+			arg_25_0.minSize=vector;
 			window.ClassType = classType;
 			window.CSharp = cSharp;
 		}

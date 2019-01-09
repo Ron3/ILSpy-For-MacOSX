@@ -45,7 +45,7 @@ namespace BehaviorDesigner.Editor
 			}
 			JSONSerialization.taskSerializationData.Version = "1.5.11";
 			JSONSerialization.taskSerializationData.JSONSerialization = MiniJSON.Serialize(dictionary);
-			behaviorSource.set_TaskData(JSONSerialization.taskSerializationData);
+			behaviorSource.TaskData=JSONSerialization.taskSerializationData;
 			if (behaviorSource.Owner != null && !behaviorSource.Owner.Equals(null))
 			{
 				BehaviorDesignerUtility.SetObjectDirty(behaviorSource.Owner.GetObject());
@@ -63,8 +63,8 @@ namespace BehaviorDesigner.Editor
 			Dictionary<string, object> dictionary = new Dictionary<string, object>();
 			dictionary.Add("Variables", JSONSerialization.SerializeVariables(variables.Variables, ref JSONSerialization.fieldSerializationData.unityObjects));
 			JSONSerialization.variableSerializationData.JSONSerialization = MiniJSON.Serialize(dictionary);
-			variables.set_VariableData(JSONSerialization.variableSerializationData);
-			variables.set_Version("1.5.11");
+			variables.VariableData=JSONSerialization.variableSerializationData;
+			variables.Version="1.5.11";
 			BehaviorDesignerUtility.SetObjectDirty(variables);
 		}
 

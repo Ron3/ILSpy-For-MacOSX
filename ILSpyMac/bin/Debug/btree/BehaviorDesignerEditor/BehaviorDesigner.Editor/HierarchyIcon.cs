@@ -27,9 +27,9 @@ namespace BehaviorDesigner.Editor
 				if (gameObject != null && gameObject.GetComponent<Behavior>() != null)
 				{
 					Rect rect = new Rect(selectionRect);
-					rect.set_x(rect.width + (selectionRect.x - 16f));
-					rect.set_width(16f);
-					rect.set_height(16f);
+					rect.x=rect.width + (selectionRect.x - 16f);
+					rect.width=16f;
+					rect.height=16f;
 					GUI.DrawTexture(rect, HierarchyIcon.icon);
 				}
 			}

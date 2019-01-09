@@ -65,13 +65,13 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			GUILayout.Space(5f);
-			variableSynchronizer.set_UpdateInterval((UpdateIntervalType)EditorGUILayout.EnumPopup("Update Interval", variableSynchronizer.UpdateInterval, new GUILayoutOption[0]));
+			variableSynchronizer.UpdateInterval=(UpdateIntervalType)EditorGUILayout.EnumPopup("Update Interval", variableSynchronizer.UpdateInterval, new GUILayoutOption[0]);
 			if (variableSynchronizer.UpdateInterval == 1)
 			{
-				variableSynchronizer.set_UpdateIntervalSeconds(EditorGUILayout.FloatField("Seconds", variableSynchronizer.UpdateIntervalSeconds, new GUILayoutOption[0]));
+				variableSynchronizer.UpdateIntervalSeconds=EditorGUILayout.FloatField("Seconds", variableSynchronizer.UpdateIntervalSeconds, new GUILayoutOption[0]);
 			}
 			GUILayout.Space(5f);
-			GUI.set_enabled(!Application.isPlaying);
+			GUI.enabled=!Application.isPlaying;
 			this.DrawSharedVariableSynchronizer(this.sharedVariableSynchronizer, null);
 			if (string.IsNullOrEmpty(this.sharedVariableSynchronizer.targetName))
 			{
@@ -125,7 +125,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (string.IsNullOrEmpty(this.targetSynchronizer.targetName))
 			{
-				GUI.set_enabled(false);
+				GUI.enabled=false;
 			}
 			if (GUILayout.Button("Add", new GUILayoutOption[0]))
 			{
@@ -135,7 +135,7 @@ namespace BehaviorDesigner.Editor
 				this.sharedVariableSynchronizer = new VariableSynchronizerInspector.Synchronizer();
 				this.targetSynchronizer = new VariableSynchronizerInspector.Synchronizer();
 			}
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			this.DrawSynchronizedVariables(variableSynchronizer);
 		}
 
@@ -150,7 +150,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (synchronizer.gameObject == null)
 			{
-				GUI.set_enabled(false);
+				GUI.enabled=false;
 			}
 			switch (listType)
 			{
@@ -284,7 +284,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (string.IsNullOrEmpty(synchronizer.targetName))
 			{
-				GUI.set_enabled(false);
+				GUI.enabled=false;
 			}
 			return GUI.enabled;
 		}
@@ -397,16 +397,16 @@ namespace BehaviorDesigner.Editor
 
 		private void DrawSynchronizedVariables(VariableSynchronizer variableSynchronizer)
 		{
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			if (variableSynchronizer.SynchronizedVariables == null || variableSynchronizer.SynchronizedVariables.Count == 0)
 			{
 				return;
 			}
 			Rect lastRect = GUILayoutUtility.GetLastRect();
-			lastRect.set_x(-5f);
-			lastRect.set_y(lastRect.y + (lastRect.height + 1f));
-			lastRect.set_height(2f);
-			lastRect.set_width(lastRect.width + 20f);
+			lastRect.x=-5f;
+			lastRect.y=lastRect.y + (lastRect.height + 1f);
+			lastRect.height=2f;
+			lastRect.width=lastRect.width + 20f;
 			GUI.DrawTexture(lastRect, BehaviorDesignerUtility.LoadTexture("ContentSeparator.png", true, this));
 			GUILayout.Space(6f);
 			for (int i = 0; i < variableSynchronizer.SynchronizedVariables.Count; i++)
