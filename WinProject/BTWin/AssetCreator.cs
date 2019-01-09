@@ -19,7 +19,7 @@ namespace BehaviorDesigner.Editor
 
     public AssetCreator()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     private bool CSharp

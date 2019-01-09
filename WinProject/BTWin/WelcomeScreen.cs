@@ -39,7 +39,7 @@ namespace BehaviorDesigner.Editor
 
     public WelcomeScreen()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     [MenuItem("Tools/Behavior Designer/Welcome Screen", false, 3)]

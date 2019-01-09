@@ -24,7 +24,7 @@ namespace BehaviorDesigner.Editor
 
     public BehaviorInspector()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     private void OnEnable()

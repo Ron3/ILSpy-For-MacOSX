@@ -18,7 +18,7 @@ namespace BehaviorDesigner.Editor
 
     public HierarchyIcon()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     static HierarchyIcon()

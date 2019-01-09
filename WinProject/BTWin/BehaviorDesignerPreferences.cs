@@ -20,9 +20,9 @@ namespace BehaviorDesigner.Editor
     };
     private static string[] prefString;
 
-    public BehaviorDesignerPreferences()
+    public BehaviorDesignerPreferences() : base()
     {
-      base.\u002Ector();
+      ////base.\u002Ector();
     }
 
     private static string[] PrefString

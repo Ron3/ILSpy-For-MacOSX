@@ -33,7 +33,7 @@ namespace BehaviorDesigner.Editor
 
     public VariableSynchronizerInspector()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public virtual void OnInspectorGUI()

@@ -32,7 +32,7 @@ namespace BehaviorDesigner.Editor
 
     public GlobalVariablesWindow()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     [MenuItem("Tools/Behavior Designer/Global Variables", false, 1)]

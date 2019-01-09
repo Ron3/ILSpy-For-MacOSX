@@ -14,7 +14,7 @@ namespace BehaviorDesigner.Editor
   {
     public GlobalVariablesInspector()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public virtual void OnInspectorGUI()

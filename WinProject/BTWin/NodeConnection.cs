@@ -36,7 +36,7 @@ namespace BehaviorDesigner.Editor
 
     public NodeConnection()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public NodeDesigner OriginatingNodeDesigner

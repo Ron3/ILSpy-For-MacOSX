@@ -73,7 +73,7 @@ namespace BehaviorDesigner.Editor
 
     public NodeDesigner()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public Task Task

@@ -35,7 +35,7 @@ namespace BehaviorDesigner.Editor
 
     public GraphDesigner()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public NodeDesigner RootNode

@@ -21,10 +21,10 @@ namespace BehaviorDesigner.Editor
     private Vector2 mScrollPosition;
     private string mSearchString;
     private bool mFocusSearch;
-
-    public TaskList()
+	
+	public TaskList() : base()
     {
-      base.\u002Ector();
+      ////base.\u002Ector();
     }
 
     public void OnEnable()

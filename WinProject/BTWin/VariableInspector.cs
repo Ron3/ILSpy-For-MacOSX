@@ -40,7 +40,7 @@ namespace BehaviorDesigner.Editor
 
     public VariableInspector()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public void ResetSelectedVariableIndex()

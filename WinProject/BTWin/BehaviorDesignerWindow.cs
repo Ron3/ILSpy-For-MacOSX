@@ -103,7 +103,7 @@ namespace BehaviorDesigner.Editor
 
     public BehaviorDesignerWindow()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public List<BehaviorDesigner.Editor.ErrorDetails> ErrorDetails

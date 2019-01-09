@@ -26,7 +26,7 @@ namespace BehaviorDesigner.Editor
 
     public TaskInspector()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public Task ActiveReferenceTask

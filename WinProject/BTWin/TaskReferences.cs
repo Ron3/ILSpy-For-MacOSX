@@ -18,7 +18,7 @@ namespace BehaviorDesigner.Editor
   {
     public TaskReferences()
     {
-      base.\u002Ector();
+      //base.\u002Ector();
     }
 
     public static void CheckReferences(BehaviorSource behaviorSource)

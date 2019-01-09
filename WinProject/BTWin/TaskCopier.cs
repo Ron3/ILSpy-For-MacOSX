@@ -15,9 +15,9 @@ namespace BehaviorDesigner.Editor
 {
   public class TaskCopier : UnityEditor.Editor
   {
-    public TaskCopier()
+    public TaskCopier() : base()
     {
-      base.\u002Ector();
+      ////base.\u002Ector();
     }
 
     public static TaskSerializer CopySerialized(Task task)

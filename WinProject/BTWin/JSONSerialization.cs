@@ -20,9 +20,9 @@ namespace BehaviorDesigner.Editor
     private static FieldSerializationData fieldSerializationData;
     private static VariableSerializationData variableSerializationData;
 
-    public JSONSerialization()
+    public JSONSerialization() : base()
     {
-      base.\u002Ector();
+      ////base.\u002Ector();
     }
 
     public static void Save(BehaviorSource behaviorSource)
