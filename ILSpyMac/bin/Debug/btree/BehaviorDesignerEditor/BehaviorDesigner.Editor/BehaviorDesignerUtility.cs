@@ -1,14 +1,15 @@
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 
 namespace BehaviorDesigner.Editor
 {
@@ -272,7 +273,9 @@ namespace BehaviorDesigner.Editor
 
 		private static Texture2D screenshotBackgroundTexture = null;
 
-		private static Regex camelCaseRegex = new Regex("(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])", 32);
+		// private static Regex camelCaseRegex = new Regex("(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])", 32);
+		private static Regex camelCaseRegex = new Regex("(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace);
+
 
 		private static Dictionary<string, string> camelCaseSplit = new Dictionary<string, string>();
 
@@ -1335,16 +1338,16 @@ namespace BehaviorDesigner.Editor
 			}
 			if (BehaviorDesignerUtility.camelCaseSplit.ContainsKey(s))
 			{
-				return BehaviorDesignerUtility.camelCaseSplit.get_Item(s);
+				return BehaviorDesignerUtility.camelCaseSplit[s];
 			}
 			string text = s;
 			s = s.Replace("_uScript", "uScript");
 			s = s.Replace("_PlayMaker", "PlayMaker");
-			if (s.get_Length() > 2 && s.Substring(0, 2).CompareTo("m_") == 0)
+			if (s.Length > 2 && s.Substring(0, 2).CompareTo("m_") == 0)
 			{
 				s = s.Substring(2);
 			}
-			else if (s.get_Length() > 1 && s.get_Chars(0).CompareTo('_') == 0)
+			else if (s.Length > 1 && s[0].CompareTo('_') == 0)
 			{
 				s = s.Substring(1);
 			}
@@ -1352,7 +1355,7 @@ namespace BehaviorDesigner.Editor
 			s = s.Replace("_", " ");
 			s = s.Replace("u Script", " uScript");
 			s = s.Replace("Play Maker", "PlayMaker");
-			s = (char.ToUpper(s.get_Chars(0)) + s.Substring(1)).Trim();
+			s = (char.ToUpper(s[0]) + s.Substring(1)).Trim();
 			BehaviorDesignerUtility.camelCaseSplit.Add(text, s);
 			return s;
 		}
@@ -1362,7 +1365,7 @@ namespace BehaviorDesigner.Editor
 			Dictionary<FieldInfo, bool> dictionary = null;
 			if (BehaviorDesignerUtility.attributeFieldCache.ContainsKey(attributeType))
 			{
-				dictionary = BehaviorDesignerUtility.attributeFieldCache.get_Item(attributeType);
+				dictionary = BehaviorDesignerUtility.attributeFieldCache[attributeType];
 			}
 			if (dictionary == null)
 			{
@@ -1370,7 +1373,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (dictionary.ContainsKey(field))
 			{
-				return dictionary.get_Item(field);
+				return dictionary[field];
 			}
 			bool flag = field.GetCustomAttributes(attributeType, false).Length > 0;
 			dictionary.Add(field, flag);
@@ -1384,15 +1387,15 @@ namespace BehaviorDesigner.Editor
 		public static List<Task> GetAllTasks(BehaviorSource behaviorSource)
 		{
 			List<Task> result = new List<Task>();
-			if (behaviorSource.get_RootTask() != null)
+			if (behaviorSource.RootTask != null)
 			{
-				BehaviorDesignerUtility.GetAllTasks(behaviorSource.get_RootTask(), ref result);
+				BehaviorDesignerUtility.GetAllTasks(behaviorSource.RootTask, ref result);
 			}
-			if (behaviorSource.get_DetachedTasks() != null)
+			if (behaviorSource.DetachedTasks != null)
 			{
-				for (int i = 0; i < behaviorSource.get_DetachedTasks().get_Count(); i++)
+				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					BehaviorDesignerUtility.GetAllTasks(behaviorSource.get_DetachedTasks().get_Item(i), ref result);
+					BehaviorDesignerUtility.GetAllTasks(behaviorSource.DetachedTasks[i], ref result);
 				}
 			}
 			return result;
@@ -1402,26 +1405,26 @@ namespace BehaviorDesigner.Editor
 		{
 			taskList.Add(task);
 			ParentTask parentTask;
-			if ((parentTask = (task as ParentTask)) != null && parentTask.get_Children() != null)
+			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.get_Children().get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					BehaviorDesignerUtility.GetAllTasks(parentTask.get_Children().get_Item(i), ref taskList);
+					BehaviorDesignerUtility.GetAllTasks(parentTask.Children[i], ref taskList);
 				}
 			}
 		}
 
 		public static bool AnyNullTasks(BehaviorSource behaviorSource)
 		{
-			if (behaviorSource.get_RootTask() != null && BehaviorDesignerUtility.AnyNullTasks(behaviorSource.get_RootTask()))
+			if (behaviorSource.RootTask != null && BehaviorDesignerUtility.AnyNullTasks(behaviorSource.RootTask))
 			{
 				return true;
 			}
-			if (behaviorSource.get_DetachedTasks() != null)
+			if (behaviorSource.DetachedTasks != null)
 			{
-				for (int i = 0; i < behaviorSource.get_DetachedTasks().get_Count(); i++)
+				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					if (BehaviorDesignerUtility.AnyNullTasks(behaviorSource.get_DetachedTasks().get_Item(i)))
+					if (BehaviorDesignerUtility.AnyNullTasks(behaviorSource.DetachedTasks[i]))
 					{
 						return true;
 					}
@@ -1437,11 +1440,11 @@ namespace BehaviorDesigner.Editor
 				return true;
 			}
 			ParentTask parentTask;
-			if ((parentTask = (task as ParentTask)) != null && parentTask.get_Children() != null)
+			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.get_Children().get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					if (BehaviorDesignerUtility.AnyNullTasks(parentTask.get_Children().get_Item(i)))
+					if (BehaviorDesignerUtility.AnyNullTasks(parentTask.Children[i]))
 					{
 						return true;
 					}
@@ -1462,32 +1465,35 @@ namespace BehaviorDesigner.Editor
 
 		public static string GetEditorBaseDirectory(UnityEngine.Object obj = null)
 		{
-			string codeBase = Assembly.GetExecutingAssembly().get_CodeBase();
-			string text = Uri.UnescapeDataString(new UriBuilder(codeBase).get_Path());
-			return Path.GetDirectoryName(text.Substring(Application.get_dataPath().get_Length() - 6));
+			string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+			string text = Uri.UnescapeDataString(new UriBuilder(codeBase).Path);
+			return Path.GetDirectoryName(text.Substring(Application.dataPath.Length - 6));
 		}
 
 		public static Texture2D LoadTexture(string imageName, bool useSkinColor = true, UnityEngine.Object obj = null)
 		{
 			if (BehaviorDesignerUtility.textureCache.ContainsKey(imageName))
 			{
-				return BehaviorDesignerUtility.textureCache.get_Item(imageName);
+				return BehaviorDesignerUtility.textureCache[imageName];
 			}
 			Texture2D texture2D = null;
-			string text = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark"), imageName);
+			string text = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
 			Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(text);
 			if (manifestResourceStream == null)
 			{
-				text = string.Format("BehaviorDesignerEditor.Resources.{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark"), imageName);
+				text = string.Format("BehaviorDesignerEditor.Resources.{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
 				manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(text);
 			}
 			if (manifestResourceStream != null)
 			{
-				texture2D = new Texture2D(0, 0, 4, false, true);
+				//texture2D = new Texture2D(0, 0, 4, false, true);
+				texture2D = new Texture2D(0, 0, UnityEngine.TextureFormat.RGBA32, false, true);
 				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
 				manifestResourceStream.Close();
 			}
-			texture2D.set_hideFlags(61);
+			// TODO Ron
+			// texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			BehaviorDesignerUtility.textureCache.Add(imageName, texture2D);
 			return texture2D;
 		}
@@ -1496,27 +1502,28 @@ namespace BehaviorDesigner.Editor
 		{
 			if (BehaviorDesignerUtility.textureCache.ContainsKey(imageName))
 			{
-				return BehaviorDesignerUtility.textureCache.get_Item(imageName);
+				return BehaviorDesignerUtility.textureCache[imageName];
 			}
 			Texture2D texture2D = null;
-			string text = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark"), imageName);
+			string text = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
 			Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(text);
 			if (manifestResourceStream == null)
 			{
-				text = string.Format("BehaviorDesignerEditor.Resources.{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark"), imageName);
+				text = string.Format("BehaviorDesignerEditor.Resources.{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
 				manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(text);
 			}
 			if (manifestResourceStream != null)
 			{
-				texture2D = new Texture2D(0, 0, 4, false, true);
+				// texture2D = new Texture2D(0, 0, 4, false, true);
+				texture2D = new Texture2D(0, 0, TextureFormat.RGBA32, false, true);
 				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
 				manifestResourceStream.Close();
 			}
 			if (texture2D == null)
 			{
-				Debug.Log(string.Format("{0}/Images/Task Backgrounds/{1}{2}", BehaviorDesignerUtility.GetEditorBaseDirectory(obj), (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark"), imageName));
+				Debug.Log(string.Format("{0}/Images/Task Backgrounds/{1}{2}", BehaviorDesignerUtility.GetEditorBaseDirectory(obj), (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName));
 			}
-			texture2D.set_hideFlags(61);
+			texture2D.hideFlags= HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy; ;
 			BehaviorDesignerUtility.textureCache.Add(imageName, texture2D);
 			return texture2D;
 		}
@@ -1525,29 +1532,31 @@ namespace BehaviorDesigner.Editor
 		{
 			if (BehaviorDesignerUtility.iconCache.ContainsKey(iconName))
 			{
-				return BehaviorDesignerUtility.iconCache.get_Item(iconName);
+				return BehaviorDesignerUtility.iconCache[iconName];
 			}
 			Texture2D texture2D = null;
-			string text = iconName.Replace("{SkinColor}", (!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark");
+			string text = iconName.Replace("{SkinColor}", (!EditorGUIUtility.isProSkin) ? "Light" : "Dark");
 			Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(text);
 			if (manifestResourceStream == null)
 			{
-				text = string.Format("BehaviorDesignerEditor.Resources.{0}", iconName.Replace("{SkinColor}", (!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark"));
+				text = string.Format("BehaviorDesignerEditor.Resources.{0}", iconName.Replace("{SkinColor}", (!EditorGUIUtility.isProSkin) ? "Light" : "Dark"));
 				manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(text);
 			}
 			if (manifestResourceStream != null)
 			{
-				texture2D = new Texture2D(0, 0, 4, false, true);
+				// texture2D = new Texture2D(0, 0, 4, false, true);
+				texture2D = new Texture2D(0, 0, UnityEngine.TextureFormat.RGBA32, false, true);
 				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
 				manifestResourceStream.Close();
 			}
 			if (texture2D == null)
 			{
-				texture2D = (AssetDatabase.LoadAssetAtPath(iconName.Replace("{SkinColor}", (!EditorGUIUtility.get_isProSkin()) ? "Light" : "Dark"), typeof(Texture2D)) as Texture2D);
+				texture2D = (AssetDatabase.LoadAssetAtPath(iconName.Replace("{SkinColor}", (!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), typeof(Texture2D)) as Texture2D);
 			}
 			if (texture2D != null)
 			{
-				texture2D.set_hideFlags(61);
+				//texture2D.hideFlags=61;
+				texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			}
 			BehaviorDesignerUtility.iconCache.Add(iconName, texture2D);
 			return texture2D;
@@ -1577,10 +1586,10 @@ namespace BehaviorDesigner.Editor
 		public static void DrawContentSeperator(int yOffset, int widthExtension)
 		{
 			Rect lastRect = GUILayoutUtility.GetLastRect();
-			lastRect.set_x(-5f);
-			lastRect.set_y(lastRect.get_y() + (lastRect.get_height() + (float)yOffset));
-			lastRect.set_height(2f);
-			lastRect.set_width(lastRect.get_width() + (float)(10 + widthExtension));
+			lastRect.x=-5f;
+			lastRect.y=lastRect.y + (lastRect.height + (float)yOffset);
+			lastRect.height=2f;
+			lastRect.width=lastRect.width + (float)(10 + widthExtension);
 			GUI.DrawTexture(lastRect, BehaviorDesignerUtility.ContentSeparatorTexture);
 		}
 
@@ -1591,34 +1600,34 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitGraphStatusGUIStyle()
 		{
-			BehaviorDesignerUtility.graphStatusGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.graphStatusGUIStyle.set_alignment(3);
-			BehaviorDesignerUtility.graphStatusGUIStyle.set_fontSize(20);
-			BehaviorDesignerUtility.graphStatusGUIStyle.set_fontStyle(1);
-			if (EditorGUIUtility.get_isProSkin())
+			BehaviorDesignerUtility.graphStatusGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.graphStatusGUIStyle.alignment = UnityEngine.TextAnchor.MiddleLeft; // 3
+			BehaviorDesignerUtility.graphStatusGUIStyle.fontSize=20;
+			BehaviorDesignerUtility.graphStatusGUIStyle.fontStyle=FontStyle.Bold;		//1
+			if (EditorGUIUtility.isProSkin)
 			{
-				BehaviorDesignerUtility.graphStatusGUIStyle.get_normal().set_textColor(new Color(0.7058f, 0.7058f, 0.7058f));
+				BehaviorDesignerUtility.graphStatusGUIStyle.normal.textColor=new Color(0.7058f, 0.7058f, 0.7058f);
 			}
 			else
 			{
-				BehaviorDesignerUtility.graphStatusGUIStyle.get_normal().set_textColor(new Color(0.8058f, 0.8058f, 0.8058f));
+				BehaviorDesignerUtility.graphStatusGUIStyle.normal.textColor=new Color(0.8058f, 0.8058f, 0.8058f);
 			}
 		}
 
 		private static void InitTaskFoldoutGUIStyle()
 		{
-			BehaviorDesignerUtility.taskFoldoutGUIStyle = new GUIStyle(EditorStyles.get_foldout());
-			BehaviorDesignerUtility.taskFoldoutGUIStyle.set_alignment(3);
-			BehaviorDesignerUtility.taskFoldoutGUIStyle.set_fontSize(13);
-			BehaviorDesignerUtility.taskFoldoutGUIStyle.set_fontStyle(1);
+			BehaviorDesignerUtility.taskFoldoutGUIStyle = new GUIStyle(EditorStyles.foldout);
+			BehaviorDesignerUtility.taskFoldoutGUIStyle.alignment = UnityEngine.TextAnchor.MiddleLeft; // 3
+			BehaviorDesignerUtility.taskFoldoutGUIStyle.fontSize=13;
+			BehaviorDesignerUtility.taskFoldoutGUIStyle.fontStyle= FontStyle.Bold;  // 1
 		}
 
 		private static void InitTaskTitleGUIStyle()
 		{
-			BehaviorDesignerUtility.taskTitleGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.taskTitleGUIStyle.set_alignment(1);
-			BehaviorDesignerUtility.taskTitleGUIStyle.set_fontSize(12);
-			BehaviorDesignerUtility.taskTitleGUIStyle.set_fontStyle(0);
+			BehaviorDesignerUtility.taskTitleGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.taskTitleGUIStyle.alignment = UnityEngine.TextAnchor.UpperCenter; // 1
+			BehaviorDesignerUtility.taskTitleGUIStyle.fontSize=12;
+			BehaviorDesignerUtility.taskTitleGUIStyle.fontStyle= FontStyle.Normal;	// 0
 		}
 
 		private static void InitTaskGUIStyle(int colorIndex)
@@ -1734,53 +1743,55 @@ namespace BehaviorDesigner.Editor
 
 		private static GUIStyle InitTaskGUIStyle(Texture2D texture, RectOffset overflow)
 		{
-			GUIStyle gUIStyle = new GUIStyle(GUI.get_skin().get_box());
-			gUIStyle.set_border(new RectOffset(10, 10, 10, 10));
-			gUIStyle.set_overflow(overflow);
-			gUIStyle.get_normal().set_background(texture);
-			gUIStyle.get_active().set_background(texture);
-			gUIStyle.get_hover().set_background(texture);
-			gUIStyle.get_focused().set_background(texture);
-			gUIStyle.get_normal().set_textColor(Color.get_white());
-			gUIStyle.get_active().set_textColor(Color.get_white());
-			gUIStyle.get_hover().set_textColor(Color.get_white());
-			gUIStyle.get_focused().set_textColor(Color.get_white());
-			gUIStyle.set_stretchHeight(true);
-			gUIStyle.set_stretchWidth(true);
+			GUIStyle gUIStyle = new GUIStyle(GUI.skin.box);
+			gUIStyle.border=new RectOffset(10, 10, 10, 10);
+			gUIStyle.overflow=overflow;
+			gUIStyle.normal.background=texture;
+			gUIStyle.active.background=texture;
+			gUIStyle.hover.background=texture;
+			gUIStyle.focused.background=texture;
+			gUIStyle.normal.textColor=Color.white;
+			gUIStyle.active.textColor=Color.white;
+			gUIStyle.hover.textColor=Color.white;
+			gUIStyle.focused.textColor=Color.white;
+			gUIStyle.stretchHeight=true;
+			gUIStyle.stretchWidth=true;
 			return gUIStyle;
 		}
 
 		private static void InitTaskCommentGUIStyle()
 		{
-			BehaviorDesignerUtility.taskCommentGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.taskCommentGUIStyle.set_alignment(1);
-			BehaviorDesignerUtility.taskCommentGUIStyle.set_fontSize(12);
-			BehaviorDesignerUtility.taskCommentGUIStyle.set_fontStyle(0);
-			BehaviorDesignerUtility.taskCommentGUIStyle.set_wordWrap(true);
+			BehaviorDesignerUtility.taskCommentGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.taskCommentGUIStyle.alignment= UnityEngine.TextAnchor.UpperCenter; // 1
+			BehaviorDesignerUtility.taskCommentGUIStyle.fontSize=12;
+			BehaviorDesignerUtility.taskCommentGUIStyle.fontStyle=0;
+			BehaviorDesignerUtility.taskCommentGUIStyle.wordWrap=true;
 		}
 
 		private static void InitTaskCommentLeftAlignGUIStyle()
 		{
-			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.set_alignment(0);
-			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.set_fontSize(12);
-			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.set_fontStyle(0);
-			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.set_wordWrap(false);
+			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.alignment= UnityEngine.TextAnchor.UpperLeft; // 0
+			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.fontSize=12;
+			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.fontStyle=0;
+			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.wordWrap=false;
 		}
 
 		private static void InitTaskCommentRightAlignGUIStyle()
 		{
-			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.set_alignment(2);
-			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.set_fontSize(12);
-			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.set_fontStyle(0);
-			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.set_wordWrap(false);
+			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.alignment= UnityEngine.TextAnchor.UpperRight; // 2
+			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.fontSize=12;
+			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.fontStyle=0;
+			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.wordWrap=false;
 		}
 
 		private static void InitTaskDescriptionGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
-			if (EditorGUIUtility.get_isProSkin())
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, TextureFormat.RGBA32, false, true);
+
+			if (EditorGUIUtility.isProSkin)
 			{
 				texture2D.SetPixel(1, 1, new Color(0.1647f, 0.1647f, 0.1647f));
 			}
@@ -1788,19 +1799,21 @@ namespace BehaviorDesigner.Editor
 			{
 				texture2D.SetPixel(1, 1, new Color(0.75f, 0.75f, 0.75f));
 			}
-			texture2D.set_hideFlags(61);
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
-			BehaviorDesignerUtility.taskDescriptionGUIStyle = new GUIStyle(GUI.get_skin().get_box());
-			BehaviorDesignerUtility.taskDescriptionGUIStyle.get_normal().set_background(texture2D);
-			BehaviorDesignerUtility.taskDescriptionGUIStyle.get_active().set_background(texture2D);
-			BehaviorDesignerUtility.taskDescriptionGUIStyle.get_hover().set_background(texture2D);
-			BehaviorDesignerUtility.taskDescriptionGUIStyle.get_focused().set_background(texture2D);
+			BehaviorDesignerUtility.taskDescriptionGUIStyle = new GUIStyle(GUI.skin.box);
+			BehaviorDesignerUtility.taskDescriptionGUIStyle.normal.background=texture2D;
+			BehaviorDesignerUtility.taskDescriptionGUIStyle.active.background=texture2D;
+			BehaviorDesignerUtility.taskDescriptionGUIStyle.hover.background=texture2D;
+			BehaviorDesignerUtility.taskDescriptionGUIStyle.focused.background=texture2D;
 		}
 
 		private static void InitGraphBackgroundGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
-			if (EditorGUIUtility.get_isProSkin())
+			//Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, TextureFormat.RGBA32, false, true);
+			if (EditorGUIUtility.isProSkin)
 			{
 				texture2D.SetPixel(1, 1, new Color(0.1647f, 0.1647f, 0.1647f));
 			}
@@ -1808,237 +1821,247 @@ namespace BehaviorDesigner.Editor
 			{
 				texture2D.SetPixel(1, 1, new Color(0.3647f, 0.3647f, 0.3647f));
 			}
-			texture2D.set_hideFlags(61);
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
-			BehaviorDesignerUtility.graphBackgroundGUIStyle = new GUIStyle(GUI.get_skin().get_box());
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_normal().set_background(texture2D);
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_active().set_background(texture2D);
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_hover().set_background(texture2D);
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_focused().set_background(texture2D);
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_normal().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_active().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_hover().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.graphBackgroundGUIStyle.get_focused().set_textColor(Color.get_white());
+			BehaviorDesignerUtility.graphBackgroundGUIStyle = new GUIStyle(GUI.skin.box);
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.normal.background=texture2D;
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.active.background=texture2D;
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.hover.background=texture2D;
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.focused.background=texture2D;
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.normal.textColor=Color.white;
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.active.textColor=Color.white;
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.hover.textColor=Color.white;
+			BehaviorDesignerUtility.graphBackgroundGUIStyle.focused.textColor=Color.white;
 		}
 
 		private static void InitSelectionGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
-			Color color = (!EditorGUIUtility.get_isProSkin()) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, TextureFormat.RGBA32, false, true);
+			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
 			texture2D.SetPixel(1, 1, color);
-			texture2D.set_hideFlags(61);
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
-			BehaviorDesignerUtility.selectionGUIStyle = new GUIStyle(GUI.get_skin().get_box());
-			BehaviorDesignerUtility.selectionGUIStyle.get_normal().set_background(texture2D);
-			BehaviorDesignerUtility.selectionGUIStyle.get_active().set_background(texture2D);
-			BehaviorDesignerUtility.selectionGUIStyle.get_hover().set_background(texture2D);
-			BehaviorDesignerUtility.selectionGUIStyle.get_focused().set_background(texture2D);
-			BehaviorDesignerUtility.selectionGUIStyle.get_normal().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.selectionGUIStyle.get_active().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.selectionGUIStyle.get_hover().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.selectionGUIStyle.get_focused().set_textColor(Color.get_white());
+			BehaviorDesignerUtility.selectionGUIStyle = new GUIStyle(GUI.skin.box);
+			BehaviorDesignerUtility.selectionGUIStyle.normal.background=texture2D;
+			BehaviorDesignerUtility.selectionGUIStyle.active.background=texture2D;
+			BehaviorDesignerUtility.selectionGUIStyle.hover.background=texture2D;
+			BehaviorDesignerUtility.selectionGUIStyle.focused.background=texture2D;
+			BehaviorDesignerUtility.selectionGUIStyle.normal.textColor=Color.white;
+			BehaviorDesignerUtility.selectionGUIStyle.active.textColor=Color.white;
+			BehaviorDesignerUtility.selectionGUIStyle.hover.textColor=Color.white;
+			BehaviorDesignerUtility.selectionGUIStyle.focused.textColor=Color.white;
 		}
 
 		private static void InitSharedVariableToolbarPopup()
 		{
-			BehaviorDesignerUtility.sharedVariableToolbarPopup = new GUIStyle(EditorStyles.get_toolbarPopup());
-			BehaviorDesignerUtility.sharedVariableToolbarPopup.set_margin(new RectOffset(4, 4, 0, 0));
+			BehaviorDesignerUtility.sharedVariableToolbarPopup = new GUIStyle(EditorStyles.toolbarPopup);
+			BehaviorDesignerUtility.sharedVariableToolbarPopup.margin=new RectOffset(4, 4, 0, 0);
 		}
 
 		private static void InitLabelWrapGUIStyle()
 		{
-			BehaviorDesignerUtility.labelWrapGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.labelWrapGUIStyle.set_wordWrap(true);
-			BehaviorDesignerUtility.labelWrapGUIStyle.set_alignment(4);
+			BehaviorDesignerUtility.labelWrapGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.labelWrapGUIStyle.wordWrap=true;
+			BehaviorDesignerUtility.labelWrapGUIStyle.alignment= UnityEngine.TextAnchor.MiddleCenter; // 4
 		}
 
 		private static void InitToolbarButtonLeftAlignGUIStyle()
 		{
-			BehaviorDesignerUtility.tolbarButtonLeftAlignGUIStyle = new GUIStyle(EditorStyles.get_toolbarButton());
-			BehaviorDesignerUtility.tolbarButtonLeftAlignGUIStyle.set_alignment(3);
+			BehaviorDesignerUtility.tolbarButtonLeftAlignGUIStyle = new GUIStyle(EditorStyles.toolbarButton);
+			BehaviorDesignerUtility.tolbarButtonLeftAlignGUIStyle.alignment= UnityEngine.TextAnchor.MiddleLeft;  // 3
 		}
 
 		private static void InitToolbarLabelGUIStyle()
 		{
-			BehaviorDesignerUtility.toolbarLabelGUIStyle = new GUIStyle(EditorStyles.get_label());
-			BehaviorDesignerUtility.toolbarLabelGUIStyle.get_normal().set_textColor((!EditorGUIUtility.get_isProSkin()) ? new Color(0f, 0.5f, 0f) : new Color(0f, 0.7f, 0f));
+			BehaviorDesignerUtility.toolbarLabelGUIStyle = new GUIStyle(EditorStyles.label);
+			BehaviorDesignerUtility.toolbarLabelGUIStyle.normal.textColor=(!EditorGUIUtility.isProSkin) ? new Color(0f, 0.5f, 0f) : new Color(0f, 0.7f, 0f);
 		}
 
 		private static void InitTaskInspectorCommentGUIStyle()
 		{
-			BehaviorDesignerUtility.taskInspectorCommentGUIStyle = new GUIStyle(GUI.get_skin().get_textArea());
-			BehaviorDesignerUtility.taskInspectorCommentGUIStyle.set_wordWrap(true);
+			BehaviorDesignerUtility.taskInspectorCommentGUIStyle = new GUIStyle(GUI.skin.textArea);
+			BehaviorDesignerUtility.taskInspectorCommentGUIStyle.wordWrap=true;
 		}
 
 		private static void InitTaskInspectorGUIStyle()
 		{
-			BehaviorDesignerUtility.taskInspectorGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.taskInspectorGUIStyle.set_alignment(3);
-			BehaviorDesignerUtility.taskInspectorGUIStyle.set_fontSize(11);
-			BehaviorDesignerUtility.taskInspectorGUIStyle.set_fontStyle(0);
+			BehaviorDesignerUtility.taskInspectorGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.taskInspectorGUIStyle.alignment= UnityEngine.TextAnchor.MiddleLeft; // 3
+			BehaviorDesignerUtility.taskInspectorGUIStyle.fontSize=11;
+			BehaviorDesignerUtility.taskInspectorGUIStyle.fontStyle=0;
 		}
 
 		private static void InitToolbarButtonSelectionGUIStyle()
 		{
-			BehaviorDesignerUtility.toolbarButtonSelectionGUIStyle = new GUIStyle(EditorStyles.get_toolbarButton());
-			BehaviorDesignerUtility.toolbarButtonSelectionGUIStyle.get_normal().set_background(BehaviorDesignerUtility.toolbarButtonSelectionGUIStyle.get_active().get_background());
+			BehaviorDesignerUtility.toolbarButtonSelectionGUIStyle = new GUIStyle(EditorStyles.toolbarButton);
+			BehaviorDesignerUtility.toolbarButtonSelectionGUIStyle.normal.background=BehaviorDesignerUtility.toolbarButtonSelectionGUIStyle.active.background;
 		}
 
 		private static void InitPreferencesPaneGUIStyle()
 		{
-			BehaviorDesignerUtility.preferencesPaneGUIStyle = new GUIStyle(GUI.get_skin().get_box());
-			BehaviorDesignerUtility.preferencesPaneGUIStyle.get_normal().set_background(EditorStyles.get_toolbarButton().get_normal().get_background());
+			BehaviorDesignerUtility.preferencesPaneGUIStyle = new GUIStyle(GUI.skin.box);
+			BehaviorDesignerUtility.preferencesPaneGUIStyle.normal.background=EditorStyles.toolbarButton.normal.background;
 		}
 
 		private static void InitPropertyBoxGUIStyle()
 		{
 			BehaviorDesignerUtility.propertyBoxGUIStyle = new GUIStyle();
-			BehaviorDesignerUtility.propertyBoxGUIStyle.set_padding(new RectOffset(2, 2, 0, 0));
+			BehaviorDesignerUtility.propertyBoxGUIStyle.padding=new RectOffset(2, 2, 0, 0);
 		}
 
 		private static void InitPlainButtonGUIStyle()
 		{
-			BehaviorDesignerUtility.plainButtonGUIStyle = new GUIStyle(GUI.get_skin().get_button());
-			BehaviorDesignerUtility.plainButtonGUIStyle.set_border(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.plainButtonGUIStyle.set_margin(new RectOffset(0, 0, 2, 2));
-			BehaviorDesignerUtility.plainButtonGUIStyle.set_padding(new RectOffset(0, 0, 1, 0));
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_normal().set_background(null);
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_active().set_background(null);
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_hover().set_background(null);
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_focused().set_background(null);
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_normal().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_active().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_hover().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.plainButtonGUIStyle.get_focused().set_textColor(Color.get_white());
+			BehaviorDesignerUtility.plainButtonGUIStyle = new GUIStyle(GUI.skin.button);
+			BehaviorDesignerUtility.plainButtonGUIStyle.border=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.plainButtonGUIStyle.margin=new RectOffset(0, 0, 2, 2);
+			BehaviorDesignerUtility.plainButtonGUIStyle.padding=new RectOffset(0, 0, 1, 0);
+			BehaviorDesignerUtility.plainButtonGUIStyle.normal.background=null;
+			BehaviorDesignerUtility.plainButtonGUIStyle.active.background=null;
+			BehaviorDesignerUtility.plainButtonGUIStyle.hover.background=null;
+			BehaviorDesignerUtility.plainButtonGUIStyle.focused.background=null;
+			BehaviorDesignerUtility.plainButtonGUIStyle.normal.textColor=Color.white;
+			BehaviorDesignerUtility.plainButtonGUIStyle.active.textColor=Color.white;
+			BehaviorDesignerUtility.plainButtonGUIStyle.hover.textColor=Color.white;
+			BehaviorDesignerUtility.plainButtonGUIStyle.focused.textColor=Color.white;
 		}
 
 		private static void InitTransparentButtonGUIStyle()
 		{
-			BehaviorDesignerUtility.transparentButtonGUIStyle = new GUIStyle(GUI.get_skin().get_button());
-			BehaviorDesignerUtility.transparentButtonGUIStyle.set_border(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.transparentButtonGUIStyle.set_margin(new RectOffset(4, 4, 2, 2));
-			BehaviorDesignerUtility.transparentButtonGUIStyle.set_padding(new RectOffset(2, 2, 1, 0));
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_normal().set_background(null);
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_active().set_background(null);
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_hover().set_background(null);
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_focused().set_background(null);
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_normal().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_active().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_hover().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.transparentButtonGUIStyle.get_focused().set_textColor(Color.get_white());
+			BehaviorDesignerUtility.transparentButtonGUIStyle = new GUIStyle(GUI.skin.button);
+			BehaviorDesignerUtility.transparentButtonGUIStyle.border=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.transparentButtonGUIStyle.margin=new RectOffset(4, 4, 2, 2);
+			BehaviorDesignerUtility.transparentButtonGUIStyle.padding=new RectOffset(2, 2, 1, 0);
+			BehaviorDesignerUtility.transparentButtonGUIStyle.normal.background=null;
+			BehaviorDesignerUtility.transparentButtonGUIStyle.active.background=null;
+			BehaviorDesignerUtility.transparentButtonGUIStyle.hover.background=null;
+			BehaviorDesignerUtility.transparentButtonGUIStyle.focused.background=null;
+			BehaviorDesignerUtility.transparentButtonGUIStyle.normal.textColor=Color.white;
+			BehaviorDesignerUtility.transparentButtonGUIStyle.active.textColor=Color.white;
+			BehaviorDesignerUtility.transparentButtonGUIStyle.hover.textColor=Color.white;
+			BehaviorDesignerUtility.transparentButtonGUIStyle.focused.textColor=Color.white;
 		}
 
 		private static void InitTransparentButtonOffsetGUIStyle()
 		{
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle = new GUIStyle(GUI.get_skin().get_button());
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.set_border(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.set_margin(new RectOffset(4, 4, 4, 2));
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.set_padding(new RectOffset(2, 2, 1, 0));
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_normal().set_background(null);
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_active().set_background(null);
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_hover().set_background(null);
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_focused().set_background(null);
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_normal().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_active().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_hover().set_textColor(Color.get_white());
-			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.get_focused().set_textColor(Color.get_white());
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle = new GUIStyle(GUI.skin.button);
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.border=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.margin=new RectOffset(4, 4, 4, 2);
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.padding=new RectOffset(2, 2, 1, 0);
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.normal.background=null;
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.active.background=null;
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.hover.background=null;
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.focused.background=null;
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.normal.textColor=Color.white;
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.active.textColor=Color.white;
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.hover.textColor=Color.white;
+			BehaviorDesignerUtility.transparentButtonOffsetGUIStyle.focused.textColor=Color.white;
 		}
 
 		private static void InitButtonGUIStyle()
 		{
-			BehaviorDesignerUtility.buttonGUIStyle = new GUIStyle(GUI.get_skin().get_button());
-			BehaviorDesignerUtility.buttonGUIStyle.set_margin(new RectOffset(0, 0, 2, 2));
-			BehaviorDesignerUtility.buttonGUIStyle.set_padding(new RectOffset(0, 0, 1, 1));
+			BehaviorDesignerUtility.buttonGUIStyle = new GUIStyle(GUI.skin.button);
+			BehaviorDesignerUtility.buttonGUIStyle.margin=new RectOffset(0, 0, 2, 2);
+			BehaviorDesignerUtility.buttonGUIStyle.padding=new RectOffset(0, 0, 1, 1);
 		}
 
 		private static void InitPlainTextureGUIStyle()
 		{
 			BehaviorDesignerUtility.plainTextureGUIStyle = new GUIStyle();
-			BehaviorDesignerUtility.plainTextureGUIStyle.set_border(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.plainTextureGUIStyle.set_margin(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.plainTextureGUIStyle.set_padding(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.plainTextureGUIStyle.get_normal().set_background(null);
-			BehaviorDesignerUtility.plainTextureGUIStyle.get_active().set_background(null);
-			BehaviorDesignerUtility.plainTextureGUIStyle.get_hover().set_background(null);
-			BehaviorDesignerUtility.plainTextureGUIStyle.get_focused().set_background(null);
+			BehaviorDesignerUtility.plainTextureGUIStyle.border=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.plainTextureGUIStyle.margin=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.plainTextureGUIStyle.padding=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.plainTextureGUIStyle.normal.background=null;
+			BehaviorDesignerUtility.plainTextureGUIStyle.active.background=null;
+			BehaviorDesignerUtility.plainTextureGUIStyle.hover.background=null;
+			BehaviorDesignerUtility.plainTextureGUIStyle.focused.background=null;
 		}
 
 		private static void InitArrowSeparatorGUIStyle()
 		{
 			BehaviorDesignerUtility.arrowSeparatorGUIStyle = new GUIStyle();
-			BehaviorDesignerUtility.arrowSeparatorGUIStyle.set_border(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.arrowSeparatorGUIStyle.set_margin(new RectOffset(0, 0, 3, 0));
-			BehaviorDesignerUtility.arrowSeparatorGUIStyle.set_padding(new RectOffset(0, 0, 0, 0));
+			BehaviorDesignerUtility.arrowSeparatorGUIStyle.border=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.arrowSeparatorGUIStyle.margin=new RectOffset(0, 0, 3, 0);
+			BehaviorDesignerUtility.arrowSeparatorGUIStyle.padding=new RectOffset(0, 0, 0, 0);
 			Texture2D background = BehaviorDesignerUtility.LoadTexture("ArrowSeparator.png", true, null);
-			BehaviorDesignerUtility.arrowSeparatorGUIStyle.get_normal().set_background(background);
-			BehaviorDesignerUtility.arrowSeparatorGUIStyle.get_active().set_background(background);
-			BehaviorDesignerUtility.arrowSeparatorGUIStyle.get_hover().set_background(background);
-			BehaviorDesignerUtility.arrowSeparatorGUIStyle.get_focused().set_background(background);
+			BehaviorDesignerUtility.arrowSeparatorGUIStyle.normal.background=background;
+			BehaviorDesignerUtility.arrowSeparatorGUIStyle.active.background=background;
+			BehaviorDesignerUtility.arrowSeparatorGUIStyle.hover.background=background;
+			BehaviorDesignerUtility.arrowSeparatorGUIStyle.focused.background=background;
 		}
 
 		private static void InitSelectedBackgroundGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
-			Color color = (!EditorGUIUtility.get_isProSkin()) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, UnityEngine.TextureFormat.RGBA32, false, true);
+			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
 			texture2D.SetPixel(1, 1, color);
-			texture2D.set_hideFlags(61);
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
 			BehaviorDesignerUtility.selectedBackgroundGUIStyle = new GUIStyle();
-			BehaviorDesignerUtility.selectedBackgroundGUIStyle.set_border(new RectOffset(0, 0, 0, 0));
-			BehaviorDesignerUtility.selectedBackgroundGUIStyle.set_margin(new RectOffset(0, 0, -2, 2));
-			BehaviorDesignerUtility.selectedBackgroundGUIStyle.get_normal().set_background(texture2D);
-			BehaviorDesignerUtility.selectedBackgroundGUIStyle.get_active().set_background(texture2D);
-			BehaviorDesignerUtility.selectedBackgroundGUIStyle.get_hover().set_background(texture2D);
-			BehaviorDesignerUtility.selectedBackgroundGUIStyle.get_focused().set_background(texture2D);
+			BehaviorDesignerUtility.selectedBackgroundGUIStyle.border=new RectOffset(0, 0, 0, 0);
+			BehaviorDesignerUtility.selectedBackgroundGUIStyle.margin=new RectOffset(0, 0, -2, 2);
+			BehaviorDesignerUtility.selectedBackgroundGUIStyle.normal.background=texture2D;
+			BehaviorDesignerUtility.selectedBackgroundGUIStyle.active.background=texture2D;
+			BehaviorDesignerUtility.selectedBackgroundGUIStyle.hover.background=texture2D;
+			BehaviorDesignerUtility.selectedBackgroundGUIStyle.focused.background=texture2D;
 		}
 
 		private static void InitErrorListDarkBackground()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
-			Color color = (!EditorGUIUtility.get_isProSkin()) ? new Color(0.706f, 0.706f, 0.706f) : new Color(0.2f, 0.2f, 0.2f, 1f);
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, UnityEngine.TextureFormat.RGBA32, false, true);
+			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.706f, 0.706f, 0.706f) : new Color(0.2f, 0.2f, 0.2f, 1f);
 			texture2D.SetPixel(1, 1, color);
-			texture2D.set_hideFlags(61);
+			//texture2D.hideFlags=61;
+			texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 			texture2D.Apply();
 			BehaviorDesignerUtility.errorListDarkBackground = new GUIStyle();
-			BehaviorDesignerUtility.errorListDarkBackground.set_padding(new RectOffset(2, 0, 2, 0));
-			BehaviorDesignerUtility.errorListDarkBackground.get_normal().set_background(texture2D);
-			BehaviorDesignerUtility.errorListDarkBackground.get_active().set_background(texture2D);
-			BehaviorDesignerUtility.errorListDarkBackground.get_hover().set_background(texture2D);
-			BehaviorDesignerUtility.errorListDarkBackground.get_focused().set_background(texture2D);
-			BehaviorDesignerUtility.errorListDarkBackground.get_normal().set_textColor((!EditorGUIUtility.get_isProSkin()) ? new Color(0.206f, 0.206f, 0.206f) : new Color(0.706f, 0.706f, 0.706f));
-			BehaviorDesignerUtility.errorListDarkBackground.set_alignment(0);
-			BehaviorDesignerUtility.errorListDarkBackground.set_wordWrap(true);
+			BehaviorDesignerUtility.errorListDarkBackground.padding=new RectOffset(2, 0, 2, 0);
+			BehaviorDesignerUtility.errorListDarkBackground.normal.background=texture2D;
+			BehaviorDesignerUtility.errorListDarkBackground.active.background=texture2D;
+			BehaviorDesignerUtility.errorListDarkBackground.hover.background=texture2D;
+			BehaviorDesignerUtility.errorListDarkBackground.focused.background=texture2D;
+			BehaviorDesignerUtility.errorListDarkBackground.normal.textColor=(!EditorGUIUtility.isProSkin) ? new Color(0.206f, 0.206f, 0.206f) : new Color(0.706f, 0.706f, 0.706f);
+			BehaviorDesignerUtility.errorListDarkBackground.alignment= UnityEngine.TextAnchor.UpperLeft; // 0
+			BehaviorDesignerUtility.errorListDarkBackground.wordWrap=true;
 		}
 
 		private static void InitErrorListLightBackground()
 		{
 			BehaviorDesignerUtility.errorListLightBackground = new GUIStyle();
-			BehaviorDesignerUtility.errorListLightBackground.set_padding(new RectOffset(2, 0, 2, 0));
-			BehaviorDesignerUtility.errorListLightBackground.get_normal().set_textColor((!EditorGUIUtility.get_isProSkin()) ? new Color(0.106f, 0.106f, 0.106f) : new Color(0.706f, 0.706f, 0.706f));
-			BehaviorDesignerUtility.errorListLightBackground.set_alignment(0);
-			BehaviorDesignerUtility.errorListLightBackground.set_wordWrap(true);
+			BehaviorDesignerUtility.errorListLightBackground.padding=new RectOffset(2, 0, 2, 0);
+			BehaviorDesignerUtility.errorListLightBackground.normal.textColor=(!EditorGUIUtility.isProSkin) ? new Color(0.106f, 0.106f, 0.106f) : new Color(0.706f, 0.706f, 0.706f);
+			BehaviorDesignerUtility.errorListLightBackground.alignment= UnityEngine.TextAnchor.UpperLeft; // 0
+			BehaviorDesignerUtility.errorListLightBackground.wordWrap=true;
 		}
 
 		private static void InitWelcomeScreenIntroGUIStyle()
 		{
-			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.set_fontSize(16);
-			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.set_fontStyle(1);
-			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.get_normal().set_textColor(new Color(0.706f, 0.706f, 0.706f));
+			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.fontSize=16;
+			// BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.fontStyle=1;
+			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.fontStyle = UnityEngine.FontStyle.Bold;
+			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.normal.textColor=new Color(0.706f, 0.706f, 0.706f);
 		}
 
 		private static void InitWelcomeScreenTextHeaderGUIStyle()
 		{
-			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.set_alignment(3);
-			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.set_fontSize(14);
-			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.set_fontStyle(1);
+			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle = new GUIStyle(GUI.skin.label);
+			// BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.alignment=3;
+			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.alignment = UnityEngine.TextAnchor.MiddleLeft;
+			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.fontSize=14;
+			// BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.fontStyle=1;
+			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.fontStyle = UnityEngine.FontStyle.Bold;
 		}
 
 		private static void InitWelcomeScreenTextDescriptionGUIStyle()
 		{
-			BehaviorDesignerUtility.welcomeScreenTextDescriptionGUIStyle = new GUIStyle(GUI.get_skin().get_label());
-			BehaviorDesignerUtility.welcomeScreenTextDescriptionGUIStyle.set_wordWrap(true);
+			BehaviorDesignerUtility.welcomeScreenTextDescriptionGUIStyle = new GUIStyle(GUI.skin.label);
+			BehaviorDesignerUtility.welcomeScreenTextDescriptionGUIStyle.wordWrap=true;
 		}
 
 		private static void InitTaskBorderTexture(int colorIndex)
@@ -2263,8 +2286,9 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitScreenshotBackgroundTexture()
 		{
-			BehaviorDesignerUtility.screenshotBackgroundTexture = new Texture2D(1, 1, 3, false, true);
-			if (EditorGUIUtility.get_isProSkin())
+			// BehaviorDesignerUtility.screenshotBackgroundTexture = new Texture2D(1, 1, 3, false, true);
+			BehaviorDesignerUtility.screenshotBackgroundTexture = new Texture2D(1, 1, UnityEngine.TextureFormat.RGB24, false, true);
+			if (EditorGUIUtility.isProSkin)
 			{
 				BehaviorDesignerUtility.screenshotBackgroundTexture.SetPixel(1, 1, new Color(0.1647f, 0.1647f, 0.1647f));
 			}
@@ -2277,7 +2301,7 @@ namespace BehaviorDesigner.Editor
 
 		public static void SetObjectDirty(UnityEngine.Object obj)
 		{
-			if (EditorApplication.get_isPlaying())
+			if (EditorApplication.isPlaying)
 			{
 				return;
 			}

@@ -10,20 +10,22 @@ namespace BehaviorDesigner.Editor
 	{
 		public override void OnInspectorGUI()
 		{
-			BehaviorManager behaviorManager = this.get_target() as BehaviorManager;
-			behaviorManager.set_UpdateInterval((UpdateIntervalType)EditorGUILayout.EnumPopup("Update Interval", behaviorManager.get_UpdateInterval(), new GUILayoutOption[0]));
-			if (behaviorManager.get_UpdateInterval() == 1)
+			BehaviorManager behaviorManager = this.target as BehaviorManager;
+			behaviorManager.UpdateInterval = (UpdateIntervalType)EditorGUILayout.EnumPopup("Update Interval", behaviorManager.UpdateInterval, new GUILayoutOption[0]);
+			if (behaviorManager.UpdateInterval == UpdateIntervalType.SpecifySeconds)
 			{
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
-				behaviorManager.set_UpdateIntervalSeconds(EditorGUILayout.FloatField("Seconds", behaviorManager.get_UpdateIntervalSeconds(), new GUILayoutOption[0]));
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+				EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
+				behaviorManager.UpdateIntervalSeconds = EditorGUILayout.FloatField("Seconds", behaviorManager.UpdateIntervalSeconds, new GUILayoutOption[0]);
+				EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 			}
-			behaviorManager.set_ExecutionsPerTick((BehaviorManager.ExecutionsPerTickType)EditorGUILayout.EnumPopup("Task Execution Type", behaviorManager.get_ExecutionsPerTick(), new GUILayoutOption[0]));
-			if (behaviorManager.get_ExecutionsPerTick() == 1)
+			behaviorManager.ExecutionsPerTick = ((BehaviorManager.ExecutionsPerTickType)EditorGUILayout.EnumPopup("Task Execution Type", behaviorManager.ExecutionsPerTick, new GUILayoutOption[0]));
+
+			// TODO Ron 这个枚举一会看一下
+			if (behaviorManager.ExecutionsPerTick == BehaviorManager.ExecutionsPerTickType.NoDuplicates)
 			{
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
-				behaviorManager.set_MaxTaskExecutionsPerTick(EditorGUILayout.IntField("Max Execution Count", behaviorManager.get_MaxTaskExecutionsPerTick(), new GUILayoutOption[0]));
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+				EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
+				behaviorManager.MaxTaskExecutionsPerTick = (EditorGUILayout.IntField("Max Execution Count", behaviorManager.MaxTaskExecutionsPerTick, new GUILayoutOption[0]));
+				EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 			}
 		}
 	}

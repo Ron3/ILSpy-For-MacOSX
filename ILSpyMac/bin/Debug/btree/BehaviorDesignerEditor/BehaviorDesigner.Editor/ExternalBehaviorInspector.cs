@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -21,16 +21,16 @@ namespace BehaviorDesigner.Editor
 
 		public override void OnInspectorGUI()
 		{
-			ExternalBehavior externalBehavior = this.get_target() as ExternalBehavior;
+			ExternalBehavior externalBehavior = this.target as ExternalBehavior;
 			if (externalBehavior == null)
 			{
 				return;
 			}
-			if (externalBehavior.get_BehaviorSource().get_Owner() == null)
+			if (externalBehavior.BehaviorSource.Owner == null)
 			{
-				externalBehavior.get_BehaviorSource().set_Owner(externalBehavior);
+				externalBehavior.BehaviorSource.Owner=externalBehavior;
 			}
-			if (ExternalBehaviorInspector.DrawInspectorGUI(externalBehavior.get_BehaviorSource(), true, ref this.mShowVariables))
+			if (ExternalBehaviorInspector.DrawInspectorGUI(externalBehavior.BehaviorSource, true, ref this.mShowVariables))
 			{
 				BehaviorDesignerUtility.SetObjectDirty(externalBehavior);
 			}
@@ -38,14 +38,14 @@ namespace BehaviorDesigner.Editor
 
 		public void Reset()
 		{
-			ExternalBehavior externalBehavior = this.get_target() as ExternalBehavior;
+			ExternalBehavior externalBehavior = this.target as ExternalBehavior;
 			if (externalBehavior == null)
 			{
 				return;
 			}
-			if (externalBehavior.get_BehaviorSource().get_Owner() == null)
+			if (externalBehavior.BehaviorSource.Owner == null)
 			{
-				externalBehavior.get_BehaviorSource().set_Owner(externalBehavior);
+				externalBehavior.BehaviorSource.Owner=externalBehavior;
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace BehaviorDesigner.Editor
 				string text = "BehaviorDesigner.VariablesFoldout." + behaviorSource.GetHashCode();
 				if (showVariables = EditorGUILayout.Foldout(EditorPrefs.GetBool(text, true), "Variables"))
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 					List<SharedVariable> allVariables = behaviorSource.GetAllVariables();
 					if (allVariables != null && VariableInspector.DrawAllVariables(false, behaviorSource, ref allVariables, false, ref ExternalBehaviorInspector.variablePosition, ref ExternalBehaviorInspector.selectedVariableIndex, ref ExternalBehaviorInspector.selectedVariableName, ref ExternalBehaviorInspector.selectedVariableTypeIndex, true, false))
 					{
@@ -87,7 +87,7 @@ namespace BehaviorDesigner.Editor
 							JSONSerialization.Save(behaviorSource);
 						}
 					}
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 				EditorPrefs.SetBool(text, showVariables);
 			}

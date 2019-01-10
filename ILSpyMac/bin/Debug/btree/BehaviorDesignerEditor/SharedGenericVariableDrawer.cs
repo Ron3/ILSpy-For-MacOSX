@@ -1,4 +1,4 @@
-using BehaviorDesigner.Editor;
+﻿using BehaviorDesigner.Editor;
 using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
@@ -16,14 +16,14 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 		EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
 		if (FieldInspector.DrawFoldout(genericVariable.GetHashCode(), label))
 		{
-			EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+			EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 			if (SharedGenericVariableDrawer.variableNames == null)
 			{
 				List<Type> list = VariableInspector.FindAllSharedVariableTypes(true);
-				SharedGenericVariableDrawer.variableNames = new string[list.get_Count()];
-				for (int i = 0; i < list.get_Count(); i++)
+				SharedGenericVariableDrawer.variableNames = new string[list.Count];
+				for (int i = 0; i < list.Count; i++)
 				{
-					SharedGenericVariableDrawer.variableNames[i] = list.get_Item(i).get_Name().Remove(0, 6);
+					SharedGenericVariableDrawer.variableNames[i] = list[i].Name.Remove(0, 6);
 				}
 			}
 			int num = 0;
@@ -37,7 +37,7 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 				}
 			}
 			int num2 = EditorGUILayout.Popup("Type", num, SharedGenericVariableDrawer.variableNames, BehaviorDesignerUtility.SharedVariableToolbarPopup, new GUILayoutOption[0]);
-			Type type = VariableInspector.FindAllSharedVariableTypes(true).get_Item(num2);
+			Type type = VariableInspector.FindAllSharedVariableTypes(true)[num2];
 			if (num2 != num)
 			{
 				num = num2;
@@ -46,7 +46,7 @@ public class SharedGenericVariableDrawer : ObjectDrawer
 			GUILayout.Space(3f);
 			genericVariable.type = "Shared" + SharedGenericVariableDrawer.variableNames[num];
 			genericVariable.value = FieldInspector.DrawSharedVariable(null, new GUIContent("Value"), null, type, genericVariable.value);
-			EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+			EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 		}
 		EditorGUILayout.EndVertical();
 	}

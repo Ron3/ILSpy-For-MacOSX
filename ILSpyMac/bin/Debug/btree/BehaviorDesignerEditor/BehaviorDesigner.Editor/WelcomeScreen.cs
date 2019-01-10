@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -62,8 +62,8 @@ namespace BehaviorDesigner.Editor
 			WelcomeScreen window = EditorWindow.GetWindow<WelcomeScreen>(true, "Welcome to Behavior Designer");
 			EditorWindow arg_25_0 = window;
 			Vector2 vector = new Vector2(340f, 410f);
-			window.set_maxSize(vector);
-			arg_25_0.set_minSize(vector);
+			window.maxSize=vector;
+			arg_25_0.minSize=vector;
 		}
 
 		public void OnEnable()
@@ -101,24 +101,44 @@ namespace BehaviorDesigner.Editor
 			{
 				BehaviorDesignerPreferences.SetBool(BDPreferences.ShowWelcomeScreen, flag);
 			}
-			EditorGUIUtility.AddCursorRect(this.m_SamplesImageRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_SamplesHeaderRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_SamplesDescriptionRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_DocImageRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_DocHeaderRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_DocDescriptionRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_VideoImageRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_VideoHeaderRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_VideoDescriptionRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_ForumImageRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_ForumHeaderRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_ForumDescriptionRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_ContactImageRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_ContactHeaderRect, 4);
-			EditorGUIUtility.AddCursorRect(this.m_ContactDescriptionRect, 4);
-			if (Event.get_current().get_type() == 1)
+			// EditorGUIUtility.AddCursorRect(this.m_SamplesImageRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_SamplesHeaderRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_SamplesDescriptionRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_DocImageRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_DocHeaderRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_DocDescriptionRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_VideoImageRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_VideoHeaderRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_VideoDescriptionRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_ForumImageRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_ForumHeaderRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_ForumDescriptionRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_ContactImageRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_ContactHeaderRect, 4);
+			// EditorGUIUtility.AddCursorRect(this.m_ContactDescriptionRect, 4);
+
+			// TODO Ron.认为枚举是从0开始的
+			EditorGUIUtility.AddCursorRect(this.m_SamplesImageRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_SamplesHeaderRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_SamplesDescriptionRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_DocImageRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_DocHeaderRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_DocDescriptionRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_VideoImageRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_VideoHeaderRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_VideoDescriptionRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_ForumImageRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_ForumHeaderRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_ForumDescriptionRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_ContactImageRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_ContactHeaderRect, MouseCursor.Link);
+			EditorGUIUtility.AddCursorRect(this.m_ContactDescriptionRect, MouseCursor.Link);
+
+			// TODO Ron 这里不确定是那个枚举
+			// if (Event.current.type == 1)
+			if (Event.current.type == EventType.MouseUp)
 			{
-				Vector2 mousePosition = Event.get_current().get_mousePosition();
+				Vector2 mousePosition = Event.current.mousePosition;
 				if (this.m_SamplesImageRect.Contains(mousePosition) || this.m_SamplesHeaderRect.Contains(mousePosition) || this.m_SamplesDescriptionRect.Contains(mousePosition))
 				{
 					Application.OpenURL("http://www.opsive.com/assets/BehaviorDesigner/samples.php");

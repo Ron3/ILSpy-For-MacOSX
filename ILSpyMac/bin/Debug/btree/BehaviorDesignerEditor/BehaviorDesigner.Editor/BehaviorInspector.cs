@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -23,7 +23,7 @@ namespace BehaviorDesigner.Editor
 
 		private void OnEnable()
 		{
-			Behavior behavior = this.get_target() as Behavior;
+			Behavior behavior = this.target as Behavior;
 			if (behavior == null)
 			{
 				return;
@@ -33,16 +33,16 @@ namespace BehaviorDesigner.Editor
 
 		public override void OnInspectorGUI()
 		{
-			Behavior behavior = this.get_target() as Behavior;
+			Behavior behavior = this.target as Behavior;
 			if (behavior == null)
 			{
 				return;
 			}
 			bool flag = false;
-			if (BehaviorInspector.DrawInspectorGUI(behavior, base.get_serializedObject(), true, ref flag, ref this.mShowOptions, ref this.mShowVariables))
+			if (BehaviorInspector.DrawInspectorGUI(behavior, base.serializedObject, true, ref flag, ref this.mShowOptions, ref this.mShowVariables))
 			{
 				BehaviorDesignerUtility.SetObjectDirty(behavior);
-				if (flag && BehaviorDesignerWindow.instance != null && behavior.GetBehaviorSource().get_BehaviorID() == BehaviorDesignerWindow.instance.ActiveBehaviorID)
+				if (flag && BehaviorDesignerWindow.instance != null && behavior.GetBehaviorSource().BehaviorID == BehaviorDesignerWindow.instance.ActiveBehaviorID)
 				{
 					BehaviorDesignerWindow.instance.LoadBehavior(behavior.GetBehaviorSource(), false, false);
 				}
@@ -70,26 +70,26 @@ namespace BehaviorDesigner.Editor
 				GUILayout.Height(48f)
 			});
 			serializedObject.Update();
-			GUI.set_enabled(PrefabUtility.GetPrefabType(behavior) != 3 || BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances));
+			GUI.enabled=PrefabUtility.GetPrefabType(behavior) != PrefabType.PrefabInstance || BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances);
 			SerializedProperty serializedProperty = serializedObject.FindProperty("externalBehavior");
-			ExternalBehavior externalBehavior = serializedProperty.get_objectReferenceValue() as ExternalBehavior;
+			ExternalBehavior externalBehavior = serializedProperty.objectReferenceValue as ExternalBehavior;
 			EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
 			serializedObject.ApplyModifiedProperties();
-			if ((!object.ReferenceEquals(behavior.get_ExternalBehavior(), null) && !behavior.get_ExternalBehavior().Equals(externalBehavior)) || (!object.ReferenceEquals(externalBehavior, null) && !externalBehavior.Equals(behavior.get_ExternalBehavior())))
+			if ((!object.ReferenceEquals(behavior.ExternalBehavior, null) && !behavior.ExternalBehavior.Equals(externalBehavior)) || (!object.ReferenceEquals(externalBehavior, null) && !externalBehavior.Equals(behavior.ExternalBehavior)))
 			{
-				if (!object.ReferenceEquals(behavior.get_ExternalBehavior(), null))
+				if (!object.ReferenceEquals(behavior.ExternalBehavior, null))
 				{
-					behavior.get_ExternalBehavior().get_BehaviorSource().set_Owner(behavior.get_ExternalBehavior());
-					behavior.get_ExternalBehavior().get_BehaviorSource().CheckForSerialization(true, behavior.GetBehaviorSource());
+					behavior.ExternalBehavior.BehaviorSource.Owner=behavior.ExternalBehavior;
+					behavior.ExternalBehavior.BehaviorSource.CheckForSerialization(true, behavior.GetBehaviorSource());
 				}
 				else
 				{
-					behavior.GetBehaviorSource().set_EntryTask(null);
-					behavior.GetBehaviorSource().set_RootTask(null);
-					behavior.GetBehaviorSource().set_DetachedTasks(null);
-					behavior.GetBehaviorSource().set_Variables(null);
+					behavior.GetBehaviorSource().EntryTask=null;
+					behavior.GetBehaviorSource().RootTask=null;
+					behavior.GetBehaviorSource().DetachedTasks=null;
+					behavior.GetBehaviorSource().Variables=null;
 					behavior.GetBehaviorSource().CheckForSerialization(true, null);
-					behavior.GetBehaviorSource().set_Variables(null);
+					behavior.GetBehaviorSource().Variables=null;
 					if (BehaviorDesignerPreferences.GetBool(BDPreferences.BinarySerialization))
 					{
 						BinarySerialization.Save(behavior.GetBehaviorSource());
@@ -101,7 +101,7 @@ namespace BehaviorDesigner.Editor
 				}
 				externalModification = true;
 			}
-			GUI.set_enabled(true);
+			GUI.enabled=true;
 			serializedProperty = serializedObject.FindProperty("group");
 			EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
 			string text;
@@ -110,17 +110,17 @@ namespace BehaviorDesigner.Editor
 				text = "BehaviorDesigner.VariablesFoldout." + behavior.GetHashCode();
 				if (showVariables = EditorGUILayout.Foldout(EditorPrefs.GetBool(text, true), "Variables"))
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 					bool flag = false;
 					BehaviorSource behaviorSource = behavior.GetBehaviorSource();
 					List<SharedVariable> allVariables = behaviorSource.GetAllVariables();
-					if (allVariables != null && allVariables.get_Count() > 0)
+					if (allVariables != null && allVariables.Count > 0)
 					{
 						if (VariableInspector.DrawAllVariables(false, behaviorSource, ref allVariables, false, ref BehaviorInspector.variablePosition, ref BehaviorInspector.selectedVariableIndex, ref BehaviorInspector.selectedVariableName, ref BehaviorInspector.selectedVariableTypeIndex, false, true))
 						{
-							if (!EditorApplication.get_isPlayingOrWillChangePlaymode() && behavior.get_ExternalBehavior() != null)
+							if (!EditorApplication.isPlayingOrWillChangePlaymode && behavior.ExternalBehavior != null)
 							{
-								BehaviorSource behaviorSource2 = behavior.get_ExternalBehavior().GetBehaviorSource();
+								BehaviorSource behaviorSource2 = behavior.ExternalBehavior.GetBehaviorSource();
 								behaviorSource2.CheckForSerialization(true, null);
 								if (VariableInspector.SyncVariables(behaviorSource2, allVariables))
 								{
@@ -152,7 +152,7 @@ namespace BehaviorDesigner.Editor
 							JSONSerialization.Save(behaviorSource);
 						}
 					}
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 				EditorPrefs.SetBool(text, showVariables);
 			}
@@ -161,7 +161,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (fromInspector)
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 				}
 				serializedProperty = serializedObject.FindProperty("startWhenEnabled");
 				EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
@@ -175,7 +175,7 @@ namespace BehaviorDesigner.Editor
 				EditorGUILayout.PropertyField(serializedProperty, true, new GUILayoutOption[0]);
 				if (fromInspector)
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 			}
 			if (fromInspector)

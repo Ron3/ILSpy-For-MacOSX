@@ -1,9 +1,12 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+
+using Object = UnityEngine.Object;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace BehaviorDesigner.Editor
 {
@@ -214,7 +217,7 @@ namespace BehaviorDesigner.Editor
 				return this.mIncomingRectangle;
 			}
 			Rect rect = this.Rectangle(offset, false, false);
-			this.mIncomingRectangle = new Rect(rect.get_x() + (rect.get_width() - 42f) / 2f, rect.get_y() - 14f, 42f, 14f);
+			this.mIncomingRectangle = new Rect(rect.x + (rect.width - 42f) / 2f, rect.y - 14f, 42f, 14f);
 			this.mIncomingRectIsDirty = false;
 			return this.mIncomingRectangle;
 		}
@@ -226,14 +229,15 @@ namespace BehaviorDesigner.Editor
 				return this.mOutgoingRectangle;
 			}
 			Rect rect = this.Rectangle(offset, false, false);
-			this.mOutgoingRectangle = new Rect(rect.get_x() + (rect.get_width() - 42f) / 2f, rect.get_yMax(), 42f, 16f);
+			this.mOutgoingRectangle = new Rect(rect.x + (rect.width - 42f) / 2f, rect.yMax, 42f, 16f);
 			this.mOutgoingRectIsDirty = false;
 			return this.mOutgoingRectangle;
 		}
 
 		public void OnEnable()
 		{
-			base.set_hideFlags(61);
+			//base.hideFlags=61;
+			base.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 		}
 
 		public void LoadTask(Task task, Behavior owner, ref int id)
@@ -243,43 +247,44 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			this.mTask = task;
-			this.mTask.set_Owner(owner);
-			this.mTask.set_ID(id++);
-			this.mTask.get_NodeData().set_NodeDesigner(this);
-			this.mTask.get_NodeData().InitWatchedFields(this.mTask);
-			if (!this.mTask.get_NodeData().get_FriendlyName().Equals(string.Empty))
+			this.mTask.Owner=owner;
+			this.mTask.ID=id++;
+			this.mTask.NodeData.NodeDesigner=this;
+			this.mTask.NodeData.InitWatchedFields(this.mTask);
+			if (!this.mTask.NodeData.FriendlyName.Equals(string.Empty))
 			{
-				this.mTask.set_FriendlyName(this.mTask.get_NodeData().get_FriendlyName());
-				this.mTask.get_NodeData().set_FriendlyName(string.Empty);
+				this.mTask.FriendlyName=this.mTask.NodeData.FriendlyName;
+				this.mTask.NodeData.FriendlyName=string.Empty;
 			}
 			this.LoadTaskIcon();
 			this.Init();
 			RequiredComponentAttribute[] array;
-			if (this.mTask.get_Owner() != null && (array = (this.mTask.GetType().GetCustomAttributes(typeof(RequiredComponentAttribute), true) as RequiredComponentAttribute[])).Length > 0)
+			if (this.mTask.Owner != null && (array = (this.mTask.GetType().GetCustomAttributes(typeof(RequiredComponentAttribute), true) as RequiredComponentAttribute[])).Length > 0)
 			{
-				Type componentType = array[0].get_ComponentType();
-				if (typeof(Component).IsAssignableFrom(componentType) && this.mTask.get_Owner().get_gameObject().GetComponent(componentType) == null)
+				Type componentType = array[0].ComponentType;
+				if (typeof(Component).IsAssignableFrom(componentType) && this.mTask.Owner.gameObject.GetComponent(componentType) == null)
 				{
-					this.mTask.get_Owner().get_gameObject().AddComponent(componentType);
+					this.mTask.Owner.gameObject.AddComponent(componentType);
 				}
 			}
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(this.mTask.GetType());
-			BindingFlags bindingFlags = 54;
-			for (int i = baseClasses.get_Count() - 1; i > -1; i--)
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
-					if (typeof(SharedVariable).IsAssignableFrom(fields[j].get_FieldType()) && !fields[j].get_FieldType().get_IsAbstract())
+					if (typeof(SharedVariable).IsAssignableFrom(fields[j].FieldType) && !fields[j].FieldType.IsAbstract)
 					{
 						SharedVariable sharedVariable = fields[j].GetValue(this.mTask) as SharedVariable;
 						if (sharedVariable == null)
 						{
-							sharedVariable = (Activator.CreateInstance(fields[j].get_FieldType()) as SharedVariable);
+							sharedVariable = (Activator.CreateInstance(fields[j].FieldType) as SharedVariable);
 						}
 						if (TaskUtility.HasAttribute(fields[j], typeof(RequiredFieldAttribute)) || TaskUtility.HasAttribute(fields[j], typeof(SharedRequiredAttribute)))
 						{
-							sharedVariable.set_IsShared(true);
+							sharedVariable.IsShared=true;
 						}
 						fields[j].SetValue(this.mTask, sharedVariable);
 					}
@@ -288,12 +293,12 @@ namespace BehaviorDesigner.Editor
 			if (this.isParent)
 			{
 				ParentTask parentTask = this.mTask as ParentTask;
-				if (parentTask.get_Children() != null)
+				if (parentTask.Children != null)
 				{
-					for (int k = 0; k < parentTask.get_Children().get_Count(); k++)
+					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
 						NodeDesigner nodeDesigner = ScriptableObject.CreateInstance<NodeDesigner>();
-						nodeDesigner.LoadTask(parentTask.get_Children().get_Item(k), owner, ref id);
+						nodeDesigner.LoadTask(parentTask.Children[k], owner, ref id);
 						NodeConnection nodeConnection = ScriptableObject.CreateInstance<NodeConnection>();
 						nodeConnection.LoadConnection(this, NodeConnectionType.Fixed);
 						this.AddChildNode(nodeDesigner, nodeConnection, true, true, k);
@@ -306,40 +311,41 @@ namespace BehaviorDesigner.Editor
 		public void LoadNode(Task task, BehaviorSource behaviorSource, Vector2 offset, ref int id)
 		{
 			this.mTask = task;
-			this.mTask.set_Owner(behaviorSource.get_Owner() as Behavior);
-			this.mTask.set_ID(id++);
-			this.mTask.set_NodeData(new NodeData());
-			this.mTask.get_NodeData().set_Offset(offset);
-			this.mTask.get_NodeData().set_NodeDesigner(this);
+			this.mTask.Owner=behaviorSource.Owner as Behavior;
+			this.mTask.ID=id++;
+			this.mTask.NodeData=new NodeData();
+			this.mTask.NodeData.Offset=offset;
+			this.mTask.NodeData.NodeDesigner=this;
 			this.LoadTaskIcon();
 			this.Init();
-			this.mTask.set_FriendlyName(this.taskName);
+			this.mTask.FriendlyName=this.taskName;
 			RequiredComponentAttribute[] array;
-			if (this.mTask.get_Owner() != null && (array = (this.mTask.GetType().GetCustomAttributes(typeof(RequiredComponentAttribute), true) as RequiredComponentAttribute[])).Length > 0)
+			if (this.mTask.Owner != null && (array = (this.mTask.GetType().GetCustomAttributes(typeof(RequiredComponentAttribute), true) as RequiredComponentAttribute[])).Length > 0)
 			{
-				Type componentType = array[0].get_ComponentType();
-				if (typeof(Component).IsAssignableFrom(componentType) && this.mTask.get_Owner().get_gameObject().GetComponent(componentType) == null)
+				Type componentType = array[0].ComponentType;
+				if (typeof(Component).IsAssignableFrom(componentType) && this.mTask.Owner.gameObject.GetComponent(componentType) == null)
 				{
-					this.mTask.get_Owner().get_gameObject().AddComponent(componentType);
+					this.mTask.Owner.gameObject.AddComponent(componentType);
 				}
 			}
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(this.mTask.GetType());
-			BindingFlags bindingFlags = 54;
-			for (int i = baseClasses.get_Count() - 1; i > -1; i--)
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
-					if (typeof(SharedVariable).IsAssignableFrom(fields[j].get_FieldType()) && !fields[j].get_FieldType().get_IsAbstract())
+					if (typeof(SharedVariable).IsAssignableFrom(fields[j].FieldType) && !fields[j].FieldType.IsAbstract)
 					{
 						SharedVariable sharedVariable = fields[j].GetValue(this.mTask) as SharedVariable;
 						if (sharedVariable == null)
 						{
-							sharedVariable = (Activator.CreateInstance(fields[j].get_FieldType()) as SharedVariable);
+							sharedVariable = (Activator.CreateInstance(fields[j].FieldType) as SharedVariable);
 						}
 						if (TaskUtility.HasAttribute(fields[j], typeof(RequiredFieldAttribute)) || TaskUtility.HasAttribute(fields[j], typeof(SharedRequiredAttribute)))
 						{
-							sharedVariable.set_IsShared(true);
+							sharedVariable.IsShared=true;
 						}
 						fields[j].SetValue(this.mTask, sharedVariable);
 					}
@@ -349,13 +355,13 @@ namespace BehaviorDesigner.Editor
 
 		private void LoadTaskIcon()
 		{
-			this.mTask.get_NodeData().set_Icon(null);
+			this.mTask.NodeData.Icon=null;
 			TaskIconAttribute[] array;
 			if ((array = (this.mTask.GetType().GetCustomAttributes(typeof(TaskIconAttribute), false) as TaskIconAttribute[])).Length > 0)
 			{
-				this.mTask.get_NodeData().set_Icon(BehaviorDesignerUtility.LoadIcon(array[0].get_IconPath(), null));
+				this.mTask.NodeData.Icon=BehaviorDesignerUtility.LoadIcon(array[0].IconPath, null);
 			}
-			if (this.mTask.get_NodeData().get_Icon() == null)
+			if (this.mTask.NodeData.Icon == null)
 			{
 				string iconName = string.Empty;
 				if (this.mTask.GetType().IsSubclassOf(typeof(Action)))
@@ -378,13 +384,13 @@ namespace BehaviorDesigner.Editor
 				{
 					iconName = "{SkinColor}EntryIcon.png";
 				}
-				this.mTask.get_NodeData().set_Icon(BehaviorDesignerUtility.LoadIcon(iconName, null));
+				this.mTask.NodeData.Icon=BehaviorDesignerUtility.LoadIcon(iconName, null);
 			}
 		}
 
 		private void Init()
 		{
-			this.taskName = BehaviorDesignerUtility.SplitCamelCase(this.mTask.GetType().get_Name().ToString());
+			this.taskName = BehaviorDesignerUtility.SplitCamelCase(this.mTask.GetType().Name.ToString());
 			this.isParent = this.mTask.GetType().IsSubclassOf(typeof(ParentTask));
 			if (this.isParent)
 			{
@@ -398,13 +404,13 @@ namespace BehaviorDesigner.Editor
 		public void MakeEntryDisplay()
 		{
 			this.isEntryDisplay = (this.isParent = true);
-			this.mTask.set_FriendlyName(this.taskName = "Entry");
+			this.mTask.FriendlyName=this.taskName = "Entry";
 			this.outgoingNodeConnections = new List<NodeConnection>();
 		}
 
 		public Vector2 GetAbsolutePosition()
 		{
-			Vector2 vector = this.mTask.get_NodeData().get_Offset();
+			Vector2 vector = this.mTask.NodeData.Offset;
 			if (this.parentNodeDesigner != null)
 			{
 				vector += this.parentNodeDesigner.GetAbsolutePosition();
@@ -423,28 +429,28 @@ namespace BehaviorDesigner.Editor
 			{
 				if (!this.isEntryDisplay)
 				{
-					result.set_yMin(result.get_yMin() - 14f);
+					result.yMin=result.yMin - 14f;
 				}
 				if (this.isParent)
 				{
-					result.set_yMax(result.get_yMax() + 16f);
+					result.yMax=result.yMax + 16f;
 				}
 			}
 			if (includeComments && this.mTask != null)
 			{
-				if (this.mTask.get_NodeData().get_WatchedFields() != null && this.mTask.get_NodeData().get_WatchedFields().get_Count() > 0 && result.get_xMax() < this.watchedFieldRect.get_xMax())
+				if (this.mTask.NodeData.WatchedFields != null && this.mTask.NodeData.WatchedFields.Count > 0 && result.xMax < this.watchedFieldRect.xMax)
 				{
-					result.set_xMax(this.watchedFieldRect.get_xMax());
+					result.xMax=this.watchedFieldRect.xMax;
 				}
-				if (!this.mTask.get_NodeData().get_Comment().Equals(string.Empty))
+				if (!this.mTask.NodeData.Comment.Equals(string.Empty))
 				{
-					if (result.get_xMax() < this.commentRect.get_xMax())
+					if (result.xMax < this.commentRect.xMax)
 					{
-						result.set_xMax(this.commentRect.get_xMax());
+						result.xMax=this.commentRect.xMax;
 					}
-					if (result.get_yMax() < this.commentRect.get_yMax())
+					if (result.yMax < this.commentRect.yMax)
 					{
-						result.set_yMax(this.commentRect.get_yMax());
+						result.yMax=this.commentRect.yMax;
 					}
 				}
 			}
@@ -467,7 +473,7 @@ namespace BehaviorDesigner.Editor
 			{
 				float num2;
 				float num3;
-				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.get_NodeData().get_Comment()), ref num2, ref num3);
+				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.NodeData.Comment), out num2, out num3);
 				num3 += 20f;
 				num = ((num <= num3) ? num3 : num);
 			}
@@ -483,22 +489,22 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.mCacheIsDirty)
 			{
-				this.nodeCollapsedTextureRect = new Rect(nodeRect.get_x() + (nodeRect.get_width() - 26f) / 2f + 1f, nodeRect.get_yMax() + 2f, 26f, 6f);
-				this.iconTextureRect = new Rect(nodeRect.get_x() + (nodeRect.get_width() - 44f) / 2f, nodeRect.get_y() + 4f + 2f, 44f, 44f);
-				this.titleRect = new Rect(nodeRect.get_x(), nodeRect.get_yMax() - (float)((!BehaviorDesignerPreferences.GetBool(BDPreferences.CompactMode)) ? 20 : 28) - 1f, nodeRect.get_width(), 20f);
-				this.breakpointTextureRect = new Rect(nodeRect.get_xMax() - 16f, nodeRect.get_y() + 3f, 14f, 14f);
-				this.errorTextureRect = new Rect(nodeRect.get_xMax() - 12f, nodeRect.get_y() - 8f, 20f, 20f);
-				this.referenceTextureRect = new Rect(nodeRect.get_x() + 2f, nodeRect.get_y() + 3f, 14f, 14f);
-				this.conditionalAbortTextureRect = new Rect(nodeRect.get_x() + 3f, nodeRect.get_y() + 3f, 16f, 16f);
-				this.conditionalAbortLowerPriorityTextureRect = new Rect(nodeRect.get_x() + 3f, nodeRect.get_y(), 16f, 16f);
-				this.disabledButtonTextureRect = new Rect(nodeRect.get_x() - 1f, nodeRect.get_y() - 17f, 14f, 14f);
-				this.collapseButtonTextureRect = new Rect(nodeRect.get_x() + 15f, nodeRect.get_y() - 17f, 14f, 14f);
-				this.incomingConnectionTextureRect = new Rect(nodeRect.get_x() + (nodeRect.get_width() - 42f) / 2f, nodeRect.get_y() - 14f - 3f + 3f, 42f, 17f);
-				this.outgoingConnectionTextureRect = new Rect(nodeRect.get_x() + (nodeRect.get_width() - 42f) / 2f, nodeRect.get_yMax() - 3f, 42f, 19f);
-				this.successReevaluatingExecutionStatusTextureRect = new Rect(nodeRect.get_xMax() - 37f, nodeRect.get_yMax() - 38f, 35f, 36f);
-				this.successExecutionStatusTextureRect = new Rect(nodeRect.get_xMax() - 37f, nodeRect.get_yMax() - 33f, 35f, 31f);
-				this.failureExecutionStatusTextureRect = new Rect(nodeRect.get_xMax() - 37f, nodeRect.get_yMax() - 38f, 35f, 36f);
-				this.iconBorderTextureRect = new Rect(nodeRect.get_x() + (nodeRect.get_width() - 46f) / 2f, nodeRect.get_y() + 3f + 2f, 46f, 46f);
+				this.nodeCollapsedTextureRect = new Rect(nodeRect.x + (nodeRect.width - 26f) / 2f + 1f, nodeRect.yMax + 2f, 26f, 6f);
+				this.iconTextureRect = new Rect(nodeRect.x + (nodeRect.width - 44f) / 2f, nodeRect.y + 4f + 2f, 44f, 44f);
+				this.titleRect = new Rect(nodeRect.x, nodeRect.yMax - (float)((!BehaviorDesignerPreferences.GetBool(BDPreferences.CompactMode)) ? 20 : 28) - 1f, nodeRect.width, 20f);
+				this.breakpointTextureRect = new Rect(nodeRect.xMax - 16f, nodeRect.y + 3f, 14f, 14f);
+				this.errorTextureRect = new Rect(nodeRect.xMax - 12f, nodeRect.y - 8f, 20f, 20f);
+				this.referenceTextureRect = new Rect(nodeRect.x + 2f, nodeRect.y + 3f, 14f, 14f);
+				this.conditionalAbortTextureRect = new Rect(nodeRect.x + 3f, nodeRect.y + 3f, 16f, 16f);
+				this.conditionalAbortLowerPriorityTextureRect = new Rect(nodeRect.x + 3f, nodeRect.y, 16f, 16f);
+				this.disabledButtonTextureRect = new Rect(nodeRect.x - 1f, nodeRect.y - 17f, 14f, 14f);
+				this.collapseButtonTextureRect = new Rect(nodeRect.x + 15f, nodeRect.y - 17f, 14f, 14f);
+				this.incomingConnectionTextureRect = new Rect(nodeRect.x + (nodeRect.width - 42f) / 2f, nodeRect.y - 14f - 3f + 3f, 42f, 17f);
+				this.outgoingConnectionTextureRect = new Rect(nodeRect.x + (nodeRect.width - 42f) / 2f, nodeRect.yMax - 3f, 42f, 19f);
+				this.successReevaluatingExecutionStatusTextureRect = new Rect(nodeRect.xMax - 37f, nodeRect.yMax - 38f, 35f, 36f);
+				this.successExecutionStatusTextureRect = new Rect(nodeRect.xMax - 37f, nodeRect.yMax - 33f, 35f, 31f);
+				this.failureExecutionStatusTextureRect = new Rect(nodeRect.xMax - 37f, nodeRect.yMax - 38f, 35f, 36f);
+				this.iconBorderTextureRect = new Rect(nodeRect.x + (nodeRect.width - 46f) / 2f, nodeRect.y + 3f + 2f, 46f, 46f);
 				this.CalculateNodeCommentRect(nodeRect);
 				this.mCacheIsDirty = false;
 			}
@@ -507,21 +513,21 @@ namespace BehaviorDesigner.Editor
 		private void CalculateNodeCommentRect(Rect nodeRect)
 		{
 			bool flag = false;
-			if (this.mTask.get_NodeData().get_WatchedFields() != null && this.mTask.get_NodeData().get_WatchedFields().get_Count() > 0)
+			if (this.mTask.NodeData.WatchedFields != null && this.mTask.NodeData.WatchedFields.Count > 0)
 			{
 				string text = string.Empty;
 				string text2 = string.Empty;
-				for (int i = 0; i < this.mTask.get_NodeData().get_WatchedFields().get_Count(); i++)
+				for (int i = 0; i < this.mTask.NodeData.WatchedFields.Count; i++)
 				{
-					FieldInfo fieldInfo = this.mTask.get_NodeData().get_WatchedFields().get_Item(i);
-					text = text + BehaviorDesignerUtility.SplitCamelCase(fieldInfo.get_Name()) + ": \n";
+					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields[i];
+					text = text + BehaviorDesignerUtility.SplitCamelCase(fieldInfo.Name) + ": \n";
 					text2 = text2 + ((fieldInfo.GetValue(this.mTask) == null) ? "null" : fieldInfo.GetValue(this.mTask).ToString()) + "\n";
 				}
 				float num;
 				float num2;
-				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text), ref num, ref num2);
+				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text), out num, out num2);
 				float num3;
-				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text2), ref num, ref num3);
+				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(text2), out num, out num3);
 				float num4 = num2;
 				float num5 = num3;
 				float num6 = Mathf.Min(220f, num2 + num3 + 20f);
@@ -530,35 +536,35 @@ namespace BehaviorDesigner.Editor
 					num4 = num2 / (num2 + num3) * 220f;
 					num5 = num3 / (num2 + num3) * 220f;
 				}
-				this.watchedFieldRect = new Rect(nodeRect.get_xMax() + 4f, nodeRect.get_y(), num6 + 8f, nodeRect.get_height());
-				this.watchedFieldNamesRect = new Rect(nodeRect.get_xMax() + 6f, nodeRect.get_y() + 4f, num4, nodeRect.get_height() - 8f);
-				this.watchedFieldValuesRect = new Rect(nodeRect.get_xMax() + 6f + num4, nodeRect.get_y() + 4f, num5, nodeRect.get_height() - 8f);
+				this.watchedFieldRect = new Rect(nodeRect.xMax + 4f, nodeRect.y, num6 + 8f, nodeRect.height);
+				this.watchedFieldNamesRect = new Rect(nodeRect.xMax + 6f, nodeRect.y + 4f, num4, nodeRect.height - 8f);
+				this.watchedFieldValuesRect = new Rect(nodeRect.xMax + 6f + num4, nodeRect.y + 4f, num5, nodeRect.height - 8f);
 				flag = true;
 			}
-			if (!this.mTask.get_NodeData().get_Comment().Equals(string.Empty))
+			if (!this.mTask.NodeData.Comment.Equals(string.Empty))
 			{
 				if (this.isParent)
 				{
 					float num7;
 					float num8;
-					BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.get_NodeData().get_Comment()), ref num7, ref num8);
+					BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(this.mTask.NodeData.Comment), out num7, out num8);
 					float num9 = Mathf.Min(220f, num8 + 20f);
 					if (flag)
 					{
-						this.commentRect = new Rect(nodeRect.get_xMin() - 12f - num9, nodeRect.get_y(), num9 + 8f, nodeRect.get_height());
-						this.commentLabelRect = new Rect(nodeRect.get_xMin() - 6f - num9, nodeRect.get_y() + 4f, num9, nodeRect.get_height() - 8f);
+						this.commentRect = new Rect(nodeRect.xMin - 12f - num9, nodeRect.y, num9 + 8f, nodeRect.height);
+						this.commentLabelRect = new Rect(nodeRect.xMin - 6f - num9, nodeRect.y + 4f, num9, nodeRect.height - 8f);
 					}
 					else
 					{
-						this.commentRect = new Rect(nodeRect.get_xMax() + 4f, nodeRect.get_y(), num9 + 8f, nodeRect.get_height());
-						this.commentLabelRect = new Rect(nodeRect.get_xMax() + 6f, nodeRect.get_y() + 4f, num9, nodeRect.get_height() - 8f);
+						this.commentRect = new Rect(nodeRect.xMax + 4f, nodeRect.y, num9 + 8f, nodeRect.height);
+						this.commentLabelRect = new Rect(nodeRect.xMax + 6f, nodeRect.y + 4f, num9, nodeRect.height - 8f);
 					}
 				}
 				else
 				{
-					float num10 = Mathf.Min(100f, BehaviorDesignerUtility.TaskCommentGUIStyle.CalcHeight(new GUIContent(this.mTask.get_NodeData().get_Comment()), nodeRect.get_width() - 4f));
-					this.commentRect = new Rect(nodeRect.get_x(), nodeRect.get_yMax() + 4f, nodeRect.get_width(), num10 + 4f);
-					this.commentLabelRect = new Rect(nodeRect.get_x(), nodeRect.get_yMax() + 4f, nodeRect.get_width() - 4f, num10);
+					float num10 = Mathf.Min(100f, BehaviorDesignerUtility.TaskCommentGUIStyle.CalcHeight(new GUIContent(this.mTask.NodeData.Comment), nodeRect.width - 4f));
+					this.commentRect = new Rect(nodeRect.x, nodeRect.yMax + 4f, nodeRect.width, num10 + 4f);
+					this.commentLabelRect = new Rect(nodeRect.x, nodeRect.yMax + 4f, nodeRect.width - 4f, num10);
 				}
 			}
 		}
@@ -569,14 +575,14 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			if (this.ToString().get_Length() != this.prevFriendlyNameLength)
+			if (this.ToString().Length != this.prevFriendlyNameLength)
 			{
-				this.prevFriendlyNameLength = this.ToString().get_Length();
+				this.prevFriendlyNameLength = this.ToString().Length;
 				this.mRectIsDirty = true;
 			}
 			Rect rect = this.Rectangle(offset, false, false);
 			this.UpdateCache(rect);
-			bool flag = (this.mTask.get_NodeData().get_PushTime() != -1f && this.mTask.get_NodeData().get_PushTime() >= this.mTask.get_NodeData().get_PopTime()) || (this.isEntryDisplay && this.outgoingNodeConnections.get_Count() > 0 && this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.get_NodeData().get_PushTime() != -1f);
+			bool flag = (this.mTask.NodeData.PushTime != -1f && this.mTask.NodeData.PushTime >= this.mTask.NodeData.PopTime) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PushTime != -1f);
 			bool flag2 = this.mIdentifyUpdateCount != -1;
 			bool result = this.prevRunningState != flag;
 			float num = (!BehaviorDesignerPreferences.GetBool(BDPreferences.FadeNodes)) ? 0.01f : 0.5f;
@@ -605,15 +611,15 @@ namespace BehaviorDesigner.Editor
 			{
 				num2 = 1f;
 			}
-			else if ((this.mTask.get_NodeData().get_PopTime() != -1f && num != 0f && this.mTask.get_NodeData().get_PopTime() <= Time.get_realtimeSinceStartup() && Time.get_realtimeSinceStartup() - this.mTask.get_NodeData().get_PopTime() < num) || (this.isEntryDisplay && this.outgoingNodeConnections.get_Count() > 0 && this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.get_NodeData().get_PopTime() != -1f && this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.get_NodeData().get_PopTime() <= Time.get_realtimeSinceStartup() && Time.get_realtimeSinceStartup() - this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.get_NodeData().get_PopTime() < num))
+			else if ((this.mTask.NodeData.PopTime != -1f && num != 0f && this.mTask.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.mTask.NodeData.PopTime < num) || (this.isEntryDisplay && this.outgoingNodeConnections.Count > 0 && this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime != -1f && this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime < num))
 			{
 				if (this.isEntryDisplay)
 				{
-					num2 = 1f - (Time.get_realtimeSinceStartup() - this.outgoingNodeConnections.get_Item(0).DestinationNodeDesigner.Task.get_NodeData().get_PopTime()) / num;
+					num2 = 1f - (Time.realtimeSinceStartup - this.outgoingNodeConnections[0].DestinationNodeDesigner.Task.NodeData.PopTime) / num;
 				}
 				else
 				{
-					num2 = 1f - (Time.get_realtimeSinceStartup() - this.mTask.get_NodeData().get_PopTime()) / num;
+					num2 = 1f - (Time.realtimeSinceStartup - this.mTask.NodeData.PopTime) / num;
 				}
 				result = true;
 			}
@@ -624,17 +630,17 @@ namespace BehaviorDesigner.Editor
 			this.prevRunningState = flag;
 			if (num2 != 1f)
 			{
-				GUI.set_color((!disabled && !this.mTask.get_Disabled()) ? Color.get_white() : this.grayColor);
+				GUI.color=(!disabled && !this.mTask.Disabled) ? Color.white : this.grayColor;
 				GUIStyle backgroundGUIStyle;
 				if (BehaviorDesignerPreferences.GetBool(BDPreferences.CompactMode))
 				{
-					backgroundGUIStyle = ((!this.mSelected) ? BehaviorDesignerUtility.GetTaskCompactGUIStyle(this.mTask.get_NodeData().get_ColorIndex()) : BehaviorDesignerUtility.GetTaskSelectedCompactGUIStyle(this.mTask.get_NodeData().get_ColorIndex()));
+					backgroundGUIStyle = ((!this.mSelected) ? BehaviorDesignerUtility.GetTaskCompactGUIStyle(this.mTask.NodeData.ColorIndex) : BehaviorDesignerUtility.GetTaskSelectedCompactGUIStyle(this.mTask.NodeData.ColorIndex));
 				}
 				else
 				{
-					backgroundGUIStyle = ((!this.mSelected) ? BehaviorDesignerUtility.GetTaskGUIStyle(this.mTask.get_NodeData().get_ColorIndex()) : BehaviorDesignerUtility.GetTaskSelectedGUIStyle(this.mTask.get_NodeData().get_ColorIndex()));
+					backgroundGUIStyle = ((!this.mSelected) ? BehaviorDesignerUtility.GetTaskGUIStyle(this.mTask.NodeData.ColorIndex) : BehaviorDesignerUtility.GetTaskSelectedGUIStyle(this.mTask.NodeData.ColorIndex));
 				}
-				this.DrawNodeTexture(rect, BehaviorDesignerUtility.GetTaskConnectionTopTexture(this.mTask.get_NodeData().get_ColorIndex()), BehaviorDesignerUtility.GetTaskConnectionBottomTexture(this.mTask.get_NodeData().get_ColorIndex()), backgroundGUIStyle, BehaviorDesignerUtility.GetTaskBorderTexture(this.mTask.get_NodeData().get_ColorIndex()));
+				this.DrawNodeTexture(rect, BehaviorDesignerUtility.GetTaskConnectionTopTexture(this.mTask.NodeData.ColorIndex), BehaviorDesignerUtility.GetTaskConnectionBottomTexture(this.mTask.NodeData.ColorIndex), backgroundGUIStyle, BehaviorDesignerUtility.GetTaskBorderTexture(this.mTask.NodeData.ColorIndex));
 			}
 			if (num2 > 0f)
 			{
@@ -686,9 +692,9 @@ namespace BehaviorDesigner.Editor
 					}
 					iconBorderTexture = BehaviorDesignerUtility.TaskBorderRunningTexture;
 				}
-				Color color = (!disabled && !this.mTask.get_Disabled()) ? Color.get_white() : this.grayColor;
+				Color color = (!disabled && !this.mTask.Disabled) ? Color.white : this.grayColor;
 				color.a = num2;
-				GUI.set_color(color);
+				GUI.color=color;
 				Texture2D connectionTopTexture = null;
 				Texture2D connectionBottomTexture = null;
 				if (!this.isEntryDisplay)
@@ -714,35 +720,35 @@ namespace BehaviorDesigner.Editor
 					}
 				}
 				this.DrawNodeTexture(rect, connectionTopTexture, connectionBottomTexture, backgroundGUIStyle2, iconBorderTexture);
-				GUI.set_color(Color.get_white());
+				GUI.color=Color.white;
 			}
-			if (this.mTask.get_NodeData().get_Collapsed())
+			if (this.mTask.NodeData.Collapsed)
 			{
 				GUI.DrawTexture(this.nodeCollapsedTextureRect, BehaviorDesignerUtility.TaskConnectionCollapsedTexture);
 			}
 			if (!BehaviorDesignerPreferences.GetBool(BDPreferences.CompactMode))
 			{
-				GUI.DrawTexture(this.iconTextureRect, this.mTask.get_NodeData().get_Icon());
+				GUI.DrawTexture(this.iconTextureRect, this.mTask.NodeData.Icon);
 			}
-			if (this.mTask.get_NodeData().get_InterruptTime() != -1f && Time.get_realtimeSinceStartup() - this.mTask.get_NodeData().get_InterruptTime() < 0.75f + num)
+			if (this.mTask.NodeData.InterruptTime != -1f && Time.realtimeSinceStartup - this.mTask.NodeData.InterruptTime < 0.75f + num)
 			{
 				float a;
-				if (Time.get_realtimeSinceStartup() - this.mTask.get_NodeData().get_InterruptTime() < 0.75f)
+				if (Time.realtimeSinceStartup - this.mTask.NodeData.InterruptTime < 0.75f)
 				{
 					a = 1f;
 				}
 				else
 				{
-					a = 1f - (Time.get_realtimeSinceStartup() - (this.mTask.get_NodeData().get_InterruptTime() + 0.75f)) / num;
+					a = 1f - (Time.realtimeSinceStartup - (this.mTask.NodeData.InterruptTime + 0.75f)) / num;
 				}
-				Color white = Color.get_white();
+				Color white = Color.white;
 				white.a = a;
-				GUI.set_color(white);
+				GUI.color=white;
 				GUI.Label(rect, string.Empty, BehaviorDesignerUtility.TaskHighlightGUIStyle);
-				GUI.set_color(Color.get_white());
+				GUI.color=Color.white;
 			}
 			GUI.Label(this.titleRect, this.ToString(), BehaviorDesignerUtility.TaskTitleGUIStyle);
-			if (this.mTask.get_NodeData().get_IsBreakpoint())
+			if (this.mTask.NodeData.IsBreakpoint)
 			{
 				GUI.DrawTexture(this.breakpointTextureRect, BehaviorDesignerUtility.BreakpointTexture);
 			}
@@ -754,33 +760,35 @@ namespace BehaviorDesigner.Editor
 			{
 				GUI.DrawTexture(this.errorTextureRect, BehaviorDesignerUtility.ErrorIconTexture);
 			}
-			if (this.mTask is Composite && (this.mTask as Composite).get_AbortType() != null)
+			if (this.mTask is Composite && (this.mTask as Composite).AbortType != null)
 			{
-				switch ((this.mTask as Composite).get_AbortType())
+				switch ((this.mTask as Composite).AbortType)
 				{
-				case 1:
+				case BehaviorDesigner.Runtime.Tasks.AbortType.Self:
 					GUI.DrawTexture(this.conditionalAbortTextureRect, BehaviorDesignerUtility.ConditionalAbortSelfTexture);
 					break;
-				case 2:
+				case BehaviorDesigner.Runtime.Tasks.AbortType.LowerPriority:
 					GUI.DrawTexture(this.conditionalAbortLowerPriorityTextureRect, BehaviorDesignerUtility.ConditionalAbortLowerPriorityTexture);
 					break;
-				case 3:
+				case BehaviorDesigner.Runtime.Tasks.AbortType.Both:
 					GUI.DrawTexture(this.conditionalAbortTextureRect, BehaviorDesignerUtility.ConditionalAbortBothTexture);
 					break;
 				}
 			}
-			GUI.set_color(Color.get_white());
+			GUI.color=Color.white;
 			if (this.showHoverBar)
 			{
-				GUI.DrawTexture(this.disabledButtonTextureRect, (!this.mTask.get_Disabled()) ? BehaviorDesignerUtility.DisableTaskTexture : BehaviorDesignerUtility.EnableTaskTexture, 2);
+				//GUI.DrawTexture(this.disabledButtonTextureRect, (!this.mTask.Disabled) ? BehaviorDesignerUtility.DisableTaskTexture : BehaviorDesignerUtility.EnableTaskTexture, 2);
+				GUI.DrawTexture(this.disabledButtonTextureRect, (!this.mTask.Disabled) ? BehaviorDesignerUtility.DisableTaskTexture : BehaviorDesignerUtility.EnableTaskTexture, UnityEngine.ScaleMode.ScaleToFit);
 				if (this.isParent || this.mTask is BehaviorReference)
 				{
-					bool collapsed = this.mTask.get_NodeData().get_Collapsed();
+					bool collapsed = this.mTask.NodeData.Collapsed;
 					if (this.mTask is BehaviorReference)
 					{
 						collapsed = (this.mTask as BehaviorReference).collapsed;
 					}
-					GUI.DrawTexture(this.collapseButtonTextureRect, (!collapsed) ? BehaviorDesignerUtility.CollapseTaskTexture : BehaviorDesignerUtility.ExpandTaskTexture, 2);
+					// GUI.DrawTexture(this.collapseButtonTextureRect, (!collapsed) ? BehaviorDesignerUtility.CollapseTaskTexture : BehaviorDesignerUtility.ExpandTaskTexture, 2);
+					GUI.DrawTexture(this.collapseButtonTextureRect, (!collapsed) ? BehaviorDesignerUtility.CollapseTaskTexture : BehaviorDesignerUtility.ExpandTaskTexture, UnityEngine.ScaleMode.ScaleToFit);
 				}
 			}
 			return result;
@@ -790,16 +798,19 @@ namespace BehaviorDesigner.Editor
 		{
 			if (!this.isEntryDisplay)
 			{
-				GUI.DrawTexture(this.incomingConnectionTextureRect, connectionTopTexture, 2);
+				// GUI.DrawTexture(this.incomingConnectionTextureRect, connectionTopTexture, 2);
+				GUI.DrawTexture(this.incomingConnectionTextureRect, connectionTopTexture, UnityEngine.ScaleMode.ScaleToFit);
 			}
 			if (this.isParent)
 			{
-				GUI.DrawTexture(this.outgoingConnectionTextureRect, connectionBottomTexture, 2);
+				// GUI.DrawTexture(this.outgoingConnectionTextureRect, connectionBottomTexture, 2);
+				GUI.DrawTexture(this.outgoingConnectionTextureRect, connectionBottomTexture, UnityEngine.ScaleMode.ScaleToFit);
 			}
 			GUI.Label(nodeRect, string.Empty, backgroundGUIStyle);
-			if (this.mTask.get_NodeData().get_ExecutionStatus() == 2)
+			// if (this.mTask.NodeData.ExecutionStatus == 2)
+			if (this.mTask.NodeData.ExecutionStatus == TaskStatus.Success)
 			{
-				if (this.mTask.get_NodeData().get_IsReevaluating())
+				if (this.mTask.NodeData.IsReevaluating)
 				{
 					GUI.DrawTexture(this.successReevaluatingExecutionStatusTextureRect, BehaviorDesignerUtility.ExecutionSuccessRepeatTexture);
 				}
@@ -808,9 +819,10 @@ namespace BehaviorDesigner.Editor
 					GUI.DrawTexture(this.successExecutionStatusTextureRect, BehaviorDesignerUtility.ExecutionSuccessTexture);
 				}
 			}
-			else if (this.mTask.get_NodeData().get_ExecutionStatus() == 1)
+			// else if (this.mTask.NodeData.ExecutionStatus == 1)
+			else if (this.mTask.NodeData.ExecutionStatus == TaskStatus.Failure)
 			{
-				GUI.DrawTexture(this.failureExecutionStatusTextureRect, (!this.mTask.get_NodeData().get_IsReevaluating()) ? BehaviorDesignerUtility.ExecutionFailureTexture : BehaviorDesignerUtility.ExecutionFailureRepeatTexture);
+				GUI.DrawTexture(this.failureExecutionStatusTextureRect, (!this.mTask.NodeData.IsReevaluating) ? BehaviorDesignerUtility.ExecutionFailureTexture : BehaviorDesignerUtility.ExecutionFailureRepeatTexture);
 			}
 			if (!BehaviorDesignerPreferences.GetBool(BDPreferences.CompactMode))
 			{
@@ -827,34 +839,34 @@ namespace BehaviorDesigner.Editor
 			}
 			if (this.isParent)
 			{
-				for (int i = 0; i < this.outgoingNodeConnections.get_Count(); i++)
+				for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 				{
-					this.outgoingNodeConnections.get_Item(i).DrawConnection(offset, disabled);
+					this.outgoingNodeConnections[i].DrawConnection(offset, disabled);
 				}
 			}
 		}
 
 		public void DrawNodeComment(Vector2 offset)
 		{
-			if (this.mTask.get_NodeData().get_Comment().get_Length() != this.prevCommentLength)
+			if (this.mTask.NodeData.Comment.Length != this.prevCommentLength)
 			{
-				this.prevCommentLength = this.mTask.get_NodeData().get_Comment().get_Length();
+				this.prevCommentLength = this.mTask.NodeData.Comment.Length;
 				this.mRectIsDirty = true;
 			}
-			if (this.mTask.get_NodeData().get_WatchedFields() != null && this.mTask.get_NodeData().get_WatchedFields().get_Count() > 0)
+			if (this.mTask.NodeData.WatchedFields != null && this.mTask.NodeData.WatchedFields.Count > 0)
 			{
-				if (this.mTask.get_NodeData().get_WatchedFields().get_Count() != this.prevWatchedFieldsLength.get_Count())
+				if (this.mTask.NodeData.WatchedFields.Count != this.prevWatchedFieldsLength.Count)
 				{
 					this.mRectIsDirty = true;
 					this.prevWatchedFieldsLength.Clear();
-					for (int i = 0; i < this.mTask.get_NodeData().get_WatchedFields().get_Count(); i++)
+					for (int i = 0; i < this.mTask.NodeData.WatchedFields.Count; i++)
 					{
-						if (this.mTask.get_NodeData().get_WatchedFields().get_Item(i) != null)
+						if (this.mTask.NodeData.WatchedFields[i] != null)
 						{
-							object value = this.mTask.get_NodeData().get_WatchedFields().get_Item(i).GetValue(this.mTask);
+							object value = this.mTask.NodeData.WatchedFields[i].GetValue(this.mTask);
 							if (value != null)
 							{
-								this.prevWatchedFieldsLength.Add(value.ToString().get_Length());
+								this.prevWatchedFieldsLength.Add(value.ToString().Length);
 							}
 							else
 							{
@@ -865,17 +877,17 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					for (int j = 0; j < this.mTask.get_NodeData().get_WatchedFields().get_Count(); j++)
+					for (int j = 0; j < this.mTask.NodeData.WatchedFields.Count; j++)
 					{
-						if (this.mTask.get_NodeData().get_WatchedFields().get_Item(j) != null)
+						if (this.mTask.NodeData.WatchedFields[j] != null)
 						{
-							object value2 = this.mTask.get_NodeData().get_WatchedFields().get_Item(j).GetValue(this.mTask);
+							object value2 = this.mTask.NodeData.WatchedFields[j].GetValue(this.mTask);
 							int num = 0;
 							if (value2 != null)
 							{
-								num = value2.ToString().get_Length();
+								num = value2.ToString().Length;
 							}
-							if (num != this.prevWatchedFieldsLength.get_Item(j))
+							if (num != this.prevWatchedFieldsLength[j])
 							{
 								this.mRectIsDirty = true;
 								break;
@@ -884,28 +896,28 @@ namespace BehaviorDesigner.Editor
 					}
 				}
 			}
-			if (this.mTask.get_NodeData().get_Comment().Equals(string.Empty) && (this.mTask.get_NodeData().get_WatchedFields() == null || this.mTask.get_NodeData().get_WatchedFields().get_Count() == 0))
+			if (this.mTask.NodeData.Comment.Equals(string.Empty) && (this.mTask.NodeData.WatchedFields == null || this.mTask.NodeData.WatchedFields.Count == 0))
 			{
 				return;
 			}
-			if (this.mTask.get_NodeData().get_WatchedFields() != null && this.mTask.get_NodeData().get_WatchedFields().get_Count() > 0)
+			if (this.mTask.NodeData.WatchedFields != null && this.mTask.NodeData.WatchedFields.Count > 0)
 			{
 				string text = string.Empty;
 				string text2 = string.Empty;
-				for (int k = 0; k < this.mTask.get_NodeData().get_WatchedFields().get_Count(); k++)
+				for (int k = 0; k < this.mTask.NodeData.WatchedFields.Count; k++)
 				{
-					FieldInfo fieldInfo = this.mTask.get_NodeData().get_WatchedFields().get_Item(k);
-					text = text + BehaviorDesignerUtility.SplitCamelCase(fieldInfo.get_Name()) + ": \n";
+					FieldInfo fieldInfo = this.mTask.NodeData.WatchedFields[k];
+					text = text + BehaviorDesignerUtility.SplitCamelCase(fieldInfo.Name) + ": \n";
 					text2 = text2 + ((fieldInfo.GetValue(this.mTask) == null) ? "null" : fieldInfo.GetValue(this.mTask).ToString()) + "\n";
 				}
 				GUI.Box(this.watchedFieldRect, string.Empty, BehaviorDesignerUtility.TaskDescriptionGUIStyle);
 				GUI.Label(this.watchedFieldNamesRect, text, BehaviorDesignerUtility.TaskCommentRightAlignGUIStyle);
 				GUI.Label(this.watchedFieldValuesRect, text2, BehaviorDesignerUtility.TaskCommentLeftAlignGUIStyle);
 			}
-			if (!this.mTask.get_NodeData().get_Comment().Equals(string.Empty))
+			if (!this.mTask.NodeData.Comment.Equals(string.Empty))
 			{
 				GUI.Box(this.commentRect, string.Empty, BehaviorDesignerUtility.TaskDescriptionGUIStyle);
-				GUI.Label(this.commentLabelRect, this.mTask.get_NodeData().get_Comment(), BehaviorDesignerUtility.TaskCommentGUIStyle);
+				GUI.Label(this.commentLabelRect, this.mTask.NodeData.Comment, BehaviorDesignerUtility.TaskCommentGUIStyle);
 			}
 		}
 
@@ -937,11 +949,11 @@ namespace BehaviorDesigner.Editor
 			{
 				return;
 			}
-			for (int i = 0; i < this.outgoingNodeConnections.get_Count(); i++)
+			for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 			{
-				if (this.outgoingNodeConnections.get_Item(i).Contains(point, offset))
+				if (this.outgoingNodeConnections[i].Contains(point, offset))
 				{
-					nodeConnections.Add(this.outgoingNodeConnections.get_Item(i));
+					nodeConnections.Add(this.outgoingNodeConnections[i]);
 				}
 			}
 		}
@@ -952,27 +964,27 @@ namespace BehaviorDesigner.Editor
 			{
 				float num = 3.40282347E+38f;
 				float num2 = num;
-				for (int i = 0; i < this.outgoingNodeConnections.get_Count(); i++)
+				for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 				{
-					Rect rect = this.outgoingNodeConnections.get_Item(i).DestinationNodeDesigner.Rectangle(offset, false, false);
-					if (rect.get_y() < num)
+					Rect rect = this.outgoingNodeConnections[i].DestinationNodeDesigner.Rectangle(offset, false, false);
+					if (rect.y < num)
 					{
-						num = rect.get_y();
-						num2 = rect.get_y();
+						num = rect.y;
+						num2 = rect.y;
 					}
 				}
-				num = num * 0.75f + nodeRect.get_yMax() * 0.25f;
-				if (num < nodeRect.get_yMax() + 15f)
+				num = num * 0.75f + nodeRect.yMax * 0.25f;
+				if (num < nodeRect.yMax + 15f)
 				{
-					num = nodeRect.get_yMax() + 15f;
+					num = nodeRect.yMax + 15f;
 				}
 				else if (num > num2 - 15f)
 				{
 					num = num2 - 15f;
 				}
-				for (int j = 0; j < this.outgoingNodeConnections.get_Count(); j++)
+				for (int j = 0; j < this.outgoingNodeConnections.Count; j++)
 				{
-					this.outgoingNodeConnections.get_Item(j).HorizontalHeight = num;
+					this.outgoingNodeConnections[j].HorizontalHeight = num;
 				}
 			}
 		}
@@ -983,12 +995,12 @@ namespace BehaviorDesigner.Editor
 			if (connectionType == NodeConnectionType.Incoming)
 			{
 				Rect rect = this.IncomingConnectionRect(offset);
-				result = new Vector2(rect.get_center().x, rect.get_y() + 7f);
+				result = new Vector2(rect.center.x, rect.y + 7f);
 			}
 			else
 			{
 				Rect rect2 = this.OutgoingConnectionRect(offset);
-				result = new Vector2(rect2.get_center().x, rect2.get_yMax() - 8f);
+				result = new Vector2(rect2.center.x, rect2.yMax - 8f);
 			}
 			return result;
 		}
@@ -996,25 +1008,25 @@ namespace BehaviorDesigner.Editor
 		public bool HoverBarAreaContains(Vector2 point, Vector2 offset)
 		{
 			Rect rect = this.Rectangle(offset, false, false);
-			rect.set_y(rect.get_y() - 24f);
+			rect.y=rect.y - 24f;
 			return rect.Contains(point);
 		}
 
 		public bool HoverBarButtonClick(Vector2 point, Vector2 offset, ref bool collapsedButtonClicked)
 		{
 			Rect rect = this.Rectangle(offset, false, false);
-			Rect rect2 = new Rect(rect.get_x() - 1f, rect.get_y() - 17f, 14f, 14f);
+			Rect rect2 = new Rect(rect.x - 1f, rect.y - 17f, 14f, 14f);
 			Rect rect3 = rect2;
 			bool flag = false;
 			if (rect2.Contains(point))
 			{
-				this.mTask.set_Disabled(!this.mTask.get_Disabled());
+				this.mTask.Disabled=!this.mTask.Disabled;
 				flag = true;
 			}
 			if (!flag && (this.isParent || this.mTask is BehaviorReference))
 			{
-				Rect rect4 = new Rect(rect.get_x() + 15f, rect.get_y() - 17f, 14f, 14f);
-				rect3.set_xMax(rect4.get_xMax());
+				Rect rect4 = new Rect(rect.x + 15f, rect.y - 17f, 14f, 14f);
+				rect3.xMax=rect4.xMax;
 				if (rect4.Contains(point))
 				{
 					if (this.mTask is BehaviorReference)
@@ -1023,7 +1035,7 @@ namespace BehaviorDesigner.Editor
 					}
 					else
 					{
-						this.mTask.get_NodeData().set_Collapsed(!this.mTask.get_NodeData().get_Collapsed());
+						this.mTask.NodeData.Collapsed=!this.mTask.NodeData.Collapsed;
 					}
 					collapsedButtonClicked = true;
 					flag = true;
@@ -1039,14 +1051,14 @@ namespace BehaviorDesigner.Editor
 		public bool Intersects(Rect rect, Vector2 offset)
 		{
 			Rect rect2 = this.Rectangle(offset, false, false);
-			return rect2.get_xMin() < rect.get_xMax() && rect2.get_xMax() > rect.get_xMin() && rect2.get_yMin() < rect.get_yMax() && rect2.get_yMax() > rect.get_yMin();
+			return rect2.xMin < rect.xMax && rect2.xMax > rect.xMin && rect2.yMin < rect.yMax && rect2.yMax > rect.yMin;
 		}
 
 		public void ChangeOffset(Vector2 delta)
 		{
-			Vector2 vector = this.mTask.get_NodeData().get_Offset();
+			Vector2 vector = this.mTask.NodeData.Offset;
 			vector += delta;
-			this.mTask.get_NodeData().set_Offset(vector);
+			this.mTask.NodeData.Offset=vector;
 			this.MarkDirty();
 			if (this.parentNodeDesigner != null)
 			{
@@ -1064,7 +1076,8 @@ namespace BehaviorDesigner.Editor
 			if (replaceNode)
 			{
 				ParentTask parentTask = this.mTask as ParentTask;
-				parentTask.get_Children().set_Item(replaceNodeIndex, childNodeDesigner.Task);
+				//parentTask.Children.Item=replaceNodeIndex, childNodeDesigner.Task;
+				parentTask.Children[replaceNodeIndex] = childNodeDesigner.Task;
 			}
 			else
 			{
@@ -1072,11 +1085,11 @@ namespace BehaviorDesigner.Editor
 				{
 					ParentTask parentTask2 = this.mTask as ParentTask;
 					int i = 0;
-					if (parentTask2.get_Children() != null)
+					if (parentTask2.Children != null)
 					{
-						for (i = 0; i < parentTask2.get_Children().get_Count(); i++)
+						for (i = 0; i < parentTask2.Children.Count; i++)
 						{
-							if (childNodeDesigner.GetAbsolutePosition().x < (parentTask2.get_Children().get_Item(i).get_NodeData().get_NodeDesigner() as NodeDesigner).GetAbsolutePosition().x)
+							if (childNodeDesigner.GetAbsolutePosition().x < (parentTask2.Children[i].NodeData.NodeDesigner as NodeDesigner).GetAbsolutePosition().x)
 							{
 								break;
 							}
@@ -1086,8 +1099,8 @@ namespace BehaviorDesigner.Editor
 				}
 				if (adjustOffset)
 				{
-					NodeData expr_CA = childNodeDesigner.Task.get_NodeData();
-					expr_CA.set_Offset(expr_CA.get_Offset() - this.GetAbsolutePosition());
+					NodeData expr_CA = childNodeDesigner.Task.NodeData;
+					expr_CA.Offset=expr_CA.Offset - this.GetAbsolutePosition();
 				}
 			}
 			childNodeDesigner.ParentNodeDesigner = this;
@@ -1106,11 +1119,11 @@ namespace BehaviorDesigner.Editor
 			if (!this.isEntryDisplay)
 			{
 				ParentTask parentTask = this.mTask as ParentTask;
-				parentTask.get_Children().Remove(childNodeDesigner.Task);
+				parentTask.Children.Remove(childNodeDesigner.Task);
 			}
-			for (int i = 0; i < this.outgoingNodeConnections.get_Count(); i++)
+			for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 			{
-				NodeConnection nodeConnection = this.outgoingNodeConnections.get_Item(i);
+				NodeConnection nodeConnection = this.outgoingNodeConnections[i];
 				if (nodeConnection.DestinationNodeDesigner.Equals(childNodeDesigner) || nodeConnection.OriginatingNodeDesigner.Equals(childNodeDesigner))
 				{
 					this.outgoingNodeConnections.RemoveAt(i);
@@ -1123,15 +1136,15 @@ namespace BehaviorDesigner.Editor
 
 		public void SetID(ref int id)
 		{
-			this.mTask.set_ID(id++);
+			this.mTask.ID=id++;
 			if (this.isParent)
 			{
 				ParentTask parentTask = this.mTask as ParentTask;
-				if (parentTask.get_Children() != null)
+				if (parentTask.Children != null)
 				{
-					for (int i = 0; i < parentTask.get_Children().get_Count(); i++)
+					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						(parentTask.get_Children().get_Item(i).get_NodeData().get_NodeDesigner() as NodeDesigner).SetID(ref id);
+						(parentTask.Children[i].NodeData.NodeDesigner as NodeDesigner).SetID(ref id);
 					}
 				}
 			}
@@ -1142,11 +1155,11 @@ namespace BehaviorDesigner.Editor
 			if (this.isParent)
 			{
 				ParentTask parentTask = this.mTask as ParentTask;
-				if (parentTask.get_Children() != null)
+				if (parentTask.Children != null)
 				{
-					for (int i = 0; i < parentTask.get_Children().get_Count(); i++)
+					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						if (parentTask.get_Children().get_Item(i).Equals(childTask))
+						if (parentTask.Children[i].Equals(childTask))
 						{
 							return i;
 						}
@@ -1165,13 +1178,13 @@ namespace BehaviorDesigner.Editor
 			if (this.isParent)
 			{
 				ParentTask parentTask = this.mTask as ParentTask;
-				if (parentTask.get_Children() != null)
+				if (parentTask.Children != null)
 				{
-					if (index >= parentTask.get_Children().get_Count() || parentTask.get_Children().get_Item(index) == null)
+					if (index >= parentTask.Children.Count || parentTask.Children[index] == null)
 					{
 						return null;
 					}
-					return parentTask.get_Children().get_Item(index).get_NodeData().get_NodeDesigner() as NodeDesigner;
+					return parentTask.Children[index].NodeData.NodeDesigner as NodeDesigner;
 				}
 			}
 			return null;
@@ -1181,20 +1194,23 @@ namespace BehaviorDesigner.Editor
 		{
 			int num = index + ((!decreaseIndex) ? 1 : -1);
 			ParentTask parentTask = this.mTask as ParentTask;
-			Task task = parentTask.get_Children().get_Item(index);
-			parentTask.get_Children().set_Item(index, parentTask.get_Children().get_Item(num));
-			parentTask.get_Children().set_Item(num, task);
+			Task task = parentTask.Children[index];
+			parentTask.Children[index] = parentTask.Children[num];
+			parentTask.Children[num] = task;
 		}
 
 		private void BringConnectionToFront(NodeDesigner nodeDesigner)
 		{
-			for (int i = 0; i < this.outgoingNodeConnections.get_Count(); i++)
+			for (int i = 0; i < this.outgoingNodeConnections.Count; i++)
 			{
-				if (this.outgoingNodeConnections.get_Item(i).DestinationNodeDesigner.Equals(nodeDesigner))
+				if (this.outgoingNodeConnections[i].DestinationNodeDesigner.Equals(nodeDesigner))
 				{
-					NodeConnection nodeConnection = this.outgoingNodeConnections.get_Item(i);
-					this.outgoingNodeConnections.set_Item(i, this.outgoingNodeConnections.get_Item(this.outgoingNodeConnections.get_Count() - 1));
-					this.outgoingNodeConnections.set_Item(this.outgoingNodeConnections.get_Count() - 1, nodeConnection);
+					NodeConnection nodeConnection = this.outgoingNodeConnections[i];
+					// this.outgoingNodeConnections.Item=i, this.outgoingNodeConnections[this.outgoingNodeConnections.Count - 1);
+					// this.outgoingNodeConnections.Item=this.outgoingNodeConnections.Count - 1, nodeConnection;
+
+					this.outgoingNodeConnections[i] = this.outgoingNodeConnections[this.outgoingNodeConnections.Count - 1];
+					this.outgoingNodeConnections[this.outgoingNodeConnections.Count - 1] = nodeConnection;
 					break;
 				}
 			}
@@ -1202,23 +1218,23 @@ namespace BehaviorDesigner.Editor
 
 		public void ToggleBreakpoint()
 		{
-			this.mTask.get_NodeData().set_IsBreakpoint(!this.Task.get_NodeData().get_IsBreakpoint());
+			this.mTask.NodeData.IsBreakpoint=!this.Task.NodeData.IsBreakpoint;
 		}
 
 		public void ToggleEnableState()
 		{
-			this.mTask.set_Disabled(!this.Task.get_Disabled());
+			this.mTask.Disabled=!this.Task.Disabled;
 		}
 
 		public bool IsDisabled()
 		{
-			return this.mTask.get_Disabled() || (this.parentNodeDesigner != null && this.parentNodeDesigner.IsDisabled());
+			return this.mTask.Disabled || (this.parentNodeDesigner != null && this.parentNodeDesigner.IsDisabled());
 		}
 
 		public bool ToggleCollapseState()
 		{
-			this.mTask.get_NodeData().set_Collapsed(!this.Task.get_NodeData().get_Collapsed());
-			return this.mTask.get_NodeData().get_Collapsed();
+			this.mTask.NodeData.Collapsed=!this.Task.NodeData.Collapsed;
+			return this.mTask.NodeData.Collapsed;
 		}
 
 		public void IdentifyNode()
@@ -1235,9 +1251,9 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.outgoingNodeConnections != null)
 			{
-				for (int i = this.outgoingNodeConnections.get_Count() - 1; i > -1; i--)
+				for (int i = this.outgoingNodeConnections.Count - 1; i > -1; i--)
 				{
-					Object.DestroyImmediate(this.outgoingNodeConnections.get_Item(i), true);
+					Object.DestroyImmediate(this.outgoingNodeConnections[i], true);
 				}
 			}
 		}
@@ -1254,7 +1270,7 @@ namespace BehaviorDesigner.Editor
 
 		public override string ToString()
 		{
-			return (this.mTask != null) ? ((!this.mTask.get_FriendlyName().Equals(string.Empty)) ? this.mTask.get_FriendlyName() : this.taskName) : string.Empty;
+			return (this.mTask != null) ? ((!this.mTask.FriendlyName.Equals(string.Empty)) ? this.mTask.FriendlyName : this.taskName) : string.Empty;
 		}
 	}
 }

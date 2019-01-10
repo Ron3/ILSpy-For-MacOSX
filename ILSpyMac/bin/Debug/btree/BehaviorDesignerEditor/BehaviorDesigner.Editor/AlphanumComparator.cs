@@ -3,6 +3,8 @@ using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
+
 namespace BehaviorDesigner.Editor
 {
 	public class AlphanumComparator<T> : IComparer<T>
@@ -17,24 +19,24 @@ namespace BehaviorDesigner.Editor
 				TaskCategoryAttribute[] array;
 				if ((array = (type.GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
 				{
-					text = text + array[0].get_Category() + "/";
+					text = text + array[0].Category + "/";
 				}
 				TaskNameAttribute[] array2;
 				if ((array2 = (type.GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[])).Length > 0)
 				{
-					text += array2[0].get_Name();
+					text += array2[0].Name;
 				}
 				else
 				{
-					text += BehaviorDesignerUtility.SplitCamelCase(type.get_Name().ToString());
+					text += BehaviorDesignerUtility.SplitCamelCase(type.Name.ToString());
 				}
 			}
 			else if (x.GetType().IsSubclassOf(typeof(SharedVariable)))
 			{
-				string text2 = x.GetType().get_Name();
-				if (text2.get_Length() > 6 && text2.Substring(0, 6).Equals("Shared"))
+				string text2 = x.GetType().Name;
+				if (text2.Length > 6 && text2.Substring(0, 6).Equals("Shared"))
 				{
-					text2 = text2.Substring(6, text2.get_Length() - 6);
+					text2 = text2.Substring(6, text2.Length - 6);
 				}
 				text = BehaviorDesignerUtility.SplitCamelCase(text2);
 			}
@@ -54,24 +56,24 @@ namespace BehaviorDesigner.Editor
 				TaskCategoryAttribute[] array3;
 				if ((array3 = (type2.GetCustomAttributes(typeof(TaskCategoryAttribute), false) as TaskCategoryAttribute[])).Length > 0)
 				{
-					text3 = text3 + array3[0].get_Category() + "/";
+					text3 = text3 + array3[0].Category + "/";
 				}
 				TaskNameAttribute[] array4;
 				if ((array4 = (type2.GetCustomAttributes(typeof(TaskNameAttribute), false) as TaskNameAttribute[])).Length > 0)
 				{
-					text3 += array4[0].get_Name();
+					text3 += array4[0].Name;
 				}
 				else
 				{
-					text3 += BehaviorDesignerUtility.SplitCamelCase(type2.get_Name().ToString());
+					text3 += BehaviorDesignerUtility.SplitCamelCase(type2.Name.ToString());
 				}
 			}
 			else if (y.GetType().IsSubclassOf(typeof(SharedVariable)))
 			{
-				string text4 = y.GetType().get_Name();
-				if (text4.get_Length() > 6 && text4.Substring(0, 6).Equals("Shared"))
+				string text4 = y.GetType().Name;
+				if (text4.Length > 6 && text4.Substring(0, 6).Equals("Shared"))
 				{
-					text4 = text4.Substring(6, text4.get_Length() - 6);
+					text4 = text4.Substring(6, text4.Length - 6);
 				}
 				text3 = BehaviorDesignerUtility.SplitCamelCase(text4);
 			}
@@ -83,36 +85,36 @@ namespace BehaviorDesigner.Editor
 			{
 				return 0;
 			}
-			int length = text.get_Length();
-			int length2 = text3.get_Length();
+			int length = text.Length;
+			int length2 = text3.Length;
 			int num = 0;
 			int num2 = 0;
 			while (num < length && num2 < length2)
 			{
 				int num5;
-				if (char.IsDigit(text.get_Chars(num)) && char.IsDigit(text.get_Chars(num2)))
+				if (char.IsDigit(text[num]) && char.IsDigit(text[num2]))
 				{
 					string text5 = string.Empty;
-					while (num < length && char.IsDigit(text.get_Chars(num)))
+					while (num < length && char.IsDigit(text[num]))
 					{
-						text5 += text.get_Chars(num);
+						text5 += text[num];
 						num++;
 					}
 					string text6 = string.Empty;
-					while (num2 < length2 && char.IsDigit(text3.get_Chars(num2)))
+					while (num2 < length2 && char.IsDigit(text3[num2]))
 					{
-						text6 += text3.get_Chars(num2);
+						text6 += text3[num2];
 						num2++;
 					}
 					int num3 = 0;
-					int.TryParse(text5, ref num3);
+					int.TryParse(text5, out num3);
 					int num4 = 0;
-					int.TryParse(text6, ref num4);
+					int.TryParse(text6, out num4);
 					num5 = num3.CompareTo(num4);
 				}
 				else
 				{
-					num5 = text.get_Chars(num).CompareTo(text3.get_Chars(num2));
+					num5 = text[num].CompareTo(text3[num2]);
 				}
 				if (num5 != 0)
 				{

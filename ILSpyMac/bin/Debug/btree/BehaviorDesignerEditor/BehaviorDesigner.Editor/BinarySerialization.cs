@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+
+using Object = UnityEngine.Object;
 
 namespace BehaviorDesigner.Editor
 {
@@ -24,34 +26,34 @@ namespace BehaviorDesigner.Editor
 			BinarySerialization.fieldIndex = 0;
 			BinarySerialization.taskSerializationData = new TaskSerializationData();
 			BinarySerialization.fieldSerializationData = BinarySerialization.taskSerializationData.fieldSerializationData;
-			if (behaviorSource.get_Variables() != null)
+			if (behaviorSource.Variables != null)
 			{
-				for (int i = 0; i < behaviorSource.get_Variables().get_Count(); i++)
+				for (int i = 0; i < behaviorSource.Variables.Count; i++)
 				{
-					BinarySerialization.taskSerializationData.variableStartIndex.Add(BinarySerialization.fieldSerializationData.startIndex.get_Count());
-					BinarySerialization.SaveSharedVariable(behaviorSource.get_Variables().get_Item(i), 0);
+					BinarySerialization.taskSerializationData.variableStartIndex.Add(BinarySerialization.fieldSerializationData.startIndex.Count);
+					BinarySerialization.SaveSharedVariable(behaviorSource.Variables[i], 0);
 				}
 			}
-			if (!object.ReferenceEquals(behaviorSource.get_EntryTask(), null))
+			if (!object.ReferenceEquals(behaviorSource.EntryTask, null))
 			{
-				BinarySerialization.SaveTask(behaviorSource.get_EntryTask(), -1);
+				BinarySerialization.SaveTask(behaviorSource.EntryTask, -1);
 			}
-			if (!object.ReferenceEquals(behaviorSource.get_RootTask(), null))
+			if (!object.ReferenceEquals(behaviorSource.RootTask, null))
 			{
-				BinarySerialization.SaveTask(behaviorSource.get_RootTask(), 0);
+				BinarySerialization.SaveTask(behaviorSource.RootTask, 0);
 			}
-			if (behaviorSource.get_DetachedTasks() != null)
+			if (behaviorSource.DetachedTasks != null)
 			{
-				for (int j = 0; j < behaviorSource.get_DetachedTasks().get_Count(); j++)
+				for (int j = 0; j < behaviorSource.DetachedTasks.Count; j++)
 				{
-					BinarySerialization.SaveTask(behaviorSource.get_DetachedTasks().get_Item(j), -1);
+					BinarySerialization.SaveTask(behaviorSource.DetachedTasks[j], -1);
 				}
 			}
 			BinarySerialization.taskSerializationData.Version = "1.5.11";
-			behaviorSource.set_TaskData(BinarySerialization.taskSerializationData);
-			if (behaviorSource.get_Owner() != null && !behaviorSource.get_Owner().Equals(null))
+			behaviorSource.TaskData=BinarySerialization.taskSerializationData;
+			if (behaviorSource.Owner != null && !behaviorSource.Owner.Equals(null))
 			{
-				BehaviorDesignerUtility.SetObjectDirty(behaviorSource.get_Owner().GetObject());
+				BehaviorDesignerUtility.SetObjectDirty(behaviorSource.Owner.GetObject());
 			}
 		}
 
@@ -62,18 +64,18 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			BinarySerialization.fieldIndex = 0;
-			globalVariables.set_VariableData(new VariableSerializationData());
-			if (globalVariables.get_Variables() == null || globalVariables.get_Variables().get_Count() == 0)
+			globalVariables.VariableData=new VariableSerializationData();
+			if (globalVariables.Variables == null || globalVariables.Variables.Count == 0)
 			{
 				return;
 			}
-			BinarySerialization.fieldSerializationData = globalVariables.get_VariableData().fieldSerializationData;
-			for (int i = 0; i < globalVariables.get_Variables().get_Count(); i++)
+			BinarySerialization.fieldSerializationData = globalVariables.VariableData.fieldSerializationData;
+			for (int i = 0; i < globalVariables.Variables.Count; i++)
 			{
-				globalVariables.get_VariableData().variableStartIndex.Add(BinarySerialization.fieldSerializationData.startIndex.get_Count());
-				BinarySerialization.SaveSharedVariable(globalVariables.get_Variables().get_Item(i), 0);
+				globalVariables.VariableData.variableStartIndex.Add(BinarySerialization.fieldSerializationData.startIndex.Count);
+				BinarySerialization.SaveSharedVariable(globalVariables.Variables[i], 0);
 			}
-			globalVariables.set_Version("1.5.11");
+			globalVariables.Version="1.5.11";
 			BehaviorDesignerUtility.SetObjectDirty(globalVariables);
 		}
 
@@ -81,21 +83,21 @@ namespace BehaviorDesigner.Editor
 		{
 			BinarySerialization.taskSerializationData.types.Add(task.GetType().ToString());
 			BinarySerialization.taskSerializationData.parentIndex.Add(parentTaskIndex);
-			BinarySerialization.taskSerializationData.startIndex.Add(BinarySerialization.fieldSerializationData.startIndex.get_Count());
-			BinarySerialization.SaveField(typeof(int), "ID", 0, task.get_ID(), null);
-			BinarySerialization.SaveField(typeof(string), "FriendlyName", 0, task.get_FriendlyName(), null);
-			BinarySerialization.SaveField(typeof(bool), "IsInstant", 0, task.get_IsInstant(), null);
-			BinarySerialization.SaveField(typeof(bool), "Disabled", 0, task.get_Disabled(), null);
-			BinarySerialization.SaveNodeData(task.get_NodeData());
+			BinarySerialization.taskSerializationData.startIndex.Add(BinarySerialization.fieldSerializationData.startIndex.Count);
+			BinarySerialization.SaveField(typeof(int), "ID", 0, task.ID, null);
+			BinarySerialization.SaveField(typeof(string), "FriendlyName", 0, task.FriendlyName, null);
+			BinarySerialization.SaveField(typeof(bool), "IsInstant", 0, task.IsInstant, null);
+			BinarySerialization.SaveField(typeof(bool), "Disabled", 0, task.Disabled, null);
+			BinarySerialization.SaveNodeData(task.NodeData);
 			BinarySerialization.SaveFields(task, 0);
 			if (task is ParentTask)
 			{
 				ParentTask parentTask = task as ParentTask;
-				if (parentTask.get_Children() != null && parentTask.get_Children().get_Count() > 0)
+				if (parentTask.Children != null && parentTask.Children.Count > 0)
 				{
-					for (int i = 0; i < parentTask.get_Children().get_Count(); i++)
+					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						BinarySerialization.SaveTask(parentTask.get_Children().get_Item(i), parentTask.get_ID());
+						BinarySerialization.SaveTask(parentTask.Children[i], parentTask.ID);
 					}
 				}
 			}
@@ -103,12 +105,12 @@ namespace BehaviorDesigner.Editor
 
 		private static void SaveNodeData(NodeData nodeData)
 		{
-			BinarySerialization.SaveField(typeof(Vector2), "NodeDataOffset", 0, nodeData.get_Offset(), null);
-			BinarySerialization.SaveField(typeof(string), "NodeDataComment", 0, nodeData.get_Comment(), null);
-			BinarySerialization.SaveField(typeof(bool), "NodeDataIsBreakpoint", 0, nodeData.get_IsBreakpoint(), null);
-			BinarySerialization.SaveField(typeof(bool), "NodeDataCollapsed", 0, nodeData.get_Collapsed(), null);
-			BinarySerialization.SaveField(typeof(int), "NodeDataColorIndex", 0, nodeData.get_ColorIndex(), null);
-			BinarySerialization.SaveField(typeof(List<string>), "NodeDataWatchedFields", 0, nodeData.get_WatchedFieldNames(), null);
+			BinarySerialization.SaveField(typeof(Vector2), "NodeDataOffset", 0, nodeData.Offset, null);
+			BinarySerialization.SaveField(typeof(string), "NodeDataComment", 0, nodeData.Comment, null);
+			BinarySerialization.SaveField(typeof(bool), "NodeDataIsBreakpoint", 0, nodeData.IsBreakpoint, null);
+			BinarySerialization.SaveField(typeof(bool), "NodeDataCollapsed", 0, nodeData.Collapsed, null);
+			BinarySerialization.SaveField(typeof(int), "NodeDataColorIndex", 0, nodeData.ColorIndex, null);
+			BinarySerialization.SaveField(typeof(List<string>), "NodeDataWatchedFields", 0, nodeData.WatchedFieldNames, null);
 		}
 
 		private static void SaveSharedVariable(SharedVariable sharedVariable, int hashPrefix)
@@ -118,25 +120,25 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			BinarySerialization.SaveField(typeof(string), "Type", hashPrefix, sharedVariable.GetType().ToString(), null);
-			BinarySerialization.SaveField(typeof(string), "Name", hashPrefix, sharedVariable.get_Name(), null);
-			if (sharedVariable.get_IsShared())
+			BinarySerialization.SaveField(typeof(string), "Name", hashPrefix, sharedVariable.Name, null);
+			if (sharedVariable.IsShared)
 			{
-				BinarySerialization.SaveField(typeof(bool), "IsShared", hashPrefix, sharedVariable.get_IsShared(), null);
+				BinarySerialization.SaveField(typeof(bool), "IsShared", hashPrefix, sharedVariable.IsShared, null);
 			}
-			if (sharedVariable.get_IsGlobal())
+			if (sharedVariable.IsGlobal)
 			{
-				BinarySerialization.SaveField(typeof(bool), "IsGlobal", hashPrefix, sharedVariable.get_IsGlobal(), null);
+				BinarySerialization.SaveField(typeof(bool), "IsGlobal", hashPrefix, sharedVariable.IsGlobal, null);
 			}
-			if (sharedVariable.get_NetworkSync())
+			if (sharedVariable.NetworkSync)
 			{
-				BinarySerialization.SaveField(typeof(bool), "NetworkSync", hashPrefix, sharedVariable.get_NetworkSync(), null);
+				BinarySerialization.SaveField(typeof(bool), "NetworkSync", hashPrefix, sharedVariable.NetworkSync, null);
 			}
-			if (!string.IsNullOrEmpty(sharedVariable.get_PropertyMapping()))
+			if (!string.IsNullOrEmpty(sharedVariable.PropertyMapping))
 			{
-				BinarySerialization.SaveField(typeof(string), "PropertyMapping", hashPrefix, sharedVariable.get_PropertyMapping(), null);
-				if (!object.Equals(sharedVariable.get_PropertyMappingOwner(), null))
+				BinarySerialization.SaveField(typeof(string), "PropertyMapping", hashPrefix, sharedVariable.PropertyMapping, null);
+				if (!object.Equals(sharedVariable.PropertyMappingOwner, null))
 				{
-					BinarySerialization.SaveField(typeof(GameObject), "PropertyMappingOwner", hashPrefix, sharedVariable.get_PropertyMappingOwner(), null);
+					BinarySerialization.SaveField(typeof(GameObject), "PropertyMappingOwner", hashPrefix, sharedVariable.PropertyMappingOwner, null);
 				}
 			}
 			BinarySerialization.SaveFields(sharedVariable, hashPrefix);
@@ -148,12 +150,12 @@ namespace BehaviorDesigner.Editor
 			FieldInfo[] allFields = TaskUtility.GetAllFields(obj.GetType());
 			for (int i = 0; i < allFields.Length; i++)
 			{
-				if (!BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(NonSerializedAttribute)) && ((!allFields[i].get_IsPrivate() && !allFields[i].get_IsFamily()) || BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(SerializeField))) && (!(obj is ParentTask) || !allFields[i].get_Name().Equals("children")))
+				if (!BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(NonSerializedAttribute)) && ((!allFields[i].IsPrivate && !allFields[i].IsFamily) || BehaviorDesignerUtility.HasAttribute(allFields[i], typeof(SerializeField))) && (!(obj is ParentTask) || !allFields[i].Name.Equals("children")))
 				{
 					object value = allFields[i].GetValue(obj);
 					if (!object.ReferenceEquals(value, null))
 					{
-						BinarySerialization.SaveField(allFields[i].get_FieldType(), allFields[i].get_Name(), hashPrefix, value, allFields[i]);
+						BinarySerialization.SaveField(allFields[i].FieldType, allFields[i].Name, hashPrefix, value, allFields[i]);
 					}
 				}
 			}
@@ -161,7 +163,7 @@ namespace BehaviorDesigner.Editor
 
 		private static void SaveField(Type fieldType, string fieldName, int hashPrefix, object value, FieldInfo fieldInfo = null)
 		{
-			int num = hashPrefix + BinaryDeserialization.StringHash(fieldType.get_Name().ToString(), true) + BinaryDeserialization.StringHash(fieldName, true);
+			int num = hashPrefix + BinaryDeserialization.StringHash(fieldType.Name.ToString(), true) + BinaryDeserialization.StringHash(fieldName, true);
 			if (BinarySerialization.fieldHashes.Contains(num))
 			{
 				return;
@@ -172,16 +174,16 @@ namespace BehaviorDesigner.Editor
 			if (typeof(IList).IsAssignableFrom(fieldType))
 			{
 				Type fieldType2;
-				if (fieldType.get_IsArray())
+				if (fieldType.IsArray)
 				{
 					fieldType2 = fieldType.GetElementType();
 				}
 				else
 				{
 					Type type = fieldType;
-					while (!type.get_IsGenericType())
+					while (!type.IsGenericType)
 					{
-						type = type.get_BaseType();
+						type = type.BaseType;
 					}
 					fieldType2 = type.GetGenericArguments()[0];
 				}
@@ -192,18 +194,18 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					BinarySerialization.AddByteData(BinarySerialization.IntToBytes(list.get_Count()));
-					if (list.get_Count() > 0)
+					BinarySerialization.AddByteData(BinarySerialization.IntToBytes(list.Count));
+					if (list.Count > 0)
 					{
-						for (int i = 0; i < list.get_Count(); i++)
+						for (int i = 0; i < list.Count; i++)
 						{
-							if (object.ReferenceEquals(list.get_Item(i), null))
+							if (object.ReferenceEquals(list[i], null))
 							{
 								BinarySerialization.AddByteData(BinarySerialization.IntToBytes(-1));
 							}
 							else
 							{
-								BinarySerialization.SaveField(fieldType2, i.ToString(), num / (i + 1), list.get_Item(i), fieldInfo);
+								BinarySerialization.SaveField(fieldType2, i.ToString(), num / (i + 1), list[i], fieldInfo);
 							}
 						}
 					}
@@ -218,7 +220,7 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					BinarySerialization.AddByteData(BinarySerialization.IntToBytes((value as Task).get_ID()));
+					BinarySerialization.AddByteData(BinarySerialization.IntToBytes((value as Task).ID));
 				}
 			}
 			else if (typeof(SharedVariable).IsAssignableFrom(fieldType))
@@ -227,10 +229,10 @@ namespace BehaviorDesigner.Editor
 			}
 			else if (typeof(Object).IsAssignableFrom(fieldType))
 			{
-				BinarySerialization.AddByteData(BinarySerialization.IntToBytes(BinarySerialization.fieldSerializationData.unityObjects.get_Count()));
+				BinarySerialization.AddByteData(BinarySerialization.IntToBytes(BinarySerialization.fieldSerializationData.unityObjects.Count));
 				BinarySerialization.fieldSerializationData.unityObjects.Add(value as Object);
 			}
-			else if (fieldType.Equals(typeof(int)) || fieldType.get_IsEnum())
+			else if (fieldType.Equals(typeof(int)) || fieldType.IsEnum)
 			{
 				BinarySerialization.AddByteData(BinarySerialization.IntToBytes((int)value));
 			}
@@ -296,13 +298,13 @@ namespace BehaviorDesigner.Editor
 			}
 			else if (fieldType.Equals(typeof(LayerMask)))
 			{
-				BinarySerialization.AddByteData(BinarySerialization.IntToBytes(((LayerMask)value).get_value()));
+				BinarySerialization.AddByteData(BinarySerialization.IntToBytes(((LayerMask)value).value));
 			}
 			else if (fieldType.Equals(typeof(AnimationCurve)))
 			{
 				BinarySerialization.AddByteData(BinarySerialization.AnimationCurveToBytes((AnimationCurve)value));
 			}
-			else if (fieldType.get_IsClass() || (fieldType.get_IsValueType() && !fieldType.get_IsPrimitive()))
+			else if (fieldType.IsClass || (fieldType.IsValueType && !fieldType.IsPrimitive))
 			{
 				if (object.ReferenceEquals(value, null))
 				{
@@ -357,7 +359,7 @@ namespace BehaviorDesigner.Editor
 			{
 				str = string.Empty;
 			}
-			return Encoding.get_UTF8().GetBytes(str);
+			return Encoding.UTF8.GetBytes(str);
 		}
 
 		private static byte[] ByteToBytes(byte value)
@@ -418,10 +420,10 @@ namespace BehaviorDesigner.Editor
 		private static ICollection<byte> RectToBytes(Rect rect)
 		{
 			List<byte> list = new List<byte>();
-			list.AddRange(BitConverter.GetBytes(rect.get_x()));
-			list.AddRange(BitConverter.GetBytes(rect.get_y()));
-			list.AddRange(BitConverter.GetBytes(rect.get_width()));
-			list.AddRange(BitConverter.GetBytes(rect.get_height()));
+			list.AddRange(BitConverter.GetBytes(rect.x));
+			list.AddRange(BitConverter.GetBytes(rect.y));
+			list.AddRange(BitConverter.GetBytes(rect.width));
+			list.AddRange(BitConverter.GetBytes(rect.height));
 			return list;
 		}
 
@@ -450,31 +452,34 @@ namespace BehaviorDesigner.Editor
 		private static ICollection<byte> AnimationCurveToBytes(AnimationCurve animationCurve)
 		{
 			List<byte> list = new List<byte>();
-			Keyframe[] keys = animationCurve.get_keys();
+			Keyframe[] keys = animationCurve.keys;
 			if (keys != null)
 			{
 				list.AddRange(BitConverter.GetBytes(keys.Length));
 				for (int i = 0; i < keys.Length; i++)
 				{
-					list.AddRange(BitConverter.GetBytes(keys[i].get_time()));
-					list.AddRange(BitConverter.GetBytes(keys[i].get_value()));
-					list.AddRange(BitConverter.GetBytes(keys[i].get_inTangent()));
-					list.AddRange(BitConverter.GetBytes(keys[i].get_outTangent()));
-					list.AddRange(BitConverter.GetBytes(keys[i].get_tangentMode()));
+					list.AddRange(BitConverter.GetBytes(keys[i].time));
+					list.AddRange(BitConverter.GetBytes(keys[i].value));
+					list.AddRange(BitConverter.GetBytes(keys[i].inTangent));
+					list.AddRange(BitConverter.GetBytes(keys[i].outTangent));
+					list.AddRange(BitConverter.GetBytes(keys[i].tangentMode));
 				}
 			}
 			else
 			{
 				list.AddRange(BitConverter.GetBytes(0));
 			}
-			list.AddRange(BitConverter.GetBytes(animationCurve.get_preWrapMode()));
-			list.AddRange(BitConverter.GetBytes(animationCurve.get_postWrapMode()));
+			// list.AddRange(BitConverter.GetBytes(animationCurve.preWrapMode));
+			// list.AddRange(BitConverter.GetBytes(animationCurve.postWrapMode));
+
+			list.AddRange(BitConverter.GetBytes(animationCurve.preWrapMode != UnityEngine.WrapMode.Default));
+			list.AddRange(BitConverter.GetBytes(animationCurve.postWrapMode != UnityEngine.WrapMode.Default));
 			return list;
 		}
 
 		private static void AddByteData(ICollection<byte> bytes)
 		{
-			BinarySerialization.fieldSerializationData.dataPosition.Add(BinarySerialization.fieldSerializationData.byteData.get_Count());
+			BinarySerialization.fieldSerializationData.dataPosition.Add(BinarySerialization.fieldSerializationData.byteData.Count);
 			if (bytes != null)
 			{
 				BinarySerialization.fieldSerializationData.byteData.AddRange(bytes);

@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using UnityEngine;
 
@@ -77,8 +77,8 @@ namespace BehaviorDesigner.Editor
 			this.mType = type;
 			if (task != null)
 			{
-				this.mNodeDesigner = (task.get_NodeData().get_NodeDesigner() as NodeDesigner);
-				this.mTaskFriendlyName = task.get_FriendlyName();
+				this.mNodeDesigner = (task.NodeData.NodeDesigner as NodeDesigner);
+				this.mTaskFriendlyName = task.FriendlyName;
 				this.mTaskType = task.GetType().ToString();
 			}
 			this.mFieldName = fieldName;

@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
@@ -12,15 +12,15 @@ namespace BehaviorDesigner.Editor
 	{
 		public static void CheckReferences(BehaviorSource behaviorSource)
 		{
-			if (behaviorSource.get_RootTask() != null)
+			if (behaviorSource.RootTask != null)
 			{
-				TaskReferences.CheckReferences(behaviorSource, behaviorSource.get_RootTask());
+				TaskReferences.CheckReferences(behaviorSource, behaviorSource.RootTask);
 			}
-			if (behaviorSource.get_DetachedTasks() != null)
+			if (behaviorSource.DetachedTasks != null)
 			{
-				for (int i = 0; i < behaviorSource.get_DetachedTasks().get_Count(); i++)
+				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					TaskReferences.CheckReferences(behaviorSource, behaviorSource.get_DetachedTasks().get_Item(i));
+					TaskReferences.CheckReferences(behaviorSource, behaviorSource.DetachedTasks[i]);
 				}
 			}
 		}
@@ -30,7 +30,7 @@ namespace BehaviorDesigner.Editor
 			FieldInfo[] allFields = TaskUtility.GetAllFields(task.GetType());
 			for (int i = 0; i < allFields.Length; i++)
 			{
-				if (!allFields[i].get_FieldType().get_IsArray() && (allFields[i].get_FieldType().Equals(typeof(Task)) || allFields[i].get_FieldType().IsSubclassOf(typeof(Task))))
+				if (!allFields[i].FieldType.IsArray && (allFields[i].FieldType.Equals(typeof(Task)) || allFields[i].FieldType.IsSubclassOf(typeof(Task))))
 				{
 					Task task2 = allFields[i].GetValue(task) as Task;
 					if (task2 != null)
@@ -42,14 +42,14 @@ namespace BehaviorDesigner.Editor
 						}
 					}
 				}
-				else if (allFields[i].get_FieldType().get_IsArray() && (allFields[i].get_FieldType().GetElementType().Equals(typeof(Task)) || allFields[i].get_FieldType().GetElementType().IsSubclassOf(typeof(Task))))
+				else if (allFields[i].FieldType.IsArray && (allFields[i].FieldType.GetElementType().Equals(typeof(Task)) || allFields[i].FieldType.GetElementType().IsSubclassOf(typeof(Task))))
 				{
 					Task[] array = allFields[i].GetValue(task) as Task[];
 					if (array != null)
 					{
-						IList list = Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+						IList list = Activator.CreateInstance(typeof(List<Task>).MakeGenericType(new Type[]
 						{
-							allFields[i].get_FieldType().GetElementType()
+							allFields[i].FieldType.GetElementType()
 						})) as IList;
 						for (int j = 0; j < array.Length; j++)
 						{
@@ -59,7 +59,7 @@ namespace BehaviorDesigner.Editor
 								list.Add(task4);
 							}
 						}
-						Array array2 = Array.CreateInstance(allFields[i].get_FieldType().GetElementType(), list.get_Count());
+						Array array2 = Array.CreateInstance(allFields[i].FieldType.GetElementType(), list.Count);
 						list.CopyTo(array2, 0);
 						allFields[i].SetValue(task, array2);
 					}
@@ -68,11 +68,11 @@ namespace BehaviorDesigner.Editor
 			if (task.GetType().IsSubclassOf(typeof(ParentTask)))
 			{
 				ParentTask parentTask = task as ParentTask;
-				if (parentTask.get_Children() != null)
+				if (parentTask.Children != null)
 				{
-					for (int k = 0; k < parentTask.get_Children().get_Count(); k++)
+					for (int k = 0; k < parentTask.Children.Count; k++)
 					{
-						TaskReferences.CheckReferences(behaviorSource, parentTask.get_Children().get_Item(k));
+						TaskReferences.CheckReferences(behaviorSource, parentTask.Children[k]);
 					}
 				}
 			}
@@ -84,17 +84,17 @@ namespace BehaviorDesigner.Editor
 			{
 				return null;
 			}
-			int iD = referencedTask.get_ID();
+			int iD = referencedTask.ID;
 			Task result;
-			if (behaviorSource.get_RootTask() != null && (result = TaskReferences.FindReferencedTask(behaviorSource.get_RootTask(), iD)) != null)
+			if (behaviorSource.RootTask != null && (result = TaskReferences.FindReferencedTask(behaviorSource.RootTask, iD)) != null)
 			{
 				return result;
 			}
-			if (behaviorSource.get_DetachedTasks() != null)
+			if (behaviorSource.DetachedTasks != null)
 			{
-				for (int i = 0; i < behaviorSource.get_DetachedTasks().get_Count(); i++)
+				for (int i = 0; i < behaviorSource.DetachedTasks.Count; i++)
 				{
-					if ((result = TaskReferences.FindReferencedTask(behaviorSource.get_DetachedTasks().get_Item(i), iD)) != null)
+					if ((result = TaskReferences.FindReferencedTask(behaviorSource.DetachedTasks[i], iD)) != null)
 					{
 						return result;
 					}
@@ -105,19 +105,19 @@ namespace BehaviorDesigner.Editor
 
 		private static Task FindReferencedTask(Task task, int referencedTaskID)
 		{
-			if (task.get_ID() == referencedTaskID)
+			if (task.ID == referencedTaskID)
 			{
 				return task;
 			}
 			if (task.GetType().IsSubclassOf(typeof(ParentTask)))
 			{
 				ParentTask parentTask = task as ParentTask;
-				if (parentTask.get_Children() != null)
+				if (parentTask.Children != null)
 				{
-					for (int i = 0; i < parentTask.get_Children().get_Count(); i++)
+					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
 						Task result;
-						if ((result = TaskReferences.FindReferencedTask(parentTask.get_Children().get_Item(i), referencedTaskID)) != null)
+						if ((result = TaskReferences.FindReferencedTask(parentTask.Children[i], referencedTaskID)) != null)
 						{
 							return result;
 						}
@@ -129,9 +129,9 @@ namespace BehaviorDesigner.Editor
 
 		public static void CheckReferences(Behavior behavior, List<Task> taskList)
 		{
-			for (int i = 0; i < taskList.get_Count(); i++)
+			for (int i = 0; i < taskList.Count; i++)
 			{
-				TaskReferences.CheckReferences(behavior, taskList.get_Item(i), taskList);
+				TaskReferences.CheckReferences(behavior, taskList[i], taskList);
 			}
 		}
 
@@ -149,10 +149,10 @@ namespace BehaviorDesigner.Editor
 			FieldInfo[] allFields = TaskUtility.GetAllFields(task.GetType());
 			for (int i = 0; i < allFields.Length; i++)
 			{
-				if (!allFields[i].get_FieldType().get_IsArray() && (allFields[i].get_FieldType().Equals(typeof(Task)) || allFields[i].get_FieldType().IsSubclassOf(typeof(Task))))
+				if (!allFields[i].FieldType.IsArray && (allFields[i].FieldType.Equals(typeof(Task)) || allFields[i].FieldType.IsSubclassOf(typeof(Task))))
 				{
 					Task task2 = allFields[i].GetValue(task) as Task;
-					if (task2 != null && !task2.get_Owner().Equals(behavior))
+					if (task2 != null && !task2.Owner.Equals(behavior))
 					{
 						Task task3 = TaskReferences.FindReferencedTask(task2, taskList);
 						if (task3 != null)
@@ -161,14 +161,14 @@ namespace BehaviorDesigner.Editor
 						}
 					}
 				}
-				else if (allFields[i].get_FieldType().get_IsArray() && (allFields[i].get_FieldType().GetElementType().Equals(typeof(Task)) || allFields[i].get_FieldType().GetElementType().IsSubclassOf(typeof(Task))))
+				else if (allFields[i].FieldType.IsArray && (allFields[i].FieldType.GetElementType().Equals(typeof(Task)) || allFields[i].FieldType.GetElementType().IsSubclassOf(typeof(Task))))
 				{
 					Task[] array = allFields[i].GetValue(task) as Task[];
 					if (array != null)
 					{
-						IList list = Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+						IList list = Activator.CreateInstance(typeof(List<Task>).MakeGenericType(new Type[]
 						{
-							allFields[i].get_FieldType().GetElementType()
+							allFields[i].FieldType.GetElementType()
 						})) as IList;
 						for (int j = 0; j < array.Length; j++)
 						{
@@ -178,7 +178,7 @@ namespace BehaviorDesigner.Editor
 								list.Add(task4);
 							}
 						}
-						Array array2 = Array.CreateInstance(allFields[i].get_FieldType().GetElementType(), list.get_Count());
+						Array array2 = Array.CreateInstance(allFields[i].FieldType.GetElementType(), list.Count);
 						list.CopyTo(array2, 0);
 						allFields[i].SetValue(task, array2);
 					}
@@ -188,12 +188,12 @@ namespace BehaviorDesigner.Editor
 
 		private static Task FindReferencedTask(Task referencedTask, List<Task> taskList)
 		{
-			int referenceID = referencedTask.get_ReferenceID();
-			for (int i = 0; i < taskList.get_Count(); i++)
+			int referenceID = referencedTask.ReferenceID;
+			for (int i = 0; i < taskList.Count; i++)
 			{
-				if (taskList.get_Item(i).get_ReferenceID() == referenceID)
+				if (taskList[i].ReferenceID == referenceID)
 				{
-					return taskList.get_Item(i);
+					return taskList[i];
 				}
 			}
 			return null;

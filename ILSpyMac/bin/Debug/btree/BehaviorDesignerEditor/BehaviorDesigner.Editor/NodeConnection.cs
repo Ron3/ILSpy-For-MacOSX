@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -99,7 +99,8 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			base.set_hideFlags(61);
+			//base.hideFlags=61;
+			base.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.DontSaveInBuild | HideFlags.NotEditable | HideFlags.DontSaveInEditor | HideFlags.HideInHierarchy;
 		}
 
 		public void LoadConnection(NodeDesigner nodeDesigner, NodeConnectionType nodeConnectionType)
@@ -116,14 +117,14 @@ namespace BehaviorDesigner.Editor
 
 		public void DrawConnection(Vector2 source, Vector2 destination, bool disabled)
 		{
-			Color color = (!disabled) ? Color.get_white() : new Color(0.7f, 0.7f, 0.7f);
-			bool flag = this.destinationNodeDesigner != null && this.destinationNodeDesigner.Task != null && this.destinationNodeDesigner.Task.get_NodeData().get_PushTime() != -1f && this.destinationNodeDesigner.Task.get_NodeData().get_PushTime() >= this.destinationNodeDesigner.Task.get_NodeData().get_PopTime();
+			Color color = (!disabled) ? Color.white : new Color(0.7f, 0.7f, 0.7f);
+			bool flag = this.destinationNodeDesigner != null && this.destinationNodeDesigner.Task != null && this.destinationNodeDesigner.Task.NodeData.PushTime != -1f && this.destinationNodeDesigner.Task.NodeData.PushTime >= this.destinationNodeDesigner.Task.NodeData.PopTime;
 			float num = (!BehaviorDesignerPreferences.GetBool(BDPreferences.FadeNodes)) ? 0.01f : 0.5f;
 			if (this.selected)
 			{
 				if (disabled)
 				{
-					if (EditorGUIUtility.get_isProSkin())
+					if (EditorGUIUtility.isProSkin)
 					{
 						color = this.selectedDisabledProColor;
 					}
@@ -132,7 +133,7 @@ namespace BehaviorDesigner.Editor
 						color = this.selectedDisabledStandardColor;
 					}
 				}
-				else if (EditorGUIUtility.get_isProSkin())
+				else if (EditorGUIUtility.isProSkin)
 				{
 					color = this.selectedEnabledProColor;
 				}
@@ -143,7 +144,7 @@ namespace BehaviorDesigner.Editor
 			}
 			else if (flag)
 			{
-				if (EditorGUIUtility.get_isProSkin())
+				if (EditorGUIUtility.isProSkin)
 				{
 					color = this.taskRunningProColor;
 				}
@@ -152,11 +153,11 @@ namespace BehaviorDesigner.Editor
 					color = this.taskRunningStandardColor;
 				}
 			}
-			else if (num != 0f && this.destinationNodeDesigner != null && this.destinationNodeDesigner.Task != null && this.destinationNodeDesigner.Task.get_NodeData().get_PopTime() != -1f && this.destinationNodeDesigner.Task.get_NodeData().get_PopTime() <= Time.get_realtimeSinceStartup() && Time.get_realtimeSinceStartup() - this.destinationNodeDesigner.Task.get_NodeData().get_PopTime() < num)
+			else if (num != 0f && this.destinationNodeDesigner != null && this.destinationNodeDesigner.Task != null && this.destinationNodeDesigner.Task.NodeData.PopTime != -1f && this.destinationNodeDesigner.Task.NodeData.PopTime <= Time.realtimeSinceStartup && Time.realtimeSinceStartup - this.destinationNodeDesigner.Task.NodeData.PopTime < num)
 			{
-				float num2 = 1f - (Time.get_realtimeSinceStartup() - this.destinationNodeDesigner.Task.get_NodeData().get_PopTime()) / num;
-				Color white = Color.get_white();
-				if (EditorGUIUtility.get_isProSkin())
+				float num2 = 1f - (Time.realtimeSinceStartup - this.destinationNodeDesigner.Task.NodeData.PopTime) / num;
+				Color white = Color.white;
+				if (EditorGUIUtility.isProSkin)
 				{
 					white = this.taskRunningProColor;
 				}
@@ -164,9 +165,9 @@ namespace BehaviorDesigner.Editor
 				{
 					white = this.taskRunningStandardColor;
 				}
-				color = Color.Lerp(Color.get_white(), white, num2);
+				color = Color.Lerp(Color.white, white, num2);
 			}
-			Handles.set_color(color);
+			Handles.color=color;
 			if (this.horizontalDirty)
 			{
 				this.startHorizontalBreak = new Vector2(source.x, this.horizontalHeight);
@@ -192,7 +193,7 @@ namespace BehaviorDesigner.Editor
 
 		public bool Contains(Vector2 point, Vector2 offset)
 		{
-			Vector2 center = this.originatingNodeDesigner.OutgoingConnectionRect(offset).get_center();
+			Vector2 center = this.originatingNodeDesigner.OutgoingConnectionRect(offset).center;
 			Vector2 vector = new Vector2(center.x, this.horizontalHeight);
 			float num = Mathf.Abs(point.x - center.x);
 			if (num < 7f && ((point.y >= center.y && point.y <= vector.y) || (point.y <= center.y && point.y >= vector.y)))
@@ -200,7 +201,7 @@ namespace BehaviorDesigner.Editor
 				return true;
 			}
 			Rect rect = this.destinationNodeDesigner.IncomingConnectionRect(offset);
-			Vector2 vector2 = new Vector2(rect.get_center().x, rect.get_y());
+			Vector2 vector2 = new Vector2(rect.center.x, rect.y);
 			Vector2 vector3 = new Vector2(vector2.x, this.horizontalHeight);
 			num = Mathf.Abs(point.y - this.horizontalHeight);
 			if (num < 7f && ((point.x <= center.x && point.x >= vector3.x) || (point.x >= center.x && point.x <= vector3.x)))

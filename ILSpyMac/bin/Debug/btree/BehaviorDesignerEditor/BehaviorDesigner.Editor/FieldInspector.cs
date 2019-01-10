@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+
+using Object = UnityEngine.Object;
+using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
+
 
 namespace BehaviorDesigner.Editor
 {
@@ -41,7 +45,7 @@ namespace BehaviorDesigner.Editor
 				"BehaviorDesigner.Editor.Foldout..",
 				hash,
 				".",
-				guiContent.get_text()
+				guiContent.text
 			});
 			bool @bool = EditorPrefs.GetBool(text, true);
 			bool flag = EditorGUILayout.Foldout(@bool, guiContent);
@@ -64,21 +68,24 @@ namespace BehaviorDesigner.Editor
 				return null;
 			}
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(obj.GetType());
-			BindingFlags bindingFlags = 54;
-			for (int i = baseClasses.get_Count() - 1; i > -1; i--)
+
+			// TODO Ron
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
-				FieldInfo[] fields = baseClasses.get_Item(i).GetFields(bindingFlags);
+				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
 				for (int j = 0; j < fields.Length; j++)
 				{
-					if (!BehaviorDesignerUtility.HasAttribute(fields[j], typeof(NonSerializedAttribute)) && !BehaviorDesignerUtility.HasAttribute(fields[j], typeof(HideInInspector)) && ((!fields[j].get_IsPrivate() && !fields[j].get_IsFamily()) || BehaviorDesignerUtility.HasAttribute(fields[j], typeof(SerializeField))) && (!(obj is ParentTask) || !fields[j].get_Name().Equals("children")))
+					if (!BehaviorDesignerUtility.HasAttribute(fields[j], typeof(NonSerializedAttribute)) && !BehaviorDesignerUtility.HasAttribute(fields[j], typeof(HideInInspector)) && ((!fields[j].IsPrivate && !fields[j].IsFamily) || BehaviorDesignerUtility.HasAttribute(fields[j], typeof(SerializeField))) && (!(obj is ParentTask) || !fields[j].Name.Equals("children")))
 					{
 						if (guiContent == null)
 						{
-							string name = fields[j].get_Name();
+							string name = fields[j].Name;
 							TooltipAttribute[] array;
 							if ((array = (fields[j].GetCustomAttributes(typeof(TooltipAttribute), false) as TooltipAttribute[])).Length > 0)
 							{
-								guiContent = new GUIContent(BehaviorDesignerUtility.SplitCamelCase(name), array[0].get_Tooltip());
+								guiContent = new GUIContent(BehaviorDesignerUtility.SplitCamelCase(name), array[0].Tooltip);
 							}
 							else
 							{
@@ -90,7 +97,7 @@ namespace BehaviorDesigner.Editor
 						if (EditorGUI.EndChangeCheck())
 						{
 							fields[j].SetValue(obj, obj2);
-							GUI.set_changed(true);
+							GUI.changed=true;
 						}
 						guiContent = null;
 					}
@@ -105,7 +112,7 @@ namespace BehaviorDesigner.Editor
 			while (t != null && !t.Equals(typeof(ParentTask)) && !t.Equals(typeof(Task)) && !t.Equals(typeof(SharedVariable)))
 			{
 				list.Add(t);
-				t = t.get_BaseType();
+				t = t.BaseType;
 			}
 			return list;
 		}
@@ -115,16 +122,16 @@ namespace BehaviorDesigner.Editor
 			ObjectDrawer objectDrawer;
 			if ((objectDrawer = ObjectDrawerUtility.GetObjectDrawer(task, field)) != null)
 			{
-				if (value == null && !field.get_FieldType().get_IsAbstract())
+				if (value == null && !field.FieldType.IsAbstract)
 				{
-					value = Activator.CreateInstance(field.get_FieldType(), true);
+					value = Activator.CreateInstance(field.FieldType, true);
 				}
 				objectDrawer.Value = value;
 				objectDrawer.OnGUI(guiContent);
 				if (objectDrawer.Value != value)
 				{
 					value = objectDrawer.Value;
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				return value;
 			}
@@ -133,18 +140,18 @@ namespace BehaviorDesigner.Editor
 			{
 				if (value == null)
 				{
-					value = Activator.CreateInstance(field.get_FieldType(), true);
+					value = Activator.CreateInstance(field.FieldType, true);
 				}
 				objectDrawer.Value = value;
 				objectDrawer.OnGUI(guiContent);
 				if (objectDrawer.Value != value)
 				{
 					value = objectDrawer.Value;
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				return value;
 			}
-			return FieldInspector.DrawField(task, guiContent, field, field.get_FieldType(), value);
+			return FieldInspector.DrawField(task, guiContent, field, field.FieldType, value);
 		}
 
 		private static object DrawField(Task task, GUIContent guiContent, FieldInfo fieldInfo, Type fieldType, object value)
@@ -159,25 +166,25 @@ namespace BehaviorDesigner.Editor
 		private static object DrawArrayField(Task task, GUIContent guiContent, FieldInfo fieldInfo, Type fieldType, object value)
 		{
 			Type type;
-			if (fieldType.get_IsArray())
+			if (fieldType.IsArray)
 			{
 				type = fieldType.GetElementType();
 			}
 			else
 			{
 				Type type2 = fieldType;
-				while (!type2.get_IsGenericType())
+				while (!type2.IsGenericType)
 				{
-					type2 = type2.get_BaseType();
+					type2 = type2.BaseType;
 				}
 				type = type2.GetGenericArguments()[0];
 			}
 			IList list;
 			if (value == null)
 			{
-				if (fieldType.get_IsGenericType() || fieldType.get_IsArray())
+				if (fieldType.IsGenericType || fieldType.IsArray)
 				{
-					list = (Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+					list = (Activator.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 					{
 						type
 					}), true) as IList);
@@ -186,34 +193,36 @@ namespace BehaviorDesigner.Editor
 				{
 					list = (Activator.CreateInstance(fieldType, true) as IList);
 				}
-				if (fieldType.get_IsArray())
+				if (fieldType.IsArray)
 				{
-					Array array = Array.CreateInstance(type, list.get_Count());
+					Array array = Array.CreateInstance(type, list.Count);
 					list.CopyTo(array, 0);
 					list = array;
 				}
-				GUI.set_changed(true);
+				GUI.changed=true;
 			}
 			else
 			{
 				list = (IList)value;
 			}
 			EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
-			if (FieldInspector.DrawFoldout(guiContent.get_text().GetHashCode(), guiContent))
+			if (FieldInspector.DrawFoldout(guiContent.text.GetHashCode(), guiContent))
 			{
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
-				bool flag = guiContent.get_text().GetHashCode() == FieldInspector.editingFieldHash;
-				int num = (!flag) ? list.get_Count() : FieldInspector.savedArraySize;
+				EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
+				bool flag = guiContent.text.GetHashCode() == FieldInspector.editingFieldHash;
+				int num = (!flag) ? list.Count : FieldInspector.savedArraySize;
 				int num2 = EditorGUILayout.IntField("Size", num, new GUILayoutOption[0]);
-				if (flag && FieldInspector.editingArray && (GUIUtility.get_keyboardControl() != FieldInspector.currentKeyboardControl || Event.get_current().get_keyCode() == 13))
+
+				// 枚举13
+				if (flag && FieldInspector.editingArray && (GUIUtility.keyboardControl != FieldInspector.currentKeyboardControl || Event.current.keyCode == KeyCode.Return))
 				{
-					if (num2 != list.get_Count())
+					if (num2 != list.Count)
 					{
 						Array array2 = Array.CreateInstance(type, num2);
 						int num3 = -1;
 						for (int i = 0; i < num2; i++)
 						{
-							if (i < list.get_Count())
+							if (i < list.Count)
 							{
 								num3 = i;
 							}
@@ -221,22 +230,22 @@ namespace BehaviorDesigner.Editor
 							{
 								break;
 							}
-							object obj = list.get_Item(num3);
-							if (i >= list.get_Count() && !typeof(Object).IsAssignableFrom(type) && !typeof(string).IsAssignableFrom(type))
+							object obj = list[num3];
+							if (i >= list.Count && !typeof(Object).IsAssignableFrom(type) && !typeof(string).IsAssignableFrom(type))
 							{
-								obj = Activator.CreateInstance(list.get_Item(num3).GetType(), true);
+								obj = Activator.CreateInstance(list[num3].GetType(), true);
 							}
 							array2.SetValue(obj, i);
 						}
-						if (fieldType.get_IsArray())
+						if (fieldType.IsArray)
 						{
 							list = array2;
 						}
 						else
 						{
-							if (fieldType.get_IsGenericType())
+							if (fieldType.IsGenericType)
 							{
-								list = (Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+								list = (Activator.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 								{
 									type
 								}), true) as IList);
@@ -245,7 +254,7 @@ namespace BehaviorDesigner.Editor
 							{
 								list = (Activator.CreateInstance(fieldType, true) as IList);
 							}
-							for (int j = 0; j < array2.get_Length(); j++)
+							for (int j = 0; j < array2.Length; j++)
 							{
 								list.Add(array2.GetValue(j));
 							}
@@ -254,27 +263,28 @@ namespace BehaviorDesigner.Editor
 					FieldInspector.editingArray = false;
 					FieldInspector.savedArraySize = -1;
 					FieldInspector.editingFieldHash = -1;
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				else if (num2 != num)
 				{
 					if (!FieldInspector.editingArray)
 					{
-						FieldInspector.currentKeyboardControl = GUIUtility.get_keyboardControl();
+						FieldInspector.currentKeyboardControl = GUIUtility.keyboardControl;
 						FieldInspector.editingArray = true;
-						FieldInspector.editingFieldHash = guiContent.get_text().GetHashCode();
+						FieldInspector.editingFieldHash = guiContent.text.GetHashCode();
 					}
 					FieldInspector.savedArraySize = num2;
 				}
-				for (int k = 0; k < list.get_Count(); k++)
+				for (int k = 0; k < list.Count; k++)
 				{
 					GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-					guiContent.set_text("Element " + k);
-					list.set_Item(k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list.get_Item(k)));
+					guiContent.text="Element " + k;
+					// list.Item=k, FieldInspector.DrawField(task, guiContent, fieldInfo, type, list[k]);
+					list[k] = FieldInspector.DrawField(task, guiContent, fieldInfo, type, list[k]);
 					GUILayout.Space(6f);
 					GUILayout.EndHorizontal();
 				}
-				EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+				EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 			}
 			EditorGUILayout.EndVertical();
 			return list;
@@ -320,14 +330,14 @@ namespace BehaviorDesigner.Editor
 			}
 			if (fieldType.Equals(typeof(Vector4)))
 			{
-				return EditorGUILayout.Vector4Field(guiContent.get_text(), (Vector4)value, new GUILayoutOption[0]);
+				return EditorGUILayout.Vector4Field(guiContent.text, (Vector4)value, new GUILayoutOption[0]);
 			}
 			if (fieldType.Equals(typeof(Quaternion)))
 			{
 				Quaternion quaternion = (Quaternion)value;
-				Vector4 vector = Vector4.get_zero();
+				Vector4 vector = Vector4.zero;
 				vector.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-				vector = EditorGUILayout.Vector4Field(guiContent.get_text(), vector, new GUILayoutOption[0]);
+				vector = EditorGUILayout.Vector4Field(guiContent.text, vector, new GUILayoutOption[0]);
 				quaternion.Set(vector.x, vector.y, vector.z, vector.w);
 				return quaternion;
 			}
@@ -342,24 +352,25 @@ namespace BehaviorDesigner.Editor
 			if (fieldType.Equals(typeof(Matrix4x4)))
 			{
 				GUILayout.BeginVertical(new GUILayoutOption[0]);
-				if (FieldInspector.DrawFoldout(guiContent.get_text().GetHashCode(), guiContent))
+				if (FieldInspector.DrawFoldout(guiContent.text.GetHashCode(), guiContent))
 				{
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 					Matrix4x4 matrix4x = (Matrix4x4)value;
 					for (int i = 0; i < 4; i++)
 					{
 						for (int j = 0; j < 4; j++)
 						{
 							EditorGUI.BeginChangeCheck();
-							matrix4x.set_Item(i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x.get_Item(i, j), new GUILayoutOption[0]));
+							// matrix4x.Item=i, j, EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x[i, j), new GUILayoutOption[0]);
+							matrix4x[i, j] = EditorGUILayout.FloatField("E" + i.ToString() + j.ToString(), matrix4x[i, j], new GUILayoutOption[0]);
 							if (EditorGUI.EndChangeCheck())
 							{
-								GUI.set_changed(true);
+								GUI.changed=true;
 							}
 						}
 					}
 					value = matrix4x;
-					EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+					EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 				}
 				GUILayout.EndVertical();
 				return value;
@@ -369,7 +380,7 @@ namespace BehaviorDesigner.Editor
 				if (value == null)
 				{
 					value = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				return EditorGUILayout.CurveField(guiContent, (AnimationCurve)value, new GUILayoutOption[0]);
 			}
@@ -385,17 +396,17 @@ namespace BehaviorDesigner.Editor
 			{
 				return EditorGUILayout.ObjectField(guiContent, (Object)value, fieldType, true, new GUILayoutOption[0]);
 			}
-			if (fieldType.get_IsEnum())
+			if (fieldType.IsEnum)
 			{
 				return EditorGUILayout.EnumPopup(guiContent, (Enum)value, new GUILayoutOption[0]);
 			}
-			if (fieldType.get_IsClass() || (fieldType.get_IsValueType() && !fieldType.get_IsPrimitive()))
+			if (fieldType.IsClass || (fieldType.IsValueType && !fieldType.IsPrimitive))
 			{
 				if (typeof(Delegate).IsAssignableFrom(fieldType))
 				{
 					return null;
 				}
-				int hashCode = guiContent.get_text().GetHashCode();
+				int hashCode = guiContent.text.GetHashCode();
 				if (FieldInspector.drawnObjects.Contains(hashCode))
 				{
 					return null;
@@ -406,7 +417,7 @@ namespace BehaviorDesigner.Editor
 					GUILayout.BeginVertical(new GUILayoutOption[0]);
 					if (value == null)
 					{
-						if (fieldType.get_IsGenericType() && fieldType.GetGenericTypeDefinition() == typeof(Nullable))
+						if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(Nullable))
 						{
 							fieldType = Nullable.GetUnderlyingType(fieldType);
 						}
@@ -414,9 +425,9 @@ namespace BehaviorDesigner.Editor
 					}
 					if (FieldInspector.DrawFoldout(hashCode, guiContent))
 					{
-						EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() + 1);
+						EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
 						value = FieldInspector.DrawFields(task, value);
-						EditorGUI.set_indentLevel(EditorGUI.get_indentLevel() - 1);
+						EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
 					}
 					FieldInspector.drawnObjects.Remove(hashCode);
 					GUILayout.EndVertical();
@@ -442,24 +453,24 @@ namespace BehaviorDesigner.Editor
 				sharedVariable = (Activator.CreateInstance(fieldType, true) as SharedVariable);
 				if (TaskUtility.HasAttribute(fieldInfo, typeof(RequiredFieldAttribute)) || TaskUtility.HasAttribute(fieldInfo, typeof(SharedRequiredAttribute)))
 				{
-					sharedVariable.set_IsShared(true);
+					sharedVariable.IsShared=true;
 				}
-				GUI.set_changed(true);
+				GUI.changed=true;
 			}
-			if (sharedVariable == null || sharedVariable.get_IsShared())
+			if (sharedVariable == null || sharedVariable.IsShared)
 			{
 				GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 				string[] array = null;
 				int num = -1;
-				int num2 = FieldInspector.GetVariablesOfType((sharedVariable == null) ? null : sharedVariable.GetType().GetProperty("Value").get_PropertyType(), sharedVariable != null && sharedVariable.get_IsGlobal(), (sharedVariable == null) ? string.Empty : sharedVariable.get_Name(), FieldInspector.behaviorSource, out array, ref num, fieldType.Equals(typeof(SharedVariable)));
-				Color backgroundColor = GUI.get_backgroundColor();
+				int num2 = FieldInspector.GetVariablesOfType((sharedVariable == null) ? null : sharedVariable.GetType().GetProperty("Value").PropertyType, sharedVariable != null && sharedVariable.IsGlobal, (sharedVariable == null) ? string.Empty : sharedVariable.Name, FieldInspector.behaviorSource, out array, ref num, fieldType.Equals(typeof(SharedVariable)));
+				Color backgroundColor = GUI.backgroundColor;
 				if (num2 == 0 && !TaskUtility.HasAttribute(fieldInfo, typeof(SharedRequiredAttribute)))
 				{
-					GUI.set_backgroundColor(Color.get_red());
+					GUI.backgroundColor=Color.red;
 				}
 				int num3 = num2;
-				num2 = EditorGUILayout.Popup(guiContent.get_text(), num2, array, BehaviorDesignerUtility.SharedVariableToolbarPopup, new GUILayoutOption[0]);
-				GUI.set_backgroundColor(backgroundColor);
+				num2 = EditorGUILayout.Popup(guiContent.text, num2, array, BehaviorDesignerUtility.SharedVariableToolbarPopup, new GUILayoutOption[0]);
+				GUI.backgroundColor=backgroundColor;
 				if (num2 != num3)
 				{
 					if (num2 == 0)
@@ -471,18 +482,18 @@ namespace BehaviorDesigner.Editor
 						else
 						{
 							sharedVariable = (Activator.CreateInstance(fieldType, true) as SharedVariable);
-							sharedVariable.set_IsShared(true);
+							sharedVariable.IsShared=true;
 						}
 					}
 					else if (num != -1 && num2 >= num)
 					{
-						sharedVariable = GlobalVariables.get_Instance().GetVariable(array[num2].Substring(8, array[num2].get_Length() - 8));
+						sharedVariable = GlobalVariables.Instance.GetVariable(array[num2].Substring(8, array[num2].Length - 8));
 					}
 					else
 					{
 						sharedVariable = FieldInspector.behaviorSource.GetVariable(array[num2]);
 					}
-					GUI.set_changed(true);
+					GUI.changed=true;
 				}
 				if (!fieldType.Equals(typeof(SharedVariable)) && !TaskUtility.HasAttribute(fieldInfo, typeof(RequiredFieldAttribute)) && !TaskUtility.HasAttribute(fieldInfo, typeof(SharedRequiredAttribute)))
 				{
@@ -522,46 +533,46 @@ namespace BehaviorDesigner.Editor
 				names = new string[0];
 				return 0;
 			}
-			List<SharedVariable> variables = behaviorSource.get_Variables();
+			List<SharedVariable> variables = behaviorSource.Variables;
 			int result = 0;
 			List<string> list = new List<string>();
 			list.Add("None");
 			if (variables != null)
 			{
-				for (int i = 0; i < variables.get_Count(); i++)
+				for (int i = 0; i < variables.Count; i++)
 				{
-					if (variables.get_Item(i) != null)
+					if (variables[i] != null)
 					{
-						Type propertyType = variables.get_Item(i).GetType().GetProperty("Value").get_PropertyType();
+						Type propertyType = variables[i].GetType().GetProperty("Value").PropertyType;
 						if (valueType == null || getAll || valueType.IsAssignableFrom(propertyType))
 						{
-							list.Add(variables.get_Item(i).get_Name());
-							if (!isGlobal && variables.get_Item(i).get_Name().Equals(name))
+							list.Add(variables[i].Name);
+							if (!isGlobal && variables[i].Name.Equals(name))
 							{
-								result = list.get_Count() - 1;
+								result = list.Count - 1;
 							}
 						}
 					}
 				}
 			}
 			GlobalVariables instance;
-			if ((instance = GlobalVariables.get_Instance()) != null)
+			if ((instance = GlobalVariables.Instance) != null)
 			{
-				globalStartIndex = list.get_Count();
-				variables = instance.get_Variables();
+				globalStartIndex = list.Count;
+				variables = instance.Variables;
 				if (variables != null)
 				{
-					for (int j = 0; j < variables.get_Count(); j++)
+					for (int j = 0; j < variables.Count; j++)
 					{
-						if (variables.get_Item(j) != null)
+						if (variables[j] != null)
 						{
-							Type propertyType2 = variables.get_Item(j).GetType().GetProperty("Value").get_PropertyType();
+							Type propertyType2 = variables[j].GetType().GetProperty("Value").PropertyType;
 							if (valueType == null || getAll || propertyType2.Equals(valueType))
 							{
-								list.Add("Globals/" + variables.get_Item(j).get_Name());
-								if (isGlobal && variables.get_Item(j).get_Name().Equals(name))
+								list.Add("Globals/" + variables[j].Name);
+								if (isGlobal && variables[j].Name.Equals(name))
 								{
-									result = list.get_Count() - 1;
+									result = list.Count - 1;
 								}
 							}
 						}
@@ -578,21 +589,21 @@ namespace BehaviorDesigner.Editor
 			{
 				return null;
 			}
-			if (GUILayout.Button((!sharedVariable.get_IsShared()) ? BehaviorDesignerUtility.VariableButtonTexture : BehaviorDesignerUtility.VariableButtonSelectedTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
+			if (GUILayout.Button((!sharedVariable.IsShared) ? BehaviorDesignerUtility.VariableButtonTexture : BehaviorDesignerUtility.VariableButtonSelectedTexture, BehaviorDesignerUtility.PlainButtonGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(15f)
 			}))
 			{
-				bool isShared = !sharedVariable.get_IsShared();
+				bool isShared = !sharedVariable.IsShared;
 				if (sharedVariable.GetType().Equals(typeof(SharedVariable)))
 				{
-					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(sharedVariable.GetType().GetProperty("Value").get_PropertyType()), true) as SharedVariable);
+					sharedVariable = (Activator.CreateInstance(FieldInspector.FriendlySharedVariableName(sharedVariable.GetType().GetProperty("Value").PropertyType), true) as SharedVariable);
 				}
 				else
 				{
 					sharedVariable = (Activator.CreateInstance(sharedVariable.GetType(), true) as SharedVariable);
 				}
-				sharedVariable.set_IsShared(isShared);
+				sharedVariable.IsShared=isShared;
 			}
 			return sharedVariable;
 		}
@@ -617,7 +628,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (typeof(Object).IsAssignableFrom(type))
 			{
-				Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly("BehaviorDesigner.Runtime.Shared" + type.get_Name());
+				Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly("BehaviorDesigner.Runtime.Shared" + type.Name);
 				if (typeWithinAssembly != null)
 				{
 					return typeWithinAssembly;
@@ -625,7 +636,7 @@ namespace BehaviorDesigner.Editor
 			}
 			else
 			{
-				Type typeWithinAssembly2 = TaskUtility.GetTypeWithinAssembly("Shared" + type.get_Name());
+				Type typeWithinAssembly2 = TaskUtility.GetTypeWithinAssembly("Shared" + type.Name);
 				if (typeWithinAssembly2 != null)
 				{
 					return typeWithinAssembly2;
@@ -643,7 +654,7 @@ namespace BehaviorDesigner.Editor
 			int num = 0;
 			for (int i = 0; i < FieldInspector.layerNames.Length; i++)
 			{
-				if ((layerMask.get_value() & FieldInspector.maskValues[i]) == FieldInspector.maskValues[i])
+				if ((layerMask.value & FieldInspector.maskValues[i]) == FieldInspector.maskValues[i])
 				{
 					num |= 1 << i;
 				}
@@ -659,7 +670,7 @@ namespace BehaviorDesigner.Editor
 						num |= FieldInspector.maskValues[j];
 					}
 				}
-				layerMask.set_value(num);
+				layerMask.value=num;
 			}
 			return layerMask;
 		}

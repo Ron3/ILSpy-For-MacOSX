@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 
 using Vector2 = UnityEngine.Vector2;
+using Object = UnityEngine.Object;
 
 namespace BehaviorDesigner.Editor
 {
@@ -75,7 +76,7 @@ namespace BehaviorDesigner.Editor
 
 		private int mGUITickCount;
 
-		private Vector2 mSelectStartPosition = Vector2.get_zero();
+		private Vector2 mSelectStartPosition = Vector2.zero;
 
 		private Rect mSelectionArea;
 
@@ -87,7 +88,7 @@ namespace BehaviorDesigner.Editor
 
 		private bool mNodeClicked;
 
-		private Vector2 mDragDelta = Vector2.get_zero();
+		private Vector2 mDragDelta = Vector2.zero;
 
 		private bool mCommandDown;
 
@@ -215,18 +216,18 @@ namespace BehaviorDesigner.Editor
 					{
 						return this.mLastUpdateCheck;
 					}
-					this.mLastUpdateCheck = DateTime.Parse(EditorPrefs.GetString("BehaviorDesignerLastUpdateCheck", "1/1/1971 00:00:01"), CultureInfo.get_InvariantCulture());
+					this.mLastUpdateCheck = DateTime.Parse(EditorPrefs.GetString("BehaviorDesignerLastUpdateCheck", "1/1/1971 00:00:01"), CultureInfo.InvariantCulture);
 				}
 				catch (Exception)
 				{
-					this.mLastUpdateCheck = DateTime.get_UtcNow();
+					this.mLastUpdateCheck = DateTime.UtcNow;
 				}
 				return this.mLastUpdateCheck;
 			}
 			set
 			{
 				this.mLastUpdateCheck = value;
-				EditorPrefs.SetString("BehaviorDesignerLastUpdateCheck", this.mLastUpdateCheck.ToString(CultureInfo.get_InvariantCulture()));
+				EditorPrefs.SetString("BehaviorDesignerLastUpdateCheck", this.mLastUpdateCheck.ToString(CultureInfo.InvariantCulture));
 			}
 		}
 
@@ -276,8 +277,8 @@ namespace BehaviorDesigner.Editor
 		public static void ShowWindow()
 		{
 			BehaviorDesignerWindow window = EditorWindow.GetWindow<BehaviorDesignerWindow>(false, "Behavior Designer");
-			window.set_wantsMouseMove(true);
-			window.set_minSize(new Vector2(500f, 100f));
+			window.wantsMouseMove = true;
+			window.minSize = new Vector2(500f, 100f);
 			window.Init();
 			BehaviorDesignerPreferences.InitPrefernces();
 			if (BehaviorDesignerPreferences.GetBool(BDPreferences.ShowWelcomeScreen))
@@ -288,7 +289,7 @@ namespace BehaviorDesigner.Editor
 
 		public void OnEnable()
 		{
-			this.mIsPlaying = EditorApplication.get_isPlaying();
+			this.mIsPlaying = EditorApplication.isPlaying;
 			this.mSizesInitialized = false;
 			this.Repaint();
 			EditorApplication.projectWindowChanged = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.projectWindowChanged, new EditorApplication.CallbackFunction(this.OnProjectWindowChange));
@@ -301,11 +302,11 @@ namespace BehaviorDesigner.Editor
 		public void OnFocus()
 		{
 			BehaviorDesignerWindow.instance = this;
-			base.set_wantsMouseMove(true);
+			base.wantsMouseMove = true;
 			this.Init();
 			if (!this.mLockActiveGameObject)
 			{
-				this.mActiveObject = Selection.get_activeObject();
+				this.mActiveObject = Selection.activeObject;
 			}
 			this.ReloadPreviousBehavior();
 			this.UpdateGraphStatus();
@@ -363,10 +364,10 @@ namespace BehaviorDesigner.Editor
 				else if (this.mActiveObject is ExternalBehavior)
 				{
 					ExternalBehavior externalBehavior = this.mActiveObject as ExternalBehavior;
-					BehaviorSource behaviorSource = externalBehavior.get_BehaviorSource();
-					if (externalBehavior.get_BehaviorSource().get_Owner() == null)
+					BehaviorSource behaviorSource = externalBehavior.BehaviorSource;
+					if (externalBehavior.BehaviorSource.Owner == null)
 					{
-						externalBehavior.get_BehaviorSource().set_Owner(externalBehavior);
+						externalBehavior.BehaviorSource.Owner = externalBehavior;
 					}
 					this.LoadBehavior(behaviorSource, true, false);
 				}
@@ -386,12 +387,12 @@ namespace BehaviorDesigner.Editor
 		private void UpdateTree(bool firstLoad)
 		{
 			bool flag = firstLoad;
-			if (Selection.get_activeObject() != null)
+			if (Selection.activeObject != null)
 			{
 				bool loadPrevBehavior = false;
-				if (!Selection.get_activeObject().Equals(this.mActiveObject))
+				if (!Selection.activeObject.Equals(this.mActiveObject))
 				{
-					this.mActiveObject = Selection.get_activeObject();
+					this.mActiveObject = Selection.activeObject;
 					flag = true;
 				}
 				BehaviorSource behaviorSource = null;
@@ -435,7 +436,7 @@ namespace BehaviorDesigner.Editor
 						{
 							for (int j = 0; j < components2.Length; j++)
 							{
-								if (components2[j].Equals(this.mActiveBehaviorSource.get_Owner()))
+								if (components2[j].Equals(this.mActiveBehaviorSource.Owner))
 								{
 									flag2 = true;
 									break;
@@ -456,15 +457,15 @@ namespace BehaviorDesigner.Editor
 				else if (this.mActiveObject is ExternalBehavior)
 				{
 					ExternalBehavior externalBehavior = this.mActiveObject as ExternalBehavior;
-					if (externalBehavior.get_BehaviorSource().get_Owner() == null)
+					if (externalBehavior.BehaviorSource.Owner == null)
 					{
-						externalBehavior.get_BehaviorSource().set_Owner(externalBehavior);
+						externalBehavior.BehaviorSource.Owner = externalBehavior;
 					}
 					if (flag && this.mActiveObject.Equals(this.mPrevActiveObject))
 					{
 						loadPrevBehavior = true;
 					}
-					behaviorSource = externalBehavior.get_BehaviorSource();
+					behaviorSource = externalBehavior.BehaviorSource;
 				}
 				else
 				{
@@ -511,8 +512,8 @@ namespace BehaviorDesigner.Editor
 			if (this.mGridMaterial == null)
 			{
 				this.mGridMaterial = new Material(Shader.Find("Hidden/Behavior Designer/Grid"));
-				this.mGridMaterial.set_hideFlags(61);
-				this.mGridMaterial.get_shader().set_hideFlags(61);
+				this.mGridMaterial.hideFlags = HideFlags.HideAndDontSave;
+				this.mGridMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 			}
 			this.mTaskList.Init();
 			FieldInspector.Init();
@@ -531,10 +532,10 @@ namespace BehaviorDesigner.Editor
 			}
 			else if (this.ViewOnlyMode() && this.mActiveBehaviorSource != null)
 			{
-				ExternalBehavior externalBehavior = (this.mActiveBehaviorSource.get_Owner().GetObject() as Behavior).get_ExternalBehavior();
+				ExternalBehavior externalBehavior = (this.mActiveBehaviorSource.Owner.GetObject() as Behavior).ExternalBehavior;
 				if (externalBehavior != null)
 				{
-					this.mGraphStatus = externalBehavior.get_BehaviorSource().ToString() + " (View Only Mode)";
+					this.mGraphStatus = externalBehavior.BehaviorSource.ToString() + " (View Only Mode)";
 				}
 				else
 				{
@@ -549,7 +550,7 @@ namespace BehaviorDesigner.Editor
 			{
 				this.mGraphStatus = "Select tasks to reference (right click to exit)";
 			}
-			else if (this.mActiveBehaviorSource != null && this.mActiveBehaviorSource.get_Owner() != null && this.mActiveBehaviorSource.get_Owner().GetObject() != null)
+			else if (this.mActiveBehaviorSource != null && this.mActiveBehaviorSource.Owner != null && this.mActiveBehaviorSource.Owner.GetObject() != null)
 			{
 				if (this.mExternalParent != null)
 				{
@@ -572,9 +573,9 @@ namespace BehaviorDesigner.Editor
 			for (int i = array.Length - 1; i > -1; i--)
 			{
 				BehaviorSource behaviorSource = array[i].GetBehaviorSource();
-				if (behaviorSource.get_Owner() == null)
+				if (behaviorSource.Owner == null)
 				{
-					behaviorSource.set_Owner(array[i]);
+					behaviorSource.Owner = (array[i]);
 				}
 				list.Add(behaviorSource);
 			}
@@ -582,24 +583,24 @@ namespace BehaviorDesigner.Editor
 			for (int j = array2.Length - 1; j > -1; j--)
 			{
 				BehaviorSource behaviorSource2 = array2[j].GetBehaviorSource();
-				if (behaviorSource2.get_Owner() == null)
+				if (behaviorSource2.Owner == null)
 				{
-					behaviorSource2.set_Owner(array2[j]);
+					behaviorSource2.Owner = (array2[j]);
 				}
 				list.Add(behaviorSource2);
 			}
 			list.Sort(new AlphanumComparator<BehaviorSource>());
 			int k = 0;
-			while (k < list.get_Count())
+			while (k < list.Count)
 			{
-				Object @object = list.get_Item(k).get_Owner().GetObject();
+				Object @object = list[k].Owner.GetObject();
 				if (menuType != BehaviorDesignerWindow.BreadcrumbMenuType.Behavior)
 				{
 					goto IL_14E;
 				}
 				if (@object is Behavior)
 				{
-					if ((@object as Behavior).get_gameObject().Equals(this.mActiveObject))
+					if ((@object as Behavior).gameObject.Equals(this.mActiveObject))
 					{
 						goto IL_14E;
 					}
@@ -614,11 +615,11 @@ namespace BehaviorDesigner.Editor
 				IL_14E:
 				if (menuType == BehaviorDesignerWindow.BreadcrumbMenuType.GameObject && @object is Behavior)
 				{
-					if (hashSet.Contains((@object as Behavior).get_gameObject()))
+					if (hashSet.Contains((@object as Behavior).gameObject))
 					{
 						goto IL_29B;
 					}
-					hashSet.Add((@object as Behavior).get_gameObject());
+					hashSet.Add((@object as Behavior).gameObject);
 				}
 				string text = string.Empty;
 				if (@object is Behavior)
@@ -626,13 +627,13 @@ namespace BehaviorDesigner.Editor
 					switch (menuType)
 					{
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObjectBehavior:
-						text = list.get_Item(k).ToString();
+						text = list[k].ToString();
 						break;
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObject:
-						text = (@object as Behavior).get_gameObject().get_name();
+						text = (@object as Behavior).gameObject.name;
 						break;
 					case BehaviorDesignerWindow.BreadcrumbMenuType.Behavior:
-						text = list.get_Item(k).behaviorName;
+						text = list[k].behaviorName;
 						break;
 					}
 					if (!AssetDatabase.GetAssetPath(@object).Equals(string.Empty))
@@ -642,19 +643,19 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					text = list.get_Item(k).ToString() + " (external)";
+					text = list[k].ToString() + " (external)";
 				}
 				int num = 0;
-				if (dictionary2.TryGetValue(text, ref num))
+				if (dictionary2.TryGetValue(text, out num))
 				{
-					dictionary2.set_Item(text, ++num);
+					dictionary2[text] = ++num;
 					text += string.Format(" ({0})", num + 1);
 				}
 				else
 				{
 					dictionary2.Add(text, 0);
 				}
-				dictionary.Add(list.get_Item(k), text);
+				dictionary.Add(list[k], text);
 				goto IL_29B;
 			}
 			switch (menuType)
@@ -673,28 +674,28 @@ namespace BehaviorDesigner.Editor
 			{
 				while (enumerator.MoveNext())
 				{
-					KeyValuePair<BehaviorSource, string> current = enumerator.get_Current();
+					KeyValuePair<BehaviorSource, string> current = enumerator.Current;
 					switch (menuType)
 					{
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObjectBehavior:
-						this.mBreadcrumbGameObjectBehaviorMenu.AddItem(new GUIContent(current.get_Value()), current.get_Key().Equals(this.mActiveBehaviorSource), new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), current.get_Key());
+						this.mBreadcrumbGameObjectBehaviorMenu.AddItem(new GUIContent(current.Value), current.Key.Equals(this.mActiveBehaviorSource), new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), current.Key);
 						break;
 					case BehaviorDesignerWindow.BreadcrumbMenuType.GameObject:
 					{
 						bool flag;
-						if (current.get_Key().get_Owner().GetObject() is ExternalBehavior)
+						if (current.Key.Owner.GetObject() is ExternalBehavior)
 						{
-							flag = (current.get_Key().get_Owner().GetObject() as ExternalBehavior).GetObject().Equals(this.mActiveObject);
+							flag = (current.Key.Owner.GetObject() as ExternalBehavior).GetObject().Equals(this.mActiveObject);
 						}
 						else
 						{
-							flag = (current.get_Key().get_Owner().GetObject() as Behavior).get_gameObject().Equals(this.mActiveObject);
+							flag = (current.Key.Owner.GetObject() as Behavior).gameObject.Equals(this.mActiveObject);
 						}
-						this.mBreadcrumbGameObjectMenu.AddItem(new GUIContent(current.get_Value()), flag, new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), current.get_Key());
+						this.mBreadcrumbGameObjectMenu.AddItem(new GUIContent(current.Value), flag, new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), current.Key);
 						break;
 					}
 					case BehaviorDesignerWindow.BreadcrumbMenuType.Behavior:
-						this.mBreadcrumbBehaviorMenu.AddItem(new GUIContent(current.get_Value()), current.get_Key().Equals(this.mActiveBehaviorSource), new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), current.get_Key());
+						this.mBreadcrumbBehaviorMenu.AddItem(new GUIContent(current.Value), current.Key.Equals(this.mActiveBehaviorSource), new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), current.Key);
 						break;
 					}
 				}
@@ -716,10 +717,10 @@ namespace BehaviorDesigner.Editor
 			}
 			this.mRightClickMenu = new GenericMenu();
 			this.mShowRightClickMenu = true;
-			if (clickedNode == null && !EditorApplication.get_isPlaying() && !this.ViewOnlyMode())
+			if (clickedNode == null && !EditorApplication.isPlaying && !this.ViewOnlyMode())
 			{
 				this.mTaskList.AddTasksToMenu(ref this.mRightClickMenu, null, "Add Task", new GenericMenu.MenuFunction2(this.AddTaskCallback));
-				if (this.mCopiedTasks != null && this.mCopiedTasks.get_Count() > 0)
+				if (this.mCopiedTasks != null && this.mCopiedTasks.Count > 0)
 				{
 					this.mRightClickMenu.AddItem(new GUIContent("Paste Tasks"), false, new GenericMenu.MenuFunction(this.PasteNodes));
 				}
@@ -730,36 +731,36 @@ namespace BehaviorDesigner.Editor
 			}
 			if (clickedNode != null && !clickedNode.IsEntryDisplay)
 			{
-				if (this.mGraphDesigner.SelectedNodes.get_Count() == 1)
+				if (this.mGraphDesigner.SelectedNodes.Count == 1)
 				{
 					this.mRightClickMenu.AddItem(new GUIContent("Edit Script"), false, new GenericMenu.MenuFunction2(this.OpenInFileEditor), clickedNode);
 					this.mRightClickMenu.AddItem(new GUIContent("Locate Script"), false, new GenericMenu.MenuFunction2(this.SelectInProject), clickedNode);
 					if (!this.ViewOnlyMode())
 					{
-						this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.get_Disabled()) ? "Disable" : "Enable"), false, new GenericMenu.MenuFunction2(this.ToggleEnableState), clickedNode);
+						this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.Disabled) ? "Disable" : "Enable"), false, new GenericMenu.MenuFunction2(this.ToggleEnableState), clickedNode);
 						if (clickedNode.IsParent)
 						{
-							this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.get_NodeData().get_Collapsed()) ? "Collapse" : "Expand"), false, new GenericMenu.MenuFunction2(this.ToggleCollapseState), clickedNode);
+							this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.NodeData.Collapsed) ? "Collapse" : "Expand"), false, new GenericMenu.MenuFunction2(this.ToggleCollapseState), clickedNode);
 						}
-						this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.get_NodeData().get_IsBreakpoint()) ? "Set Breakpoint" : "Remove Breakpoint"), false, new GenericMenu.MenuFunction2(this.ToggleBreakpoint), clickedNode);
-						this.mTaskList.AddTasksToMenu(ref this.mRightClickMenu, this.mGraphDesigner.SelectedNodes.get_Item(0).Task.GetType(), "Replace", new GenericMenu.MenuFunction2(this.ReplaceTaskCallback));
+						this.mRightClickMenu.AddItem(new GUIContent((!clickedNode.Task.NodeData.IsBreakpoint) ? "Set Breakpoint" : "Remove Breakpoint"), false, new GenericMenu.MenuFunction2(this.ToggleBreakpoint), clickedNode);
+						this.mTaskList.AddTasksToMenu(ref this.mRightClickMenu, this.mGraphDesigner.SelectedNodes[0].Task.GetType(), "Replace", new GenericMenu.MenuFunction2(this.ReplaceTaskCallback));
 					}
 				}
-				if (!EditorApplication.get_isPlaying() && !this.ViewOnlyMode())
+				if (!EditorApplication.isPlaying && !this.ViewOnlyMode())
 				{
-					this.mRightClickMenu.AddItem(new GUIContent(string.Format("Copy Task{0}", (this.mGraphDesigner.SelectedNodes.get_Count() <= 1) ? string.Empty : "s")), false, new GenericMenu.MenuFunction(this.CopyNodes));
-					if (this.mCopiedTasks != null && this.mCopiedTasks.get_Count() > 0)
+					this.mRightClickMenu.AddItem(new GUIContent(string.Format("Copy Task{0}", (this.mGraphDesigner.SelectedNodes.Count <= 1) ? string.Empty : "s")), false, new GenericMenu.MenuFunction(this.CopyNodes));
+					if (this.mCopiedTasks != null && this.mCopiedTasks.Count > 0)
 					{
-						this.mRightClickMenu.AddItem(new GUIContent(string.Format("Paste Task{0}", (this.mCopiedTasks.get_Count() <= 1) ? string.Empty : "s")), false, new GenericMenu.MenuFunction(this.PasteNodes));
+						this.mRightClickMenu.AddItem(new GUIContent(string.Format("Paste Task{0}", (this.mCopiedTasks.Count <= 1) ? string.Empty : "s")), false, new GenericMenu.MenuFunction(this.PasteNodes));
 					}
 					else
 					{
 						this.mRightClickMenu.AddDisabledItem(new GUIContent("Paste Tasks"));
 					}
-					this.mRightClickMenu.AddItem(new GUIContent(string.Format("Delete Task{0}", (this.mGraphDesigner.SelectedNodes.get_Count() <= 1) ? string.Empty : "s")), false, new GenericMenu.MenuFunction(this.DeleteNodes));
+					this.mRightClickMenu.AddItem(new GUIContent(string.Format("Delete Task{0}", (this.mGraphDesigner.SelectedNodes.Count <= 1) ? string.Empty : "s")), false, new GenericMenu.MenuFunction(this.DeleteNodes));
 				}
 			}
-			if (!EditorApplication.get_isPlaying() && this.mActiveObject as GameObject != null)
+			if (!EditorApplication.isPlaying && this.mActiveObject as GameObject != null)
 			{
 				if (clickedNode != null && !clickedNode.IsEntryDisplay)
 				{
@@ -784,7 +785,7 @@ namespace BehaviorDesigner.Editor
 
 		public void OnGUI()
 		{
-			this.mCurrentMousePosition = Event.get_current().get_mousePosition();
+			this.mCurrentMousePosition = Event.current.mousePosition;
 			this.SetupSizes();
 			if (!this.mSizesInitialized)
 			{
@@ -809,7 +810,7 @@ namespace BehaviorDesigner.Editor
 
 		public void OnPlaymodeStateChange()
 		{
-			if (EditorApplication.get_isPlaying() && !EditorApplication.get_isPaused())
+			if (EditorApplication.isPlaying && !EditorApplication.isPaused)
 			{
 				if (this.mBehaviorManager == null)
 				{
@@ -819,33 +820,33 @@ namespace BehaviorDesigner.Editor
 						return;
 					}
 				}
-				if (this.mBehaviorManager.get_BreakpointTree() != null && this.mEditorAtBreakpoint)
+				if (this.mBehaviorManager.BreakpointTree != null && this.mEditorAtBreakpoint)
 				{
 					this.mEditorAtBreakpoint = false;
-					this.mBehaviorManager.set_BreakpointTree(null);
+					this.mBehaviorManager.BreakpointTree=null;
 				}
 			}
-			else if (EditorApplication.get_isPlaying() && EditorApplication.get_isPaused())
+			else if (EditorApplication.isPlaying && EditorApplication.isPaused)
 			{
-				if (this.mBehaviorManager != null && this.mBehaviorManager.get_BreakpointTree() != null)
+				if (this.mBehaviorManager != null && this.mBehaviorManager.BreakpointTree != null)
 				{
 					if (!this.mEditorAtBreakpoint)
 					{
 						this.mEditorAtBreakpoint = true;
 						if (BehaviorDesignerPreferences.GetBool(BDPreferences.SelectOnBreakpoint) && !this.mLockActiveGameObject)
 						{
-							Selection.set_activeObject(this.mBehaviorManager.get_BreakpointTree());
-							this.LoadBehavior(this.mBehaviorManager.get_BreakpointTree().GetBehaviorSource(), this.mActiveBehaviorSource == this.mBehaviorManager.get_BreakpointTree().GetBehaviorSource(), false);
+							Selection.activeObject = (this.mBehaviorManager.BreakpointTree);
+							this.LoadBehavior(this.mBehaviorManager.BreakpointTree.GetBehaviorSource(), this.mActiveBehaviorSource == this.mBehaviorManager.BreakpointTree.GetBehaviorSource(), false);
 						}
 					}
 					else
 					{
 						this.mEditorAtBreakpoint = false;
-						this.mBehaviorManager.set_BreakpointTree(null);
+						this.mBehaviorManager.BreakpointTree=null;
 					}
 				}
 			}
-			else if (!EditorApplication.get_isPlaying())
+			else if (!EditorApplication.isPlaying)
 			{
 				this.mBehaviorManager = null;
 			}
@@ -859,16 +860,17 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			BehaviorManager expr_23 = this.mBehaviorManager;
-			expr_23.set_OnTaskBreakpoint((BehaviorManager.BehaviorManagerHandler)Delegate.Combine(expr_23.get_OnTaskBreakpoint(), new BehaviorManager.BehaviorManagerHandler(this.OnTaskBreakpoint)));
+			expr_23.OnTaskBreakpoint=(BehaviorManager.BehaviorManagerHandler)Delegate.Combine(expr_23.OnTaskBreakpoint, new BehaviorManager.BehaviorManagerHandler(this.OnTaskBreakpoint));
 			this.mUpdateNodeTaskMap = true;
 		}
 
 		public void OnTaskBreakpoint()
 		{
-			EditorApplication.set_isPaused(true);
+			EditorApplication.isPaused=true;
 			this.Repaint();
 		}
 
+		// TODO Ron 这里的GOTO语句翻译一下
 		private void OnPreferenceChange(BDPreferences pref, object value)
 		{
 			switch (pref)
@@ -878,7 +880,7 @@ namespace BehaviorDesigner.Editor
 				return;
 			case BDPreferences.SnapToGrid:
 			case BDPreferences.ShowTaskDescription:
-				IL_1F:
+				// IL_1F:
 				if (pref != BDPreferences.ShowSceneIcon && pref != BDPreferences.GizmosViewMode)
 				{
 					return;
@@ -891,8 +893,12 @@ namespace BehaviorDesigner.Editor
 			case BDPreferences.ErrorChecking:
 				this.CheckForErrors();
 				return;
+			
+			default:
+				goto case BDPreferences.ShowTaskDescription;
+
 			}
-			goto IL_1F;
+			// goto IL_1F;
 		}
 
 		public void OnInspectorUpdate()
@@ -902,35 +908,35 @@ namespace BehaviorDesigner.Editor
 				EditorApplication.Step();
 				this.mStepApplication = false;
 			}
-			if (EditorApplication.get_isPlaying() && !EditorApplication.get_isPaused() && this.mActiveBehaviorSource != null && this.mBehaviorManager != null)
+			if (EditorApplication.isPlaying && !EditorApplication.isPaused && this.mActiveBehaviorSource != null && this.mBehaviorManager != null)
 			{
 				if (this.mUpdateNodeTaskMap)
 				{
 					this.UpdateNodeTaskMap();
 				}
-				if (this.mBehaviorManager.get_BreakpointTree() != null)
+				if (this.mBehaviorManager.BreakpointTree != null)
 				{
-					this.mBehaviorManager.set_BreakpointTree(null);
+					this.mBehaviorManager.BreakpointTree=null;
 				}
 				this.Repaint();
 			}
-			if (Application.get_isPlaying() && this.mBehaviorManager == null)
+			if (Application.isPlaying && this.mBehaviorManager == null)
 			{
 				this.SetBehaviorManager();
 			}
-			if (this.mBehaviorManager != null && this.mBehaviorManager.get_Dirty())
+			if (this.mBehaviorManager != null && this.mBehaviorManager.Dirty)
 			{
 				if (this.mActiveBehaviorSource != null)
 				{
 					this.LoadBehavior(this.mActiveBehaviorSource, true, false);
 				}
-				this.mBehaviorManager.set_Dirty(false);
+				this.mBehaviorManager.Dirty=false;
 			}
-			if (!EditorApplication.get_isPlaying() && this.mIsPlaying)
+			if (!EditorApplication.isPlaying && this.mIsPlaying)
 			{
 				this.ReloadPreviousBehavior();
 			}
-			this.mIsPlaying = EditorApplication.get_isPlaying();
+			this.mIsPlaying = EditorApplication.isPlaying;
 			this.UpdateGraphStatus();
 			this.UpdateCheck();
 		}
@@ -939,17 +945,17 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.mUpdateNodeTaskMap && this.mBehaviorManager != null)
 			{
-				Behavior behavior = this.mActiveBehaviorSource.get_Owner() as Behavior;
+				Behavior behavior = this.mActiveBehaviorSource.Owner as Behavior;
 				List<Task> taskList = this.mBehaviorManager.GetTaskList(behavior);
 				if (taskList != null)
 				{
 					this.mNodeDesignerTaskMap = new Dictionary<NodeDesigner, Task>();
-					for (int i = 0; i < taskList.get_Count(); i++)
+					for (int i = 0; i < taskList.Count; i++)
 					{
-						NodeDesigner nodeDesigner = taskList.get_Item(i).get_NodeData().get_NodeDesigner() as NodeDesigner;
+						NodeDesigner nodeDesigner = taskList[i].NodeData.NodeDesigner as NodeDesigner;
 						if (nodeDesigner != null && !this.mNodeDesignerTaskMap.ContainsKey(nodeDesigner))
 						{
-							this.mNodeDesignerTaskMap.Add(nodeDesigner, taskList.get_Item(i));
+							this.mNodeDesignerTaskMap.Add(nodeDesigner, taskList[i]);
 						}
 					}
 					this.mUpdateNodeTaskMap = false;
@@ -960,10 +966,10 @@ namespace BehaviorDesigner.Editor
 		private bool Draw()
 		{
 			bool result = false;
-			Color color = GUI.get_color();
-			Color backgroundColor = GUI.get_backgroundColor();
-			GUI.set_color(Color.get_white());
-			GUI.set_backgroundColor(Color.get_white());
+			Color color = GUI.color;
+			Color backgroundColor = GUI.backgroundColor;
+			GUI.color=Color.white;
+			GUI.backgroundColor=Color.white;
 			this.DrawFileToolbar();
 			this.DrawDebugToolbar();
 			this.DrawPropertiesBox();
@@ -974,29 +980,29 @@ namespace BehaviorDesigner.Editor
 			this.DrawPreferencesPane();
 			if (this.mTakingScreenshot)
 			{
-				GUI.DrawTexture(new Rect(0f, 0f, base.get_position().get_width(), base.get_position().get_height() + 22f), BehaviorDesignerUtility.ScreenshotBackgroundTexture, 0, false);
+				GUI.DrawTexture(new Rect(0f, 0f, base.position.width, base.position.height + 22f), BehaviorDesignerUtility.ScreenshotBackgroundTexture, 0, false);
 			}
-			GUI.set_color(color);
-			GUI.set_backgroundColor(backgroundColor);
+			GUI.color=color;
+			GUI.backgroundColor=backgroundColor;
 			return result;
 		}
 
 		private void DrawFileToolbar()
 		{
-			GUILayout.BeginArea(this.mFileToolBarRect, EditorStyles.get_toolbar());
+			GUILayout.BeginArea(this.mFileToolBarRect, EditorStyles.toolbar);
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			if (GUILayout.Button(BehaviorDesignerUtility.HistoryBackwardTexture, EditorStyles.get_toolbarButton(), new GUILayoutOption[0]) && (this.mBehaviorSourceHistoryIndex > 0 || (this.mActiveBehaviorSource == null && this.mBehaviorSourceHistoryIndex == 0)))
+			if (GUILayout.Button(BehaviorDesignerUtility.HistoryBackwardTexture, EditorStyles.toolbarButton, new GUILayoutOption[0]) && (this.mBehaviorSourceHistoryIndex > 0 || (this.mActiveBehaviorSource == null && this.mBehaviorSourceHistoryIndex == 0)))
 			{
 				BehaviorSource behaviorSource = null;
 				if (this.mActiveBehaviorSource == null)
 				{
 					this.mBehaviorSourceHistoryIndex++;
 				}
-				while (behaviorSource == null && this.mBehaviorSourceHistory.get_Count() > 0 && this.mBehaviorSourceHistoryIndex > 0)
+				while (behaviorSource == null && this.mBehaviorSourceHistory.Count > 0 && this.mBehaviorSourceHistoryIndex > 0)
 				{
 					this.mBehaviorSourceHistoryIndex--;
-					behaviorSource = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior);
-					if (behaviorSource == null || behaviorSource.get_Owner() == null || behaviorSource.get_Owner().GetObject() == null)
+					behaviorSource = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior);
+					if (behaviorSource == null || behaviorSource.Owner == null || behaviorSource.Owner.GetObject() == null)
 					{
 						this.mBehaviorSourceHistory.RemoveAt(this.mBehaviorSourceHistoryIndex);
 						behaviorSource = null;
@@ -1007,16 +1013,16 @@ namespace BehaviorDesigner.Editor
 					this.LoadBehavior(behaviorSource, false);
 				}
 			}
-			if (GUILayout.Button(BehaviorDesignerUtility.HistoryForwardTexture, EditorStyles.get_toolbarButton(), new GUILayoutOption[0]))
+			if (GUILayout.Button(BehaviorDesignerUtility.HistoryForwardTexture, EditorStyles.toolbarButton, new GUILayoutOption[0]))
 			{
 				BehaviorSource behaviorSource2 = null;
-				if (this.mBehaviorSourceHistoryIndex < this.mBehaviorSourceHistory.get_Count() - 1)
+				if (this.mBehaviorSourceHistoryIndex < this.mBehaviorSourceHistory.Count - 1)
 				{
 					this.mBehaviorSourceHistoryIndex++;
-					while (behaviorSource2 == null && this.mBehaviorSourceHistoryIndex < this.mBehaviorSourceHistory.get_Count() && this.mBehaviorSourceHistoryIndex > 0)
+					while (behaviorSource2 == null && this.mBehaviorSourceHistoryIndex < this.mBehaviorSourceHistory.Count && this.mBehaviorSourceHistoryIndex > 0)
 					{
-						behaviorSource2 = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior);
-						if (behaviorSource2 == null || behaviorSource2.get_Owner() == null || behaviorSource2.get_Owner().GetObject() == null)
+						behaviorSource2 = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior);
+						if (behaviorSource2 == null || behaviorSource2.Owner == null || behaviorSource2.Owner.GetObject() == null)
 						{
 							this.mBehaviorSourceHistory.RemoveAt(this.mBehaviorSourceHistoryIndex);
 							behaviorSource2 = null;
@@ -1028,7 +1034,7 @@ namespace BehaviorDesigner.Editor
 					this.LoadBehavior(behaviorSource2, false);
 				}
 			}
-			if (GUILayout.Button("...", EditorStyles.get_toolbarButton(), new GUILayoutOption[]
+			if (GUILayout.Button("...", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(22f)
 			}))
@@ -1036,8 +1042,8 @@ namespace BehaviorDesigner.Editor
 				this.BuildBreadcrumbMenus(BehaviorDesignerWindow.BreadcrumbMenuType.GameObjectBehavior);
 				this.mBreadcrumbGameObjectBehaviorMenu.ShowAsContext();
 			}
-			string text = (!(this.mActiveObject as GameObject != null) && !(this.mActiveObject as ExternalBehavior != null)) ? "(None Selected)" : this.mActiveObject.get_name();
-			if (GUILayout.Button(text, EditorStyles.get_toolbarPopup(), new GUILayoutOption[]
+			string text = (!(this.mActiveObject as GameObject != null) && !(this.mActiveObject as ExternalBehavior != null)) ? "(None Selected)" : this.mActiveObject.name;
+			if (GUILayout.Button(text, EditorStyles.toolbarPopup, new GUILayoutOption[]
 			{
 				GUILayout.Width(140f)
 			}))
@@ -1046,7 +1052,7 @@ namespace BehaviorDesigner.Editor
 				this.mBreadcrumbGameObjectMenu.ShowAsContext();
 			}
 			string text2 = (this.mActiveBehaviorSource == null) ? "(None Selected)" : this.mActiveBehaviorSource.behaviorName;
-			if (GUILayout.Button(text2, EditorStyles.get_toolbarPopup(), new GUILayoutOption[]
+			if (GUILayout.Button(text2, EditorStyles.toolbarPopup, new GUILayoutOption[]
 			{
 				GUILayout.Width(140f)
 			}) && this.mActiveBehaviorSource != null)
@@ -1054,24 +1060,24 @@ namespace BehaviorDesigner.Editor
 				this.BuildBreadcrumbMenus(BehaviorDesignerWindow.BreadcrumbMenuType.Behavior);
 				this.mBreadcrumbBehaviorMenu.ShowAsContext();
 			}
-			if (GUILayout.Button("Referenced Behaviors", EditorStyles.get_toolbarPopup(), new GUILayoutOption[]
+			if (GUILayout.Button("Referenced Behaviors", EditorStyles.toolbarPopup, new GUILayoutOption[]
 			{
 				GUILayout.Width(140f)
 			}) && this.mActiveBehaviorSource != null)
 			{
 				List<BehaviorSource> list = this.mGraphDesigner.FindReferencedBehaviors();
-				if (list.get_Count() > 0)
+				if (list.Count > 0)
 				{
 					list.Sort(new AlphanumComparator<BehaviorSource>());
 					this.mReferencedBehaviorsMenu = new GenericMenu();
-					for (int i = 0; i < list.get_Count(); i++)
+					for (int i = 0; i < list.Count; i++)
 					{
-						this.mReferencedBehaviorsMenu.AddItem(new GUIContent(list.get_Item(i).ToString()), false, new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), list.get_Item(i));
+						this.mReferencedBehaviorsMenu.AddItem(new GUIContent(list[i].ToString()), false, new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), list[i]);
 					}
 					this.mReferencedBehaviorsMenu.ShowAsContext();
 				}
 			}
-			if (GUILayout.Button("-", EditorStyles.get_toolbarButton(), new GUILayoutOption[]
+			if (GUILayout.Button("-", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(22f)
 			}))
@@ -1085,7 +1091,7 @@ namespace BehaviorDesigner.Editor
 					EditorUtility.DisplayDialog("Unable to Remove Behavior Tree", "No behavior tree selected.", "OK");
 				}
 			}
-			if (GUILayout.Button("+", EditorStyles.get_toolbarButton(), new GUILayoutOption[]
+			if (GUILayout.Button("+", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(22f)
 			}))
@@ -1099,7 +1105,7 @@ namespace BehaviorDesigner.Editor
 					EditorUtility.DisplayDialog("Unable to Add Behavior Tree", "No GameObject is selected.", "OK");
 				}
 			}
-			if (GUILayout.Button("Lock", (!this.mLockActiveGameObject) ? EditorStyles.get_toolbarButton() : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
+			if (GUILayout.Button("Lock", (!this.mLockActiveGameObject) ? EditorStyles.toolbarButton : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(42f)
 			}))
@@ -1121,15 +1127,15 @@ namespace BehaviorDesigner.Editor
 					EditorUtility.DisplayDialog("Unable to Lock GameObject", "No GameObject is selected.", "OK");
 				}
 			}
-			GUI.set_enabled(this.mActiveBehaviorSource == null || this.mExternalParent == null);
-			if (GUILayout.Button("Export", EditorStyles.get_toolbarButton(), new GUILayoutOption[]
+			GUI.enabled=this.mActiveBehaviorSource == null || this.mExternalParent == null;
+			if (GUILayout.Button("Export", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(46f)
 			}))
 			{
 				if (this.mActiveBehaviorSource != null)
 				{
-					if (this.mActiveBehaviorSource.get_Owner().GetObject() as Behavior)
+					if (this.mActiveBehaviorSource.Owner.GetObject() as Behavior)
 					{
 						this.SaveAsAsset();
 					}
@@ -1143,8 +1149,8 @@ namespace BehaviorDesigner.Editor
 					EditorUtility.DisplayDialog("Unable to Save Behavior Tree", "Select a behavior tree from within the scene.", "OK");
 				}
 			}
-			GUI.set_enabled(true);
-			if (GUILayout.Button("Take Screenshot", EditorStyles.get_toolbarButton(), new GUILayoutOption[]
+			GUI.enabled=true;
+			if (GUILayout.Button("Take Screenshot", EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(96f)
 			}))
@@ -1159,7 +1165,7 @@ namespace BehaviorDesigner.Editor
 				}
 			}
 			GUILayout.FlexibleSpace();
-			if (GUILayout.Button("Preferences", (!this.mShowPrefPane) ? EditorStyles.get_toolbarButton() : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
+			if (GUILayout.Button("Preferences", (!this.mShowPrefPane) ? EditorStyles.toolbarButton : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(80f)
 			}))
@@ -1172,30 +1178,30 @@ namespace BehaviorDesigner.Editor
 
 		private void DrawDebugToolbar()
 		{
-			GUILayout.BeginArea(this.mDebugToolBarRect, EditorStyles.get_toolbar());
+			GUILayout.BeginArea(this.mDebugToolBarRect, EditorStyles.toolbar);
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			if (GUILayout.Button(BehaviorDesignerUtility.PlayTexture, (!EditorApplication.get_isPlaying()) ? EditorStyles.get_toolbarButton() : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
+			if (GUILayout.Button(BehaviorDesignerUtility.PlayTexture, (!EditorApplication.isPlaying) ? EditorStyles.toolbarButton : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(40f)
 			}))
 			{
-				EditorApplication.set_isPlaying(!EditorApplication.get_isPlaying());
+				EditorApplication.isPlaying=!EditorApplication.isPlaying;
 			}
-			if (GUILayout.Button(BehaviorDesignerUtility.PauseTexture, (!EditorApplication.get_isPaused()) ? EditorStyles.get_toolbarButton() : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
+			if (GUILayout.Button(BehaviorDesignerUtility.PauseTexture, (!EditorApplication.isPaused) ? EditorStyles.toolbarButton : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(40f)
 			}))
 			{
-				EditorApplication.set_isPaused(!EditorApplication.get_isPaused());
+				EditorApplication.isPaused=!EditorApplication.isPaused;
 			}
-			if (GUILayout.Button(BehaviorDesignerUtility.StepTexture, EditorStyles.get_toolbarButton(), new GUILayoutOption[]
+			if (GUILayout.Button(BehaviorDesignerUtility.StepTexture, EditorStyles.toolbarButton, new GUILayoutOption[]
 			{
 				GUILayout.Width(40f)
-			}) && EditorApplication.get_isPlaying())
+			}) && EditorApplication.isPlaying)
 			{
 				this.mStepApplication = true;
 			}
-			if (this.mErrorDetails != null && this.mErrorDetails.get_Count() > 0 && GUILayout.Button(new GUIContent(this.mErrorDetails.get_Count() + " Error" + ((this.mErrorDetails.get_Count() <= 1) ? string.Empty : "s"), BehaviorDesignerUtility.SmallErrorIconTexture), BehaviorDesignerUtility.ToolbarButtonLeftAlignGUIStyle, new GUILayoutOption[]
+			if (this.mErrorDetails != null && this.mErrorDetails.Count > 0 && GUILayout.Button(new GUIContent(this.mErrorDetails.Count + " Error" + ((this.mErrorDetails.Count <= 1) ? string.Empty : "s"), BehaviorDesignerUtility.SmallErrorIconTexture), BehaviorDesignerUtility.ToolbarButtonLeftAlignGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Width(85f)
 			}))
@@ -1224,9 +1230,9 @@ namespace BehaviorDesigner.Editor
 
 		private void DrawPropertiesBox()
 		{
-			GUILayout.BeginArea(this.mPropertyToolbarRect, EditorStyles.get_toolbar());
+			GUILayout.BeginArea(this.mPropertyToolbarRect, EditorStyles.toolbar);
 			int num = this.mBehaviorToolbarSelection;
-			this.mBehaviorToolbarSelection = GUILayout.Toolbar(this.mBehaviorToolbarSelection, this.mBehaviorToolbarStrings, EditorStyles.get_toolbarButton(), new GUILayoutOption[0]);
+			this.mBehaviorToolbarSelection = GUILayout.Toolbar(this.mBehaviorToolbarSelection, this.mBehaviorToolbarStrings, EditorStyles.toolbarButton, new GUILayoutOption[0]);
 			GUILayout.EndArea();
 			GUILayout.BeginArea(this.mPropertyBoxRect, BehaviorDesignerUtility.PropertyBoxGUIStyle);
 			if (this.mBehaviorToolbarSelection == 0)
@@ -1235,13 +1241,13 @@ namespace BehaviorDesigner.Editor
 				{
 					GUILayout.Space(3f);
 					BehaviorSource behaviorSource = (this.mExternalParent == null) ? this.mActiveBehaviorSource : this.mExternalParent;
-					if (behaviorSource.get_Owner() as Behavior != null)
+					if (behaviorSource.Owner as Behavior != null)
 					{
 						bool flag = false;
 						bool flag2 = false;
-						if (BehaviorInspector.DrawInspectorGUI(behaviorSource.get_Owner() as Behavior, new SerializedObject(behaviorSource.get_Owner() as Behavior), false, ref flag, ref flag2, ref flag2))
+						if (BehaviorInspector.DrawInspectorGUI(behaviorSource.Owner as Behavior, new SerializedObject(behaviorSource.Owner as Behavior), false, ref flag, ref flag2, ref flag2))
 						{
-							BehaviorDesignerUtility.SetObjectDirty(behaviorSource.get_Owner().GetObject());
+							BehaviorDesignerUtility.SetObjectDirty(behaviorSource.Owner.GetObject());
 							if (flag)
 							{
 								this.LoadBehavior(behaviorSource, false, false);
@@ -1296,18 +1302,18 @@ namespace BehaviorDesigner.Editor
 			}
 			else if (this.mBehaviorToolbarSelection == 3)
 			{
-				if (this.mGraphDesigner.SelectedNodes.get_Count() == 1 && !this.mGraphDesigner.SelectedNodes.get_Item(0).IsEntryDisplay)
+				if (this.mGraphDesigner.SelectedNodes.Count == 1 && !this.mGraphDesigner.SelectedNodes[0].IsEntryDisplay)
 				{
-					Task task = this.mGraphDesigner.SelectedNodes.get_Item(0).Task;
-					if (this.mNodeDesignerTaskMap != null && this.mNodeDesignerTaskMap.get_Count() > 0)
+					Task task = this.mGraphDesigner.SelectedNodes[0].Task;
+					if (this.mNodeDesignerTaskMap != null && this.mNodeDesignerTaskMap.Count > 0)
 					{
-						NodeDesigner nodeDesigner = this.mGraphDesigner.SelectedNodes.get_Item(0).Task.get_NodeData().get_NodeDesigner() as NodeDesigner;
+						NodeDesigner nodeDesigner = this.mGraphDesigner.SelectedNodes[0].Task.NodeData.NodeDesigner as NodeDesigner;
 						if (nodeDesigner != null && this.mNodeDesignerTaskMap.ContainsKey(nodeDesigner))
 						{
-							task = this.mNodeDesignerTaskMap.get_Item(nodeDesigner);
+							task = this.mNodeDesignerTaskMap[nodeDesigner];
 						}
 					}
-					if (this.mTaskInspector.DrawTaskInspector(this.mActiveBehaviorSource, this.mTaskList, task, !this.ViewOnlyMode()) && !Application.get_isPlaying())
+					if (this.mTaskInspector.DrawTaskInspector(this.mActiveBehaviorSource, this.mTaskList, task, !this.ViewOnlyMode()) && !Application.isPlaying)
 					{
 						this.SaveBehavior();
 					}
@@ -1315,7 +1321,7 @@ namespace BehaviorDesigner.Editor
 				else
 				{
 					GUILayout.Space(5f);
-					if (this.mGraphDesigner.SelectedNodes.get_Count() > 1)
+					if (this.mGraphDesigner.SelectedNodes.Count > 1)
 					{
 						GUILayout.Label("Only one task can be selected at a time to\n view its properties.", BehaviorDesignerUtility.LabelWrapGUIStyle, new GUILayoutOption[]
 						{
@@ -1336,10 +1342,12 @@ namespace BehaviorDesigner.Editor
 
 		private bool DrawGraphArea()
 		{
-			if (Event.get_current().get_type() != 6 && !this.mTakingScreenshot)
+			// if (Event.current.type != 6 && !this.mTakingScreenshot)
+			if (Event.current.type != EventType.ScrollWheel && !this.mTakingScreenshot)
 			{
-				Vector2 vector = GUI.BeginScrollView(new Rect(this.mGraphRect.get_x(), this.mGraphRect.get_y(), this.mGraphRect.get_width() + 15f, this.mGraphRect.get_height() + 15f), this.mGraphScrollPosition, new Rect(0f, 0f, this.mGraphScrollSize.x, this.mGraphScrollSize.y), true, true);
-				if (vector != this.mGraphScrollPosition && Event.get_current().get_type() != 9 && Event.get_current().get_type() != 11)
+				Vector2 vector = GUI.BeginScrollView(new Rect(this.mGraphRect.x, this.mGraphRect.y, this.mGraphRect.width + 15f, this.mGraphRect.height + 15f), this.mGraphScrollPosition, new Rect(0f, 0f, this.mGraphScrollSize.x, this.mGraphScrollSize.y), true, true);
+				// if (vector != this.mGraphScrollPosition && Event.current.type != 9 && Event.current.type != 11)
+				if (vector != this.mGraphScrollPosition && Event.current.type != EventType.DragUpdated && Event.current.type != EventType.Ignore)
 				{
 					this.mGraphOffset -= (vector - this.mGraphScrollPosition) / this.mGraphZoom;
 					this.mGraphScrollPosition = vector;
@@ -1360,7 +1368,8 @@ namespace BehaviorDesigner.Editor
 			{
 				result = true;
 			}
-			if (this.mTakingScreenshot && Event.get_current().get_type() == 7)
+			// if (this.mTakingScreenshot && Event.current.type == 7)
+			if (this.mTakingScreenshot && Event.current.type == EventType.Repaint)
 			{
 				this.RenderScreenshotTile();
 			}
@@ -1380,13 +1389,13 @@ namespace BehaviorDesigner.Editor
 			{
 				return;
 			}
-			this.mGridMaterial.SetPass((!EditorGUIUtility.get_isProSkin()) ? 1 : 0);
+			this.mGridMaterial.SetPass((!EditorGUIUtility.isProSkin) ? 1 : 0);
 			GL.PushMatrix();
 			GL.Begin(1);
 			this.DrawGridLines(10f * this.mGraphZoom, new Vector2(this.mGraphOffset.x % 10f * this.mGraphZoom, this.mGraphOffset.y % 10f * this.mGraphZoom));
 			GL.End();
 			GL.PopMatrix();
-			this.mGridMaterial.SetPass((!EditorGUIUtility.get_isProSkin()) ? 3 : 2);
+			this.mGridMaterial.SetPass((!EditorGUIUtility.isProSkin) ? 3 : 2);
 			GL.PushMatrix();
 			GL.Begin(1);
 			this.DrawGridLines(50f * this.mGraphZoom, new Vector2(this.mGraphOffset.x % 50f * this.mGraphZoom, this.mGraphOffset.y % 50f * this.mGraphZoom));
@@ -1396,23 +1405,23 @@ namespace BehaviorDesigner.Editor
 
 		private void DrawGridLines(float gridSize, Vector2 offset)
 		{
-			float num = this.mGraphRect.get_x() + offset.x;
+			float num = this.mGraphRect.x + offset.x;
 			if (offset.x < 0f)
 			{
 				num += gridSize;
 			}
-			for (float num2 = num; num2 < this.mGraphRect.get_x() + this.mGraphRect.get_width(); num2 += gridSize)
+			for (float num2 = num; num2 < this.mGraphRect.x + this.mGraphRect.width; num2 += gridSize)
 			{
-				this.DrawLine(new Vector2(num2, this.mGraphRect.get_y()), new Vector2(num2, this.mGraphRect.get_y() + this.mGraphRect.get_height()));
+				this.DrawLine(new Vector2(num2, this.mGraphRect.y), new Vector2(num2, this.mGraphRect.y + this.mGraphRect.height));
 			}
-			float num3 = this.mGraphRect.get_y() + offset.y;
+			float num3 = this.mGraphRect.y + offset.y;
 			if (offset.y < 0f)
 			{
 				num3 += gridSize;
 			}
-			for (float num4 = num3; num4 < this.mGraphRect.get_y() + this.mGraphRect.get_height(); num4 += gridSize)
+			for (float num4 = num3; num4 < this.mGraphRect.y + this.mGraphRect.height; num4 += gridSize)
 			{
-				this.DrawLine(new Vector2(this.mGraphRect.get_x(), num4), new Vector2(this.mGraphRect.get_x() + this.mGraphRect.get_width(), num4));
+				this.DrawLine(new Vector2(this.mGraphRect.x, num4), new Vector2(this.mGraphRect.x + this.mGraphRect.width, num4));
 			}
 		}
 
@@ -1426,35 +1435,35 @@ namespace BehaviorDesigner.Editor
 		{
 			if (!this.mGraphStatus.Equals(string.Empty))
 			{
-				GUI.Label(new Rect(this.mGraphRect.get_x() + 5f, this.mGraphRect.get_y() + 5f, this.mGraphRect.get_width(), 30f), this.mGraphStatus, BehaviorDesignerUtility.GraphStatusGUIStyle);
+				GUI.Label(new Rect(this.mGraphRect.x + 5f, this.mGraphRect.y + 5f, this.mGraphRect.width, 30f), this.mGraphStatus, BehaviorDesignerUtility.GraphStatusGUIStyle);
 			}
 		}
 
 		private void DrawSelectedTaskDescription()
 		{
 			TaskDescriptionAttribute[] array;
-			if (BehaviorDesignerPreferences.GetBool(BDPreferences.ShowTaskDescription) && this.mGraphDesigner.SelectedNodes.get_Count() == 1 && (array = (this.mGraphDesigner.SelectedNodes.get_Item(0).Task.GetType().GetCustomAttributes(typeof(TaskDescriptionAttribute), false) as TaskDescriptionAttribute[])).Length > 0)
+			if (BehaviorDesignerPreferences.GetBool(BDPreferences.ShowTaskDescription) && this.mGraphDesigner.SelectedNodes.Count == 1 && (array = (this.mGraphDesigner.SelectedNodes[0].Task.GetType().GetCustomAttributes(typeof(TaskDescriptionAttribute), false) as TaskDescriptionAttribute[])).Length > 0)
 			{
 				float num;
 				float num2;
-				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(array[0].get_Description()), ref num, ref num2);
+				BehaviorDesignerUtility.TaskCommentGUIStyle.CalcMinMaxWidth(new GUIContent(array[0].Description), out num, out num2);
 				float num3 = Mathf.Min(400f, num2 + 20f);
-				float num4 = Mathf.Min(300f, BehaviorDesignerUtility.TaskCommentGUIStyle.CalcHeight(new GUIContent(array[0].get_Description()), num3)) + 3f;
-				GUI.Box(new Rect(this.mGraphRect.get_x() + 5f, this.mGraphRect.get_yMax() - num4 - 5f, num3, num4), string.Empty, BehaviorDesignerUtility.TaskDescriptionGUIStyle);
-				GUI.Box(new Rect(this.mGraphRect.get_x() + 2f, this.mGraphRect.get_yMax() - num4 - 5f, num3, num4), array[0].get_Description(), BehaviorDesignerUtility.TaskCommentGUIStyle);
+				float num4 = Mathf.Min(300f, BehaviorDesignerUtility.TaskCommentGUIStyle.CalcHeight(new GUIContent(array[0].Description), num3)) + 3f;
+				GUI.Box(new Rect(this.mGraphRect.x + 5f, this.mGraphRect.yMax - num4 - 5f, num3, num4), string.Empty, BehaviorDesignerUtility.TaskDescriptionGUIStyle);
+				GUI.Box(new Rect(this.mGraphRect.x + 2f, this.mGraphRect.yMax - num4 - 5f, num3, num4), array[0].Description, BehaviorDesignerUtility.TaskCommentGUIStyle);
 			}
 		}
 
 		private void AddBehavior()
 		{
-			if (EditorApplication.get_isPlaying())
+			if (EditorApplication.isPlaying)
 			{
 				return;
 			}
-			if (Selection.get_activeGameObject() != null)
+			if (Selection.activeGameObject != null)
 			{
-				GameObject activeGameObject = Selection.get_activeGameObject();
-				this.mActiveObject = Selection.get_activeObject();
+				GameObject activeGameObject = Selection.activeGameObject;
+				this.mActiveObject = Selection.activeObject;
 				this.mGraphDesigner = ScriptableObject.CreateInstance<GraphDesigner>();
 				Type type = Type.GetType("BehaviorDesigner.Runtime.BehaviorTree, Assembly-CSharp");
 				if (type == null)
@@ -1489,15 +1498,15 @@ namespace BehaviorDesigner.Editor
 
 		private void RemoveBehavior()
 		{
-			if (EditorApplication.get_isPlaying())
+			if (EditorApplication.isPlaying)
 			{
 				return;
 			}
-			if (this.mActiveObject as GameObject != null && (this.mActiveBehaviorSource.get_EntryTask() == null || (this.mActiveBehaviorSource.get_EntryTask() != null && EditorUtility.DisplayDialog("Remove Behavior Tree", "Are you sure you want to remove this behavior tree?", "Yes", "No"))))
+			if (this.mActiveObject as GameObject != null && (this.mActiveBehaviorSource.EntryTask == null || (this.mActiveBehaviorSource.EntryTask != null && EditorUtility.DisplayDialog("Remove Behavior Tree", "Are you sure you want to remove this behavior tree?", "Yes", "No"))))
 			{
 				GameObject gameObject = this.mActiveObject as GameObject;
-				int num = this.IndexForBehavior(this.mActiveBehaviorSource.get_Owner());
-				BehaviorUndo.DestroyObject(this.mActiveBehaviorSource.get_Owner().GetObject(), true);
+				int num = this.IndexForBehavior(this.mActiveBehaviorSource.Owner);
+				BehaviorUndo.DestroyObject(this.mActiveBehaviorSource.Owner.GetObject(), true);
 				num--;
 				if (num == -1 && gameObject.GetComponents<Behavior>().Length > 0)
 				{
@@ -1520,7 +1529,7 @@ namespace BehaviorDesigner.Editor
 		{
 			if (behavior.GetObject() as Behavior)
 			{
-				Behavior[] components = (behavior.GetObject() as Behavior).get_gameObject().GetComponents<Behavior>();
+				Behavior[] components = (behavior.GetObject() as Behavior).gameObject.GetComponents<Behavior>();
 				for (int i = 0; i < components.Length; i++)
 				{
 					if (components[i].Equals(behavior))
@@ -1535,11 +1544,11 @@ namespace BehaviorDesigner.Editor
 
 		public NodeDesigner AddTask(Type type, bool useMousePosition)
 		{
-			if ((this.mActiveObject as GameObject == null && this.mActiveObject as ExternalBehavior == null) || EditorApplication.get_isPlaying())
+			if ((this.mActiveObject as GameObject == null && this.mActiveObject as ExternalBehavior == null) || EditorApplication.isPlaying)
 			{
 				return null;
 			}
-			Vector2 vector = new Vector2(this.mGraphRect.get_width() / (2f * this.mGraphZoom), 150f);
+			Vector2 vector = new Vector2(this.mGraphRect.width / (2f * this.mGraphZoom), 150f);
 			if (useMousePosition)
 			{
 				this.GetMousePositionInGraph(out vector);
@@ -1550,7 +1559,7 @@ namespace BehaviorDesigner.Editor
 			{
 				this.AddBehavior();
 			}
-			BehaviorUndo.RegisterUndo("Add", this.mActiveBehaviorSource.get_Owner().GetObject());
+			BehaviorUndo.RegisterUndo("Add", this.mActiveBehaviorSource.Owner.GetObject());
 			NodeDesigner nodeDesigner;
 			if ((nodeDesigner = this.mGraphDesigner.AddNode(this.mActiveBehaviorSource, type, vector)) != null)
 			{
@@ -1610,23 +1619,24 @@ namespace BehaviorDesigner.Editor
 		private void TakeScreenshot()
 		{
 			this.mScreenshotPath = EditorUtility.SaveFilePanel("Save Screenshot", "Assets", this.mActiveBehaviorSource.behaviorName + "Screenshot.png", "png");
-			if (this.mScreenshotPath.get_Length() != 0 && Application.get_dataPath().get_Length() < this.mScreenshotPath.get_Length())
+			if (this.mScreenshotPath.Length != 0 && Application.dataPath.Length < this.mScreenshotPath.Length)
 			{
 				this.mTakingScreenshot = true;
 				this.mScreenshotGraphSize = this.mGraphDesigner.GraphSize(this.mGraphOffset);
 				this.mGraphDesigner.GraphDirty();
-				if (this.mScreenshotGraphSize.get_width() == 0f || this.mScreenshotGraphSize.get_height() == 0f)
+				if (this.mScreenshotGraphSize.width == 0f || this.mScreenshotGraphSize.height == 0f)
 				{
 					this.mScreenshotGraphSize = new Rect(0f, 0f, 100f, 100f);
 				}
 				this.mScreenshotStartGraphZoom = this.mGraphZoom;
 				this.mScreenshotStartGraphOffset = this.mGraphOffset;
 				this.mGraphZoom = 1f;
-				this.mGraphOffset.x = this.mGraphOffset.x - (this.mScreenshotGraphSize.get_xMin() - 10f);
-				this.mGraphOffset.y = this.mGraphOffset.y - (this.mScreenshotGraphSize.get_yMin() - 10f);
+				this.mGraphOffset.x = this.mGraphOffset.x - (this.mScreenshotGraphSize.xMin - 10f);
+				this.mGraphOffset.y = this.mGraphOffset.y - (this.mScreenshotGraphSize.yMin - 10f);
 				this.mScreenshotGraphOffset = this.mGraphOffset;
-				this.mScreenshotGraphSize.Set(this.mScreenshotGraphSize.get_xMin() - 9f, this.mScreenshotGraphSize.get_yMin(), this.mScreenshotGraphSize.get_width() + 18f, this.mScreenshotGraphSize.get_height() + 18f);
-				this.mScreenshotTexture = new Texture2D((int)this.mScreenshotGraphSize.get_width(), (int)this.mScreenshotGraphSize.get_height(), 3, false);
+				this.mScreenshotGraphSize.Set(this.mScreenshotGraphSize.xMin - 9f, this.mScreenshotGraphSize.yMin, this.mScreenshotGraphSize.width + 18f, this.mScreenshotGraphSize.height + 18f);
+				// this.mScreenshotTexture = new Texture2D((int)this.mScreenshotGraphSize.width, (int)this.mScreenshotGraphSize.height, 3, false);
+				this.mScreenshotTexture = new Texture2D((int)this.mScreenshotGraphSize.width, (int)this.mScreenshotGraphSize.height, TextureFormat.RGB24, false);
 				this.Repaint();
 			}
 			else if (Path.GetExtension(this.mScreenshotPath).Equals(".png"))
@@ -1637,18 +1647,18 @@ namespace BehaviorDesigner.Editor
 
 		private void RenderScreenshotTile()
 		{
-			float num = Mathf.Min(this.mGraphRect.get_width(), this.mScreenshotGraphSize.get_width() - (this.mGraphOffset.x - this.mScreenshotGraphOffset.x));
-			float num2 = Mathf.Min(this.mGraphRect.get_height(), this.mScreenshotGraphSize.get_height() + (this.mGraphOffset.y - this.mScreenshotGraphOffset.y));
-			Rect rect = new Rect(this.mGraphRect.get_x(), 39f + this.mGraphRect.get_height() - num2 - 7f, num, num2);
-			this.mScreenshotTexture.ReadPixels(rect, -(int)(this.mGraphOffset.x - this.mScreenshotGraphOffset.x), (int)(this.mScreenshotGraphSize.get_height() - num2 + (this.mGraphOffset.y - this.mScreenshotGraphOffset.y)));
+			float num = Mathf.Min(this.mGraphRect.width, this.mScreenshotGraphSize.width - (this.mGraphOffset.x - this.mScreenshotGraphOffset.x));
+			float num2 = Mathf.Min(this.mGraphRect.height, this.mScreenshotGraphSize.height + (this.mGraphOffset.y - this.mScreenshotGraphOffset.y));
+			Rect rect = new Rect(this.mGraphRect.x, 39f + this.mGraphRect.height - num2 - 7f, num, num2);
+			this.mScreenshotTexture.ReadPixels(rect, -(int)(this.mGraphOffset.x - this.mScreenshotGraphOffset.x), (int)(this.mScreenshotGraphSize.height - num2 + (this.mGraphOffset.y - this.mScreenshotGraphOffset.y)));
 			this.mScreenshotTexture.Apply(false);
-			if (this.mScreenshotGraphSize.get_xMin() + num - (this.mGraphOffset.x - this.mScreenshotGraphOffset.x) < this.mScreenshotGraphSize.get_xMax())
+			if (this.mScreenshotGraphSize.xMin + num - (this.mGraphOffset.x - this.mScreenshotGraphOffset.x) < this.mScreenshotGraphSize.xMax)
 			{
 				this.mGraphOffset.x = this.mGraphOffset.x - (num - 1f);
 				this.mGraphDesigner.GraphDirty();
 				this.Repaint();
 			}
-			else if (this.mScreenshotGraphSize.get_yMin() + num2 - (this.mGraphOffset.y - this.mScreenshotGraphOffset.y) < this.mScreenshotGraphSize.get_yMax())
+			else if (this.mScreenshotGraphSize.yMin + num2 - (this.mGraphOffset.y - this.mScreenshotGraphOffset.y) < this.mScreenshotGraphSize.yMax)
 			{
 				this.mGraphOffset.y = this.mGraphOffset.y - (num2 - 1f);
 				this.mGraphOffset.x = this.mScreenshotGraphOffset.x;
@@ -1666,7 +1676,7 @@ namespace BehaviorDesigner.Editor
 			byte[] array = ImageConversion.EncodeToPNG(this.mScreenshotTexture);
 			Object.DestroyImmediate(this.mScreenshotTexture, true);
 			File.WriteAllBytes(this.mScreenshotPath, array);
-			string text = string.Format("Assets/{0}", this.mScreenshotPath.Substring(Application.get_dataPath().get_Length() + 1));
+			string text = string.Format("Assets/{0}", this.mScreenshotPath.Substring(Application.dataPath.Length + 1));
 			AssetDatabase.ImportAsset(text);
 			this.mTakingScreenshot = false;
 			this.mGraphZoom = this.mScreenshotStartGraphZoom;
@@ -1681,94 +1691,109 @@ namespace BehaviorDesigner.Editor
 			{
 				return;
 			}
-			if (Event.get_current().get_type() != 1 && this.CheckForAutoScroll())
+			// if (Event.current.type != 1 && this.CheckForAutoScroll())
+			if (Event.current.type != EventType.MouseUp && this.CheckForAutoScroll())
 			{
 				this.Repaint();
 				return;
 			}
-			if (Event.get_current().get_type() == 7 || Event.get_current().get_type() == 8)
+			// if (Event.current.type == 7 || Event.current.type == 8)
+			if (Event.current.type == EventType.Repaint || Event.current.type == EventType.Layout)
 			{
 				return;
 			}
-			switch (Event.get_current().get_type())
+			switch (Event.current.type)
 			{
-			case 0:
-				if (Event.get_current().get_button() == 0 && Event.get_current().get_modifiers() != 2)
+			// case 0:
+			case EventType.MouseDown:
+				// if (Event.current.button == 0 && Event.current.modifiers != 2)
+				if (Event.current.button == 0 && Event.current.modifiers != EventModifiers.Control)
 				{
 					Vector2 mousePosition;
 					if (this.GetMousePositionInGraph(out mousePosition))
 					{
-						if (this.LeftMouseDown(Event.get_current().get_clickCount(), mousePosition))
+						if (this.LeftMouseDown(Event.current.clickCount, mousePosition))
 						{
-							Event.get_current().Use();
+							Event.current.Use();
 						}
 					}
 					else if (this.GetMousePositionInPropertiesPane(out mousePosition) && this.mBehaviorToolbarSelection == 2 && this.mVariableInspector.LeftMouseDown(this.mActiveBehaviorSource, this.mActiveBehaviorSource, mousePosition))
 					{
-						Event.get_current().Use();
+						Event.current.Use();
 						this.Repaint();
 					}
 				}
-				else if ((Event.get_current().get_button() == 1 || (Event.get_current().get_modifiers() == 2 && Event.get_current().get_button() == 0)) && this.RightMouseDown())
+				// else if ((Event.current.button == 1 || (Event.current.modifiers == 2 && Event.current.button == 0)) && this.RightMouseDown())
+				else if ((Event.current.button == 1 || (Event.current.modifiers == EventModifiers.Control && Event.current.button == 0)) && this.RightMouseDown())
 				{
-					Event.get_current().Use();
+					Event.current.Use();
 				}
 				break;
-			case 1:
-				if (Event.get_current().get_button() == 0 && Event.get_current().get_modifiers() != 2)
+			// case 1:
+			case EventType.MouseUp:
+				// if (Event.current.button == 0 && Event.current.modifiers != 2)
+				if (Event.current.button == 0 && Event.current.modifiers != EventModifiers.Control)
 				{
 					if (this.LeftMouseRelease())
 					{
-						Event.get_current().Use();
+						Event.current.Use();
 					}
 				}
-				else if ((Event.get_current().get_button() == 1 || (Event.get_current().get_modifiers() == 2 && Event.get_current().get_button() == 0)) && this.mShowRightClickMenu)
+				else if ((Event.current.button == 1 || (Event.current.modifiers == EventModifiers.Control && Event.current.button == 0)) && this.mShowRightClickMenu)
 				{
 					this.mShowRightClickMenu = false;
 					this.mRightClickMenu.ShowAsContext();
-					Event.get_current().Use();
+					Event.current.Use();
 				}
 				break;
-			case 2:
+			// case 2:
+			case EventType.MouseMove:
 				if (this.MouseMove())
 				{
-					Event.get_current().Use();
+					Event.current.Use();
 				}
 				break;
-			case 3:
-				if (Event.get_current().get_button() == 0)
+			// case 3:
+			case EventType.MouseDrag:
+				if (Event.current.button == 0)
 				{
 					if (this.LeftMouseDragged())
 					{
-						Event.get_current().Use();
+						Event.current.Use();
 					}
-					else if (Event.get_current().get_modifiers() == 4 && this.MousePan())
+					// else if (Event.current.modifiers == 4 && this.MousePan())
+					else if (Event.current.modifiers == EventModifiers.Alt && this.MousePan())
 					{
-						Event.get_current().Use();
+						Event.current.Use();
 					}
 				}
-				else if (Event.get_current().get_button() == 2 && this.MousePan())
+				else if (Event.current.button == 2 && this.MousePan())
 				{
-					Event.get_current().Use();
+					Event.current.Use();
 				}
 				break;
-			case 4:
-				if (Event.get_current().get_keyCode() == 310 || Event.get_current().get_keyCode() == 309)
+			// case 4:
+			case EventType.KeyDown:
+				// if (Event.current.keyCode == 310 || Event.current.keyCode == 309)
+				if (Event.current.keyCode == KeyCode.LeftCommand || Event.current.keyCode == KeyCode.RightApple)
 				{
 					this.mCommandDown = true;
 				}
 				break;
-			case 5:
-				if (Event.get_current().get_keyCode() == 127 || Event.get_current().get_keyCode() == 8 || Event.get_current().get_commandName().Equals("Delete"))
+			// case 5:
+			case EventType.KeyUp:
+				// if (Event.current.keyCode == 127 || Event.current.keyCode == 8 || Event.current.commandName.Equals("Delete"))
+				if (Event.current.keyCode == KeyCode.Delete || Event.current.keyCode == KeyCode.Backspace || Event.current.commandName.Equals("Delete"))
 				{
-					if (this.PropertiesInspectorHasFocus() || EditorApplication.get_isPlaying())
+					if (this.PropertiesInspectorHasFocus() || EditorApplication.isPlaying)
 					{
 						return;
 					}
 					this.DeleteNodes();
-					Event.get_current().Use();
+					Event.current.Use();
 				}
-				else if (Event.get_current().get_keyCode() == 13 || Event.get_current().get_keyCode() == 271)
+				// else if (Event.current.keyCode == 13 || Event.current.keyCode == 271)
+				else if (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)
 				{
 					if (this.mBehaviorToolbarSelection == 2 && this.mVariableInspector.HasFocus())
 					{
@@ -1782,70 +1807,75 @@ namespace BehaviorDesigner.Editor
 					{
 						this.DisableReferenceTasks();
 					}
-					Event.get_current().Use();
+					Event.current.Use();
 				}
-				else if (Event.get_current().get_keyCode() == 27)
+				// else if (Event.current.keyCode == 27)
+				else if (Event.current.keyCode == KeyCode.Escape)
 				{
 					this.DisableReferenceTasks();
 				}
-				else if (Event.get_current().get_keyCode() == 310 || Event.get_current().get_keyCode() == 309)
+				// else if (Event.current.keyCode == 310 || Event.current.keyCode == 309)
+				else if (Event.current.keyCode == KeyCode.LeftCommand || Event.current.keyCode == KeyCode.RightApple)
 				{
 					this.mCommandDown = false;
 				}
 				break;
-			case 6:
+			// case 6:
+			case EventType.ScrollWheel:
 				if (BehaviorDesignerPreferences.GetBool(BDPreferences.MouseWhellScrolls) && !this.mCommandDown)
 				{
 					this.MousePan();
 				}
 				else if (this.MouseZoom())
 				{
-					Event.get_current().Use();
+					Event.current.Use();
 				}
 				break;
-			case 13:
-				if (EditorApplication.get_isPlaying())
+			// case 13:
+			case EventType.ValidateCommand:
+				if (EditorApplication.isPlaying)
 				{
 					return;
 				}
-				if (Event.get_current().get_commandName().Equals("Copy") || Event.get_current().get_commandName().Equals("Paste") || Event.get_current().get_commandName().Equals("Cut") || Event.get_current().get_commandName().Equals("SelectAll") || Event.get_current().get_commandName().Equals("Duplicate"))
+				if (Event.current.commandName.Equals("Copy") || Event.current.commandName.Equals("Paste") || Event.current.commandName.Equals("Cut") || Event.current.commandName.Equals("SelectAll") || Event.current.commandName.Equals("Duplicate"))
 				{
-					if (this.PropertiesInspectorHasFocus() || EditorApplication.get_isPlaying() || this.ViewOnlyMode())
+					if (this.PropertiesInspectorHasFocus() || EditorApplication.isPlaying || this.ViewOnlyMode())
 					{
 						return;
 					}
-					Event.get_current().Use();
+					Event.current.Use();
 				}
 				break;
-			case 14:
-				if (this.PropertiesInspectorHasFocus() || EditorApplication.get_isPlaying() || this.ViewOnlyMode())
+			// case 14:
+			case EventType.ExecuteCommand:
+				if (this.PropertiesInspectorHasFocus() || EditorApplication.isPlaying || this.ViewOnlyMode())
 				{
 					return;
 				}
-				if (Event.get_current().get_commandName().Equals("Copy"))
+				if (Event.current.commandName.Equals("Copy"))
 				{
 					this.CopyNodes();
-					Event.get_current().Use();
+					Event.current.Use();
 				}
-				else if (Event.get_current().get_commandName().Equals("Paste"))
+				else if (Event.current.commandName.Equals("Paste"))
 				{
 					this.PasteNodes();
-					Event.get_current().Use();
+					Event.current.Use();
 				}
-				else if (Event.get_current().get_commandName().Equals("Cut"))
+				else if (Event.current.commandName.Equals("Cut"))
 				{
 					this.CutNodes();
-					Event.get_current().Use();
+					Event.current.Use();
 				}
-				else if (Event.get_current().get_commandName().Equals("SelectAll"))
+				else if (Event.current.commandName.Equals("SelectAll"))
 				{
 					this.mGraphDesigner.SelectAll();
-					Event.get_current().Use();
+					Event.current.Use();
 				}
-				else if (Event.get_current().get_commandName().Equals("Duplicate"))
+				else if (Event.current.commandName.Equals("Duplicate"))
 				{
 					this.DuplicateNodes();
-					Event.get_current().Use();
+					Event.current.Use();
 				}
 				break;
 			}
@@ -1864,27 +1894,28 @@ namespace BehaviorDesigner.Editor
 			}
 			if (this.mIsDragging || this.mIsSelecting || this.mGraphDesigner.ActiveNodeConnection != null)
 			{
-				Vector2 zero = Vector2.get_zero();
-				if (this.mCurrentMousePosition.y < this.mGraphScrollRect.get_yMin() + 15f)
+				Vector2 zero = Vector2.zero;
+				if (this.mCurrentMousePosition.y < this.mGraphScrollRect.yMin + 15f)
 				{
 					zero.y = 3f;
 				}
-				else if (this.mCurrentMousePosition.y > this.mGraphScrollRect.get_yMax() - 15f)
+				else if (this.mCurrentMousePosition.y > this.mGraphScrollRect.yMax - 15f)
 				{
 					zero.y = -3f;
 				}
-				if (this.mCurrentMousePosition.x < this.mGraphScrollRect.get_xMin() + 15f)
+				if (this.mCurrentMousePosition.x < this.mGraphScrollRect.xMin + 15f)
 				{
 					zero.x = 3f;
 				}
-				else if (this.mCurrentMousePosition.x > this.mGraphScrollRect.get_xMax() - 15f)
+				else if (this.mCurrentMousePosition.x > this.mGraphScrollRect.xMax - 15f)
 				{
 					zero.x = -3f;
 				}
 				this.ScrollGraph(zero);
 				if (this.mIsDragging)
 				{
-					this.mGraphDesigner.DragSelectedNodes(-zero / this.mGraphZoom, Event.get_current().get_modifiers() != 4);
+					//this.mGraphDesigner.DragSelectedNodes(-zero / this.mGraphZoom, Event.current.modifiers != 4);
+					this.mGraphDesigner.DragSelectedNodes(-zero / this.mGraphZoom, Event.current.modifiers != EventModifiers.Alt);
 				}
 				if (this.mIsSelecting)
 				{
@@ -1924,7 +1955,8 @@ namespace BehaviorDesigner.Editor
 				this.Repaint();
 			}
 			NodeDesigner nodeDesigner = this.mGraphDesigner.NodeAt(mousePosition, this.mGraphOffset);
-			if (Event.get_current().get_modifiers() == 4)
+			//if (Event.current.modifiers == 4)
+			if (Event.current.modifiers == EventModifiers.Alt)
 			{
 				this.mNodeClicked = this.mGraphDesigner.IsSelected(nodeDesigner);
 				return false;
@@ -1962,14 +1994,16 @@ namespace BehaviorDesigner.Editor
 					this.mKeepTasksSelected = false;
 					if (this.mGraphDesigner.IsSelected(nodeDesigner))
 					{
-						if (Event.get_current().get_modifiers() == 2)
+						//if (Event.current.modifiers == 2)
+						if (Event.current.modifiers == EventModifiers.Control)
 						{
 							this.mKeepTasksSelected = true;
 							this.mGraphDesigner.Deselect(nodeDesigner);
 						}
-						else if (Event.get_current().get_modifiers() == 1 && nodeDesigner.Task is ParentTask)
+						//else if (Event.current.modifiers == 1 && nodeDesigner.Task is ParentTask)
+						else if (Event.current.modifiers == EventModifiers.Shift && nodeDesigner.Task is ParentTask)
 						{
-							nodeDesigner.Task.get_NodeData().set_Collapsed(!nodeDesigner.Task.get_NodeData().get_Collapsed());
+							nodeDesigner.Task.NodeData.Collapsed=!nodeDesigner.Task.NodeData.Collapsed;
 							this.mGraphDesigner.DeselectWithParent(nodeDesigner);
 						}
 						else if (clickCount == 2)
@@ -1989,7 +2023,7 @@ namespace BehaviorDesigner.Editor
 									}
 									else
 									{
-										Selection.set_activeObject(behaviorReference.GetExternalBehaviors()[0]);
+										Selection.activeObject = (behaviorReference.GetExternalBehaviors()[0]);
 									}
 								}
 							}
@@ -1997,7 +2031,8 @@ namespace BehaviorDesigner.Editor
 					}
 					else
 					{
-						if (Event.get_current().get_modifiers() != 1 && Event.get_current().get_modifiers() != 2)
+						//if (Event.current.modifiers != 1 && Event.current.modifiers != 2)
+						if (Event.current.modifiers != EventModifiers.Shift && Event.current.modifiers != EventModifiers.Control)
 						{
 							this.mGraphDesigner.ClearNodeSelection();
 							this.mGraphDesigner.ClearConnectionSelection();
@@ -2022,7 +2057,7 @@ namespace BehaviorDesigner.Editor
 				if (this.mGraphDesigner.HoverNode.HoverBarButtonClick(mousePosition, this.mGraphOffset, ref flag))
 				{
 					this.SaveBehavior();
-					if (flag && this.mGraphDesigner.HoverNode.Task.get_NodeData().get_Collapsed())
+					if (flag && this.mGraphDesigner.HoverNode.Task.NodeData.Collapsed)
 					{
 						this.mGraphDesigner.DeselectWithParent(this.mGraphDesigner.HoverNode);
 					}
@@ -2031,30 +2066,33 @@ namespace BehaviorDesigner.Editor
 			}
 			List<NodeConnection> list = new List<NodeConnection>();
 			this.mGraphDesigner.NodeConnectionsAt(mousePosition, this.mGraphOffset, ref list);
-			if (list.get_Count() > 0)
+			if (list.Count > 0)
 			{
-				if (Event.get_current().get_modifiers() != 1 && Event.get_current().get_modifiers() != 2)
+				// if (Event.current.modifiers != 1 && Event.current.modifiers != 2)
+				if (Event.current.modifiers != EventModifiers.Shift && Event.current.modifiers != EventModifiers.Control)
 				{
 					this.mGraphDesigner.ClearNodeSelection();
 					this.mGraphDesigner.ClearConnectionSelection();
 				}
-				for (int i = 0; i < list.get_Count(); i++)
+				for (int i = 0; i < list.Count; i++)
 				{
-					if (this.mGraphDesigner.IsSelected(list.get_Item(i)))
+					if (this.mGraphDesigner.IsSelected(list[i]))
 					{
-						if (Event.get_current().get_modifiers() == 2)
+						// if (Event.current.modifiers == 2)
+						if (Event.current.modifiers == EventModifiers.Control)
 						{
-							this.mGraphDesigner.Deselect(list.get_Item(i));
+							this.mGraphDesigner.Deselect(list[i]);
 						}
 					}
 					else
 					{
-						this.mGraphDesigner.Select(list.get_Item(i));
+						this.mGraphDesigner.Select(list[i]);
 					}
 				}
 				return true;
 			}
-			if (Event.get_current().get_modifiers() != 1)
+			// if (Event.current.modifiers != 1)
+			if (Event.current.modifiers != EventModifiers.Shift)
 			{
 				this.mGraphDesigner.ClearNodeSelection();
 				this.mGraphDesigner.ClearConnectionSelection();
@@ -2062,7 +2100,7 @@ namespace BehaviorDesigner.Editor
 			this.mSelectStartPosition = mousePosition;
 			this.mIsSelecting = true;
 			this.mIsDragging = false;
-			this.mDragDelta = Vector2.get_zero();
+			this.mDragDelta = Vector2.zero;
 			this.mNodeClicked = false;
 			return true;
 		}
@@ -2074,7 +2112,8 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			if (Event.get_current().get_modifiers() != 4)
+			//if (Event.current.modifiers != 4)
+			if (Event.current.modifiers != EventModifiers.Alt)
 			{
 				if (this.IsReferencingTasks())
 				{
@@ -2086,9 +2125,9 @@ namespace BehaviorDesigner.Editor
 					List<NodeDesigner> list = this.mGraphDesigner.NodesAt(this.GetSelectionArea(), this.mGraphOffset);
 					if (list != null)
 					{
-						for (int i = 0; i < list.get_Count(); i++)
+						for (int i = 0; i < list.Count; i++)
 						{
-							this.mGraphDesigner.Select(list.get_Item(i));
+							this.mGraphDesigner.Select(list[i]);
 						}
 					}
 					return true;
@@ -2100,10 +2139,10 @@ namespace BehaviorDesigner.Editor
 			}
 			if (this.mNodeClicked && !this.ViewOnlyMode())
 			{
-				Vector2 vector2 = Vector2.get_zero();
+				Vector2 vector2 = Vector2.zero;
 				if (BehaviorDesignerPreferences.GetBool(BDPreferences.SnapToGrid))
 				{
-					this.mDragDelta += Event.get_current().get_delta();
+					this.mDragDelta += Event.current.delta;
 					if (Mathf.Abs(this.mDragDelta.x) > 10f)
 					{
 						float num = Mathf.Abs(this.mDragDelta.x) % 10f;
@@ -2119,9 +2158,10 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					vector2 = Event.get_current().get_delta();
+					vector2 = Event.current.delta;
 				}
-				bool flag = this.mGraphDesigner.DragSelectedNodes(vector2 / this.mGraphZoom, Event.get_current().get_modifiers() != 4);
+				// bool flag = this.mGraphDesigner.DragSelectedNodes(vector2 / this.mGraphZoom, Event.current.modifiers != 4);
+				bool flag = this.mGraphDesigner.DragSelectedNodes(vector2 / this.mGraphZoom, Event.current.modifiers != EventModifiers.Alt);
 				if (flag)
 				{
 					this.mKeepTasksSelected = true;
@@ -2159,10 +2199,10 @@ namespace BehaviorDesigner.Editor
 				}
 				if (this.mIsDragging)
 				{
-					BehaviorUndo.RegisterUndo("Drag", this.mActiveBehaviorSource.get_Owner().GetObject());
+					BehaviorUndo.RegisterUndo("Drag", this.mActiveBehaviorSource.Owner.GetObject());
 					this.SaveBehavior();
 					this.mIsDragging = false;
-					this.mDragDelta = Vector3.get_zero();
+					this.mDragDelta = Vector3.zero;
 					return true;
 				}
 				if (this.mGraphDesigner.ActiveNodeConnection != null)
@@ -2177,7 +2217,7 @@ namespace BehaviorDesigner.Editor
 					if (nodeDesigner != null && !nodeDesigner.Equals(this.mGraphDesigner.ActiveNodeConnection.OriginatingNodeDesigner) && this.mGraphDesigner.NodeCanAcceptConnection(nodeDesigner, this.mGraphDesigner.ActiveNodeConnection))
 					{
 						this.mGraphDesigner.ConnectNodes(this.mActiveBehaviorSource, nodeDesigner);
-						BehaviorUndo.RegisterUndo("Task Connection", this.mActiveBehaviorSource.get_Owner().GetObject());
+						BehaviorUndo.RegisterUndo("Task Connection", this.mActiveBehaviorSource.Owner.GetObject());
 						this.SaveBehavior();
 					}
 					else
@@ -2188,7 +2228,8 @@ namespace BehaviorDesigner.Editor
 				}
 				else
 				{
-					if (Event.get_current().get_modifiers() == 1 || this.mKeepTasksSelected)
+					// if (Event.current.modifiers == 1 || this.mKeepTasksSelected)
+					if (Event.current.modifiers == EventModifiers.Shift || this.mKeepTasksSelected)
 					{
 						return false;
 					}
@@ -2244,7 +2285,7 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			float num = -Event.get_current().get_delta().y / 150f;
+			float num = -Event.current.delta.y / 150f;
 			this.mGraphZoom += num;
 			this.mGraphZoom = Mathf.Clamp(this.mGraphZoom, 0.4f, 1f);
 			Vector2 vector2;
@@ -2262,11 +2303,13 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			Vector2 vector2 = Event.get_current().get_delta();
-			if (Event.get_current().get_type() == 6)
+			Vector2 vector2 = Event.current.delta;
+			// if (Event.current.type == 6)
+			if (Event.current.type == EventType.ScrollWheel)
 			{
 				vector2 *= -1.5f;
-				if (Event.get_current().get_modifiers() == 2)
+				//  if (Event.current.modifiers == 2)
+				if (Event.current.modifiers == EventModifiers.Control)
 				{
 					vector2.x = vector2.y;
 					vector2.y = 0f;
@@ -2297,7 +2340,7 @@ namespace BehaviorDesigner.Editor
 		private void ReplaceTaskCallback(object obj)
 		{
 			Type type = (Type)obj;
-			if (this.mGraphDesigner.SelectedNodes.get_Count() != 1 || this.mGraphDesigner.SelectedNodes.get_Item(0).Task.GetType().Equals(type))
+			if (this.mGraphDesigner.SelectedNodes.Count != 1 || this.mGraphDesigner.SelectedNodes[0].Task.GetType().Equals(type))
 			{
 				return;
 			}
@@ -2310,21 +2353,21 @@ namespace BehaviorDesigner.Editor
 		private void BehaviorSelectionCallback(object obj)
 		{
 			BehaviorSource behaviorSource = obj as BehaviorSource;
-			if (behaviorSource.get_Owner() is Behavior)
+			if (behaviorSource.Owner is Behavior)
 			{
-				this.mActiveObject = (behaviorSource.get_Owner() as Behavior).get_gameObject();
+				this.mActiveObject = (behaviorSource.Owner as Behavior).gameObject;
 			}
 			else
 			{
-				this.mActiveObject = (behaviorSource.get_Owner() as ExternalBehavior);
+				this.mActiveObject = (behaviorSource.Owner as ExternalBehavior);
 			}
 			if (!this.mLockActiveGameObject)
 			{
-				Selection.set_activeObject(this.mActiveObject);
+				Selection.activeObject = (this.mActiveObject);
 			}
 			this.LoadBehavior(behaviorSource, false);
 			this.UpdateGraphStatus();
-			if (EditorApplication.get_isPaused())
+			if (EditorApplication.isPaused)
 			{
 				this.mUpdateNodeTaskMap = true;
 				this.UpdateNodeTaskMap();
@@ -2377,7 +2420,7 @@ namespace BehaviorDesigner.Editor
 
 		private void PasteNodes()
 		{
-			if (this.mActiveObject == null || EditorApplication.get_isPlaying())
+			if (this.mActiveObject == null || EditorApplication.isPlaying)
 			{
 				return;
 			}
@@ -2386,20 +2429,20 @@ namespace BehaviorDesigner.Editor
 			{
 				this.AddBehavior();
 			}
-			if (this.mCopiedTasks != null && this.mCopiedTasks.get_Count() > 0)
+			if (this.mCopiedTasks != null && this.mCopiedTasks.Count > 0)
 			{
-				BehaviorUndo.RegisterUndo("Paste", this.mActiveBehaviorSource.get_Owner().GetObject());
+				BehaviorUndo.RegisterUndo("Paste", this.mActiveBehaviorSource.Owner.GetObject());
 			}
-			this.mGraphDesigner.Paste(this.mActiveBehaviorSource, new Vector2(this.mGraphRect.get_width() / (2f * this.mGraphZoom) - this.mGraphOffset.x, 150f - this.mGraphOffset.y), this.mCopiedTasks, this.mGraphOffset, this.mGraphZoom);
+			this.mGraphDesigner.Paste(this.mActiveBehaviorSource, new Vector2(this.mGraphRect.width / (2f * this.mGraphZoom) - this.mGraphOffset.x, 150f - this.mGraphOffset.y), this.mCopiedTasks, this.mGraphOffset, this.mGraphZoom);
 			this.SaveBehavior();
 		}
 
 		private void CutNodes()
 		{
 			this.mCopiedTasks = this.mGraphDesigner.Copy(this.mGraphOffset, this.mGraphZoom);
-			if (this.mCopiedTasks != null && this.mCopiedTasks.get_Count() > 0)
+			if (this.mCopiedTasks != null && this.mCopiedTasks.Count > 0)
 			{
-				BehaviorUndo.RegisterUndo("Cut", this.mActiveBehaviorSource.get_Owner().GetObject());
+				BehaviorUndo.RegisterUndo("Cut", this.mActiveBehaviorSource.Owner.GetObject());
 			}
 			this.mGraphDesigner.Delete(this.mActiveBehaviorSource, null);
 			this.SaveBehavior();
@@ -2408,11 +2451,11 @@ namespace BehaviorDesigner.Editor
 		private void DuplicateNodes()
 		{
 			List<TaskSerializer> list = this.mGraphDesigner.Copy(this.mGraphOffset, this.mGraphZoom);
-			if (list != null && list.get_Count() > 0)
+			if (list != null && list.Count > 0)
 			{
-				BehaviorUndo.RegisterUndo("Duplicate", this.mActiveBehaviorSource.get_Owner().GetObject());
+				BehaviorUndo.RegisterUndo("Duplicate", this.mActiveBehaviorSource.Owner.GetObject());
 			}
-			this.mGraphDesigner.Paste(this.mActiveBehaviorSource, new Vector2(this.mGraphRect.get_width() / (2f * this.mGraphZoom) - this.mGraphOffset.x, 150f - this.mGraphOffset.y), list, this.mGraphOffset, this.mGraphZoom);
+			this.mGraphDesigner.Paste(this.mActiveBehaviorSource, new Vector2(this.mGraphRect.width / (2f * this.mGraphZoom) - this.mGraphOffset.x, 150f - this.mGraphOffset.y), list, this.mGraphOffset, this.mGraphZoom);
 			this.SaveBehavior();
 		}
 
@@ -2445,8 +2488,8 @@ namespace BehaviorDesigner.Editor
 
 		private void SetupSizes()
 		{
-			float width = base.get_position().get_width();
-			float num = base.get_position().get_height() + 22f;
+			float width = base.position.width;
+			float num = base.position.height + 22f;
 			if (this.mPrevScreenWidth == width && this.mPrevScreenHeight == num && this.mPropertiesPanelOnLeft == BehaviorDesignerPreferences.GetBool(BDPreferences.PropertiesPanelOnLeft))
 			{
 				return;
@@ -2455,23 +2498,23 @@ namespace BehaviorDesigner.Editor
 			{
 				this.mFileToolBarRect = new Rect(300f, 0f, width - 300f, 18f);
 				this.mPropertyToolbarRect = new Rect(0f, 0f, 300f, 18f);
-				this.mPropertyBoxRect = new Rect(0f, this.mPropertyToolbarRect.get_height(), 300f, num - this.mPropertyToolbarRect.get_height() - 21f);
+				this.mPropertyBoxRect = new Rect(0f, this.mPropertyToolbarRect.height, 300f, num - this.mPropertyToolbarRect.height - 21f);
 				this.mGraphRect = new Rect(300f, 18f, width - 300f - 15f, num - 36f - 21f - 15f);
-				this.mPreferencesPaneRect = new Rect(300f + this.mGraphRect.get_width() - 290f, (float)(18 + ((!EditorGUIUtility.get_isProSkin()) ? 2 : 1)), 290f, 368f);
+				this.mPreferencesPaneRect = new Rect(300f + this.mGraphRect.width - 290f, (float)(18 + ((!EditorGUIUtility.isProSkin) ? 2 : 1)), 290f, 368f);
 			}
 			else
 			{
 				this.mFileToolBarRect = new Rect(0f, 0f, width - 300f, 18f);
 				this.mPropertyToolbarRect = new Rect(width - 300f, 0f, 300f, 18f);
-				this.mPropertyBoxRect = new Rect(width - 300f, this.mPropertyToolbarRect.get_height(), 300f, num - this.mPropertyToolbarRect.get_height() - 21f);
+				this.mPropertyBoxRect = new Rect(width - 300f, this.mPropertyToolbarRect.height, 300f, num - this.mPropertyToolbarRect.height - 21f);
 				this.mGraphRect = new Rect(0f, 18f, width - 300f - 15f, num - 36f - 21f - 15f);
-				this.mPreferencesPaneRect = new Rect(this.mGraphRect.get_width() - 290f, (float)(18 + ((!EditorGUIUtility.get_isProSkin()) ? 2 : 1)), 290f, 368f);
+				this.mPreferencesPaneRect = new Rect(this.mGraphRect.width - 290f, (float)(18 + ((!EditorGUIUtility.isProSkin) ? 2 : 1)), 290f, 368f);
 			}
-			this.mDebugToolBarRect = new Rect(this.mGraphRect.get_x(), num - 18f - 21f, this.mGraphRect.get_width() + 15f, 18f);
-			this.mGraphScrollRect.Set(this.mGraphRect.get_xMin() + 15f, this.mGraphRect.get_yMin() + 15f, this.mGraphRect.get_width() - 30f, this.mGraphRect.get_height() - 30f);
+			this.mDebugToolBarRect = new Rect(this.mGraphRect.x, num - 18f - 21f, this.mGraphRect.width + 15f, 18f);
+			this.mGraphScrollRect.Set(this.mGraphRect.xMin + 15f, this.mGraphRect.yMin + 15f, this.mGraphRect.width - 30f, this.mGraphRect.height - 30f);
 			if (this.mGraphScrollPosition == new Vector2(-1f, -1f))
 			{
-				this.mGraphScrollPosition = (this.mGraphScrollSize - new Vector2(this.mGraphRect.get_width(), this.mGraphRect.get_height())) / 2f - 2f * new Vector2(15f, 15f);
+				this.mGraphScrollPosition = (this.mGraphScrollSize - new Vector2(this.mGraphRect.width, this.mGraphRect.height)) / 2f - 2f * new Vector2(15f, 15f);
 			}
 			this.mPrevScreenWidth = width;
 			this.mPrevScreenHeight = num;
@@ -2489,7 +2532,7 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			mousePosition -= new Vector2(this.mGraphRect.get_xMin(), this.mGraphRect.get_yMin());
+			mousePosition -= new Vector2(this.mGraphRect.xMin, this.mGraphRect.yMin);
 			mousePosition /= this.mGraphZoom;
 			return true;
 		}
@@ -2501,8 +2544,8 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			mousePosition.x -= this.mPropertyBoxRect.get_xMin();
-			mousePosition.y -= this.mPropertyBoxRect.get_yMin();
+			mousePosition.x -= this.mPropertyBoxRect.xMin;
+			mousePosition.y -= this.mPropertyBoxRect.yMin;
 			return true;
 		}
 
@@ -2522,16 +2565,17 @@ namespace BehaviorDesigner.Editor
 
 		public bool ViewOnlyMode()
 		{
-			if (Application.get_isPlaying())
+			if (Application.isPlaying)
 			{
 				return false;
 			}
-			if (this.mActiveBehaviorSource == null || this.mActiveBehaviorSource.get_Owner() == null || this.mActiveBehaviorSource.get_Owner().Equals(null))
+			if (this.mActiveBehaviorSource == null || this.mActiveBehaviorSource.Owner == null || this.mActiveBehaviorSource.Owner.Equals(null))
 			{
 				return false;
 			}
-			Behavior behavior = this.mActiveBehaviorSource.get_Owner().GetObject() as Behavior;
-			return behavior != null && !BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabType(this.mActiveBehaviorSource.get_Owner().GetObject()) == 3;
+			Behavior behavior = this.mActiveBehaviorSource.Owner.GetObject() as Behavior;
+			// return behavior != null && !BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabType(this.mActiveBehaviorSource.Owner.GetObject()) == 3;
+			return behavior != null && !BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabType(this.mActiveBehaviorSource.Owner.GetObject()) == PrefabType.PrefabInstance;
 		}
 
 		private BehaviorSource BehaviorSourceFromIBehaviorHistory(IBehavior behavior)
@@ -2545,7 +2589,7 @@ namespace BehaviorDesigner.Editor
 				Behavior[] components = (behavior.GetObject() as GameObject).GetComponents<Behavior>();
 				for (int i = 0; i < Enumerable.Count<Behavior>(components); i++)
 				{
-					if (components[i].GetBehaviorSource().get_BehaviorID() == behavior.GetBehaviorSource().get_BehaviorID())
+					if (components[i].GetBehaviorSource().BehaviorID == behavior.GetBehaviorSource().BehaviorID)
 					{
 						return components[i].GetBehaviorSource();
 					}
@@ -2557,7 +2601,7 @@ namespace BehaviorDesigner.Editor
 
 		public void SaveBehavior()
 		{
-			if (this.mActiveBehaviorSource == null || this.ViewOnlyMode() || Application.get_isPlaying())
+			if (this.mActiveBehaviorSource == null || this.ViewOnlyMode() || Application.isPlaying)
 			{
 				return;
 			}
@@ -2569,11 +2613,11 @@ namespace BehaviorDesigner.Editor
 		{
 			if (this.mErrorDetails != null)
 			{
-				for (int i = 0; i < this.mErrorDetails.get_Count(); i++)
+				for (int i = 0; i < this.mErrorDetails.Count; i++)
 				{
-					if (this.mErrorDetails.get_Item(i).NodeDesigner != null)
+					if (this.mErrorDetails[i].NodeDesigner != null)
 					{
-						this.mErrorDetails.get_Item(i).NodeDesigner.HasError = false;
+						this.mErrorDetails[i].NodeDesigner.HasError = false;
 					}
 				}
 			}
@@ -2583,11 +2627,11 @@ namespace BehaviorDesigner.Editor
 				this.mErrorDetails = ErrorCheck.CheckForErrors(behaviorSource);
 				if (this.mErrorDetails != null)
 				{
-					for (int j = 0; j < this.mErrorDetails.get_Count(); j++)
+					for (int j = 0; j < this.mErrorDetails.Count; j++)
 					{
-						if (!(this.mErrorDetails.get_Item(j).NodeDesigner == null))
+						if (!(this.mErrorDetails[j].NodeDesigner == null))
 						{
-							this.mErrorDetails.get_Item(j).NodeDesigner.HasError = true;
+							this.mErrorDetails[j].NodeDesigner.HasError = true;
 						}
 					}
 				}
@@ -2609,21 +2653,21 @@ namespace BehaviorDesigner.Editor
 			{
 				return false;
 			}
-			for (int i = 0; i < this.mErrorDetails.get_Count(); i++)
+			for (int i = 0; i < this.mErrorDetails.Count; i++)
 			{
 				if (task == null)
 				{
-					if (!(this.mErrorDetails.get_Item(i).NodeDesigner != null))
+					if (!(this.mErrorDetails[i].NodeDesigner != null))
 					{
-						if (this.mErrorDetails.get_Item(i).FieldName == fieldName)
+						if (this.mErrorDetails[i].FieldName == fieldName)
 						{
 							return true;
 						}
 					}
 				}
-				else if (!(this.mErrorDetails.get_Item(i).NodeDesigner == null))
+				else if (!(this.mErrorDetails[i].NodeDesigner == null))
 				{
-					if (this.mErrorDetails.get_Item(i).NodeDesigner.Task == task && this.mErrorDetails.get_Item(i).FieldName == fieldName)
+					if (this.mErrorDetails[i].NodeDesigner.Task == task && this.mErrorDetails[i].FieldName == fieldName)
 					{
 						return true;
 					}
@@ -2634,30 +2678,30 @@ namespace BehaviorDesigner.Editor
 
 		private bool UpdateCheck()
 		{
-			if (this.mUpdateCheckRequest != null && this.mUpdateCheckRequest.get_isDone())
+			if (this.mUpdateCheckRequest != null && this.mUpdateCheckRequest.isDone)
 			{
-				if (!string.IsNullOrEmpty(this.mUpdateCheckRequest.get_error()))
+				if (!string.IsNullOrEmpty(this.mUpdateCheckRequest.error))
 				{
 					this.mUpdateCheckRequest = null;
 					return false;
 				}
-				if (!"1.5.11".ToString().Equals(this.mUpdateCheckRequest.get_text()))
+				if (!"1.5.11".ToString().Equals(this.mUpdateCheckRequest.text))
 				{
-					this.LatestVersion = this.mUpdateCheckRequest.get_text();
+					this.LatestVersion = this.mUpdateCheckRequest.text;
 				}
 				this.mUpdateCheckRequest = null;
 			}
-			if (BehaviorDesignerPreferences.GetBool(BDPreferences.UpdateCheck) && DateTime.Compare(this.LastUpdateCheck.AddDays(1.0), DateTime.get_UtcNow()) < 0)
+			if (BehaviorDesignerPreferences.GetBool(BDPreferences.UpdateCheck) && DateTime.Compare(this.LastUpdateCheck.AddDays(1.0), DateTime.UtcNow) < 0)
 			{
 				string text = string.Format("http://www.opsive.com/assets/BehaviorDesigner/UpdateCheck.php?version={0}&unityversion={1}&devplatform={2}&targetplatform={3}", new object[]
 				{
 					"1.5.11",
-					Application.get_unityVersion(),
-					Application.get_platform(),
-					EditorUserBuildSettings.get_activeBuildTarget()
+					Application.unityVersion,
+					Application.platform,
+					EditorUserBuildSettings.activeBuildTarget
 				});
 				this.mUpdateCheckRequest = new WWW(text);
-				this.LastUpdateCheck = DateTime.get_UtcNow();
+				this.LastUpdateCheck = DateTime.UtcNow;
 			}
 			return this.mUpdateCheckRequest != null;
 		}
@@ -2669,12 +2713,17 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			string text = EditorUtility.SaveFilePanel("Save Behavior Tree", "Assets", this.mActiveBehaviorSource.behaviorName + ".asset", "asset");
-			if (text.get_Length() != 0 && Application.get_dataPath().get_Length() < text.get_Length())
+			if (text.Length != 0 && Application.dataPath.Length < text.Length)
 			{
 				Type type = Type.GetType("BehaviorDesigner.Runtime.ExternalBehaviorTree, Assembly-CSharp");
 				if (type == null)
 				{
 					type = Type.GetType("BehaviorDesigner.Runtime.ExternalBehaviorTree, Assembly-CSharp-firstpass");
+				}
+				if (type == null)
+				{
+					type = Type.GetType("BehaviorDesigner.Runtime.ExternalBehaviorTree, Unity.ThirdParty");
+					UnityEngine.Debug.Log("找到ET40的行为树............");
 				}
 				if (BehaviorDesignerPreferences.GetBool(BDPreferences.BinarySerialization))
 				{
@@ -2688,13 +2737,13 @@ namespace BehaviorDesigner.Editor
 				BehaviorSource behaviorSource = new BehaviorSource(externalBehavior);
 				behaviorSource.behaviorName = this.mActiveBehaviorSource.behaviorName;
 				behaviorSource.behaviorDescription = this.mActiveBehaviorSource.behaviorDescription;
-				behaviorSource.set_TaskData(this.mActiveBehaviorSource.get_TaskData());
+				behaviorSource.TaskData = (this.mActiveBehaviorSource.TaskData);
 				externalBehavior.SetBehaviorSource(behaviorSource);
-				text = string.Format("Assets/{0}", text.Substring(Application.get_dataPath().get_Length() + 1));
+				text = string.Format("Assets/{0}", text.Substring(Application.dataPath.Length + 1));
 				AssetDatabase.DeleteAsset(text);
 				AssetDatabase.CreateAsset(externalBehavior, text);
 				AssetDatabase.ImportAsset(text);
-				Selection.set_activeObject(externalBehavior);
+				Selection.activeObject = (externalBehavior);
 			}
 			else if (Path.GetExtension(text).Equals(".asset"))
 			{
@@ -2709,7 +2758,7 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			string text = EditorUtility.SaveFilePanel("Save Behavior Tree", "Assets", this.mActiveBehaviorSource.behaviorName + ".prefab", "prefab");
-			if (text.get_Length() != 0 && Application.get_dataPath().get_Length() < text.get_Length())
+			if (text.Length != 0 && Application.dataPath.Length < text.Length)
 			{
 				GameObject gameObject = new GameObject();
 				Type type = Type.GetType("BehaviorDesigner.Runtime.BehaviorTree, Assembly-CSharp");
@@ -2721,14 +2770,14 @@ namespace BehaviorDesigner.Editor
 				BehaviorSource behaviorSource = new BehaviorSource(behavior);
 				behaviorSource.behaviorName = this.mActiveBehaviorSource.behaviorName;
 				behaviorSource.behaviorDescription = this.mActiveBehaviorSource.behaviorDescription;
-				behaviorSource.set_TaskData(this.mActiveBehaviorSource.get_TaskData());
+				behaviorSource.TaskData = (this.mActiveBehaviorSource.TaskData);
 				behavior.SetBehaviorSource(behaviorSource);
-				text = string.Format("Assets/{0}", text.Substring(Application.get_dataPath().get_Length() + 1));
+				text = string.Format("Assets/{0}", text.Substring(Application.dataPath.Length + 1));
 				AssetDatabase.DeleteAsset(text);
 				GameObject activeObject = PrefabUtility.CreatePrefab(text, gameObject);
 				Object.DestroyImmediate(gameObject, true);
 				AssetDatabase.ImportAsset(text);
-				Selection.set_activeObject(activeObject);
+				Selection.activeObject = (activeObject);
 			}
 			else if (Path.GetExtension(text).Equals(".prefab"))
 			{
@@ -2743,14 +2792,14 @@ namespace BehaviorDesigner.Editor
 
 		public void LoadBehavior(BehaviorSource behaviorSource, bool loadPrevBehavior, bool inspectorLoad)
 		{
-			if (behaviorSource == null || object.ReferenceEquals(behaviorSource.get_Owner(), null) || behaviorSource.get_Owner().Equals(null))
+			if (behaviorSource == null || object.ReferenceEquals(behaviorSource.Owner, null) || behaviorSource.Owner.Equals(null))
 			{
 				return;
 			}
 			if (inspectorLoad && !this.mSizesInitialized)
 			{
-				this.mActiveBehaviorID = behaviorSource.get_Owner().GetInstanceID();
-				this.mPrevActiveObject = Selection.get_activeObject();
+				this.mActiveBehaviorID = behaviorSource.Owner.GetInstanceID();
+				this.mPrevActiveObject = Selection.activeObject;
 				this.mLoadedFromInspector = true;
 				return;
 			}
@@ -2765,17 +2814,17 @@ namespace BehaviorDesigner.Editor
 			}
 			this.mExternalParent = null;
 			this.mActiveBehaviorSource = behaviorSource;
-			if (behaviorSource.get_Owner() is Behavior)
+			if (behaviorSource.Owner is Behavior)
 			{
-				this.mActiveObject = (behaviorSource.get_Owner() as Behavior).get_gameObject();
-				ExternalBehavior externalBehavior = (behaviorSource.get_Owner() as Behavior).get_ExternalBehavior();
-				if (externalBehavior != null && !EditorApplication.get_isPlayingOrWillChangePlaymode())
+				this.mActiveObject = (behaviorSource.Owner as Behavior).gameObject;
+				ExternalBehavior externalBehavior = (behaviorSource.Owner as Behavior).ExternalBehavior;
+				if (externalBehavior != null && !EditorApplication.isPlayingOrWillChangePlaymode)
 				{
-					this.mActiveBehaviorSource = externalBehavior.get_BehaviorSource();
-					this.mActiveBehaviorSource.set_Owner(externalBehavior);
+					this.mActiveBehaviorSource = externalBehavior.BehaviorSource;
+					this.mActiveBehaviorSource.Owner = (externalBehavior);
 					this.mExternalParent = behaviorSource;
 					behaviorSource.CheckForSerialization(true, null);
-					if (VariableInspector.SyncVariables(behaviorSource, this.mActiveBehaviorSource.get_Variables()))
+					if (VariableInspector.SyncVariables(behaviorSource, this.mActiveBehaviorSource.Variables))
 					{
 						if (BehaviorDesignerPreferences.GetBool(BDPreferences.BinarySerialization))
 						{
@@ -2790,33 +2839,37 @@ namespace BehaviorDesigner.Editor
 			}
 			else
 			{
-				this.mActiveObject = behaviorSource.get_Owner().GetObject();
+				this.mActiveObject = behaviorSource.Owner.GetObject();
 			}
-			this.mActiveBehaviorSource.set_BehaviorID(this.mActiveBehaviorSource.get_Owner().GetInstanceID());
-			this.mActiveBehaviorID = this.mActiveBehaviorSource.get_BehaviorID();
-			this.mPrevActiveObject = Selection.get_activeObject();
-			if (this.mBehaviorSourceHistory.get_Count() == 0 || this.mBehaviorSourceHistoryIndex >= this.mBehaviorSourceHistory.get_Count() || this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) == null || ((this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior).GetBehaviorSource() != null && !this.mActiveBehaviorSource.get_BehaviorID().Equals((this.mBehaviorSourceHistory.get_Item(this.mBehaviorSourceHistoryIndex) as IBehavior).GetBehaviorSource().get_BehaviorID())))
+			this.mActiveBehaviorSource.BehaviorID=this.mActiveBehaviorSource.Owner.GetInstanceID();
+			this.mActiveBehaviorID = this.mActiveBehaviorSource.BehaviorID;
+			this.mPrevActiveObject = Selection.activeObject;
+			if (this.mBehaviorSourceHistory.Count == 0 || 
+			this.mBehaviorSourceHistoryIndex >= this.mBehaviorSourceHistory.Count || 
+				this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] == null || 
+			((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource() != null && 
+				!this.mActiveBehaviorSource.BehaviorID.Equals((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource().BehaviorID)))
 			{
-				for (int i = this.mBehaviorSourceHistory.get_Count() - 1; i > this.mBehaviorSourceHistoryIndex; i--)
+				for (int i = this.mBehaviorSourceHistory.Count - 1; i > this.mBehaviorSourceHistoryIndex; i--)
 				{
 					this.mBehaviorSourceHistory.RemoveAt(i);
 				}
-				this.mBehaviorSourceHistory.Add(this.mActiveBehaviorSource.get_Owner().GetObject());
+				this.mBehaviorSourceHistory.Add(this.mActiveBehaviorSource.Owner.GetObject());
 				this.mBehaviorSourceHistoryIndex++;
 			}
-			Vector2 vector = new Vector2(this.mGraphRect.get_width() / (2f * this.mGraphZoom), 150f);
+			Vector2 vector = new Vector2(this.mGraphRect.width / (2f * this.mGraphZoom), 150f);
 			vector -= this.mGraphOffset;
 			if (this.mGraphDesigner.Load(this.mActiveBehaviorSource, loadPrevBehavior && !this.mLoadedFromInspector, vector) && this.mGraphDesigner.HasEntryNode() && (!loadPrevBehavior || this.mLoadedFromInspector))
 			{
-				this.mGraphOffset = new Vector2(this.mGraphRect.get_width() / (2f * this.mGraphZoom), 50f) - this.mGraphDesigner.EntryNodeOffset();
-				this.mGraphScrollPosition = (this.mGraphScrollSize - new Vector2(this.mGraphRect.get_width(), this.mGraphRect.get_height())) / 2f - 2f * new Vector2(15f, 15f);
+				this.mGraphOffset = new Vector2(this.mGraphRect.width / (2f * this.mGraphZoom), 50f) - this.mGraphDesigner.EntryNodeOffset();
+				this.mGraphScrollPosition = (this.mGraphScrollSize - new Vector2(this.mGraphRect.width, this.mGraphRect.height)) / 2f - 2f * new Vector2(15f, 15f);
 			}
 			this.mLoadedFromInspector = false;
 			if (!this.mLockActiveGameObject)
 			{
-				Selection.set_activeObject(this.mActiveObject);
+				Selection.activeObject = (this.mActiveObject);
 			}
-			if (EditorApplication.get_isPlaying() && this.mActiveBehaviorSource != null)
+			if (EditorApplication.isPlaying && this.mActiveBehaviorSource != null)
 			{
 				this.mRightClickMenu = null;
 				this.mUpdateNodeTaskMap = true;
