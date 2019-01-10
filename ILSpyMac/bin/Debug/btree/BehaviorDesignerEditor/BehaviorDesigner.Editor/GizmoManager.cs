@@ -35,7 +35,8 @@ namespace BehaviorDesigner.Editor
 
 		public static void UpdateGizmo(Behavior behavior)
 		{
-			behavior.gizmoViewMode = BehaviorDesignerPreferences.GetInt(BDPreferences.GizmosViewMode);
+			// behavior.gizmoViewMode = BehaviorDesignerPreferences.GetInt(BDPreferences.GizmosViewMode);
+			behavior.gizmoViewMode = (BehaviorDesigner.Runtime.Behavior.GizmoViewMode)BehaviorDesignerPreferences.GetInt(BDPreferences.GizmosViewMode);
 			behavior.showBehaviorDesignerGizmo = BehaviorDesignerPreferences.GetBool(BDPreferences.ShowSceneIcon);
 		}
 

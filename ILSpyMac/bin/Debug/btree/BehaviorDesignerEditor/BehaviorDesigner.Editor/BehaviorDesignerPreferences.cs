@@ -145,8 +145,13 @@ namespace BehaviorDesigner.Editor
 				BehaviorDesignerPreferences.SetBool(BDPreferences.BinarySerialization, !@bool);
 				callback(BDPreferences.BinarySerialization, !@bool);
 			}
+			// int @int = BehaviorDesignerPreferences.GetInt(BDPreferences.GizmosViewMode);
+			// int num = (Behavior.GizmoViewMode)EditorGUILayout.EnumPopup("Gizmos View Mode", @int, new GUILayoutOption[0]);
+			// if (num != @int)
+
 			int @int = BehaviorDesignerPreferences.GetInt(BDPreferences.GizmosViewMode);
-			int num = (Behavior.GizmoViewMode)EditorGUILayout.EnumPopup("Gizmos View Mode", @int, new GUILayoutOption[0]);
+			object tmpInt = (object)@int;
+			int num = (int)(Behavior.GizmoViewMode)EditorGUILayout.EnumPopup("Gizmos View Mode", (Enum)tmpInt, new GUILayoutOption[0]);
 			if (num != @int)
 			{
 				BehaviorDesignerPreferences.SetInt(BDPreferences.GizmosViewMode, num);

@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Editor
 {
 	public class BinarySerialization
@@ -467,8 +469,11 @@ namespace BehaviorDesigner.Editor
 			{
 				list.AddRange(BitConverter.GetBytes(0));
 			}
-			list.AddRange(BitConverter.GetBytes(animationCurve.preWrapMode));
-			list.AddRange(BitConverter.GetBytes(animationCurve.postWrapMode));
+			// list.AddRange(BitConverter.GetBytes(animationCurve.preWrapMode));
+			// list.AddRange(BitConverter.GetBytes(animationCurve.postWrapMode));
+
+			list.AddRange(BitConverter.GetBytes(animationCurve.preWrapMode != UnityEngine.WrapMode.Default));
+			list.AddRange(BitConverter.GetBytes(animationCurve.postWrapMode != UnityEngine.WrapMode.Default));
 			return list;
 		}
 

@@ -1,10 +1,10 @@
-﻿using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -1514,7 +1514,8 @@ namespace BehaviorDesigner.Editor
 			}
 			if (manifestResourceStream != null)
 			{
-				texture2D = new Texture2D(0, 0, 4, false, true);
+				// texture2D = new Texture2D(0, 0, 4, false, true);
+				texture2D = new Texture2D(0, 0, TextureFormat.RGBA32, false, true);
 				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
 				manifestResourceStream.Close();
 			}
@@ -1543,7 +1544,8 @@ namespace BehaviorDesigner.Editor
 			}
 			if (manifestResourceStream != null)
 			{
-				texture2D = new Texture2D(0, 0, 4, false, true);
+				// texture2D = new Texture2D(0, 0, 4, false, true);
+				texture2D = new Texture2D(0, 0, UnityEngine.TextureFormat.RGBA32, false, true);
 				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
 				manifestResourceStream.Close();
 			}
@@ -1599,9 +1601,9 @@ namespace BehaviorDesigner.Editor
 		private static void InitGraphStatusGUIStyle()
 		{
 			BehaviorDesignerUtility.graphStatusGUIStyle = new GUIStyle(GUI.skin.label);
-			BehaviorDesignerUtility.graphStatusGUIStyle.alignment=3;
+			BehaviorDesignerUtility.graphStatusGUIStyle.alignment = UnityEngine.TextAnchor.MiddleLeft; // 3
 			BehaviorDesignerUtility.graphStatusGUIStyle.fontSize=20;
-			BehaviorDesignerUtility.graphStatusGUIStyle.fontStyle=1;
+			BehaviorDesignerUtility.graphStatusGUIStyle.fontStyle=FontStyle.Bold;		//1
 			if (EditorGUIUtility.isProSkin)
 			{
 				BehaviorDesignerUtility.graphStatusGUIStyle.normal.textColor=new Color(0.7058f, 0.7058f, 0.7058f);
@@ -1615,17 +1617,17 @@ namespace BehaviorDesigner.Editor
 		private static void InitTaskFoldoutGUIStyle()
 		{
 			BehaviorDesignerUtility.taskFoldoutGUIStyle = new GUIStyle(EditorStyles.foldout);
-			BehaviorDesignerUtility.taskFoldoutGUIStyle.alignment=3;
+			BehaviorDesignerUtility.taskFoldoutGUIStyle.alignment = UnityEngine.TextAnchor.MiddleLeft; // 3
 			BehaviorDesignerUtility.taskFoldoutGUIStyle.fontSize=13;
-			BehaviorDesignerUtility.taskFoldoutGUIStyle.fontStyle=1;
+			BehaviorDesignerUtility.taskFoldoutGUIStyle.fontStyle= FontStyle.Bold;  // 1
 		}
 
 		private static void InitTaskTitleGUIStyle()
 		{
 			BehaviorDesignerUtility.taskTitleGUIStyle = new GUIStyle(GUI.skin.label);
-			BehaviorDesignerUtility.taskTitleGUIStyle.alignment=1;
+			BehaviorDesignerUtility.taskTitleGUIStyle.alignment = UnityEngine.TextAnchor.UpperCenter; // 1
 			BehaviorDesignerUtility.taskTitleGUIStyle.fontSize=12;
-			BehaviorDesignerUtility.taskTitleGUIStyle.fontStyle=0;
+			BehaviorDesignerUtility.taskTitleGUIStyle.fontStyle= FontStyle.Normal;	// 0
 		}
 
 		private static void InitTaskGUIStyle(int colorIndex)
@@ -1760,7 +1762,7 @@ namespace BehaviorDesigner.Editor
 		private static void InitTaskCommentGUIStyle()
 		{
 			BehaviorDesignerUtility.taskCommentGUIStyle = new GUIStyle(GUI.skin.label);
-			BehaviorDesignerUtility.taskCommentGUIStyle.alignment=1;
+			BehaviorDesignerUtility.taskCommentGUIStyle.alignment= UnityEngine.TextAnchor.UpperCenter; // 1
 			BehaviorDesignerUtility.taskCommentGUIStyle.fontSize=12;
 			BehaviorDesignerUtility.taskCommentGUIStyle.fontStyle=0;
 			BehaviorDesignerUtility.taskCommentGUIStyle.wordWrap=true;
@@ -1769,7 +1771,7 @@ namespace BehaviorDesigner.Editor
 		private static void InitTaskCommentLeftAlignGUIStyle()
 		{
 			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle = new GUIStyle(GUI.skin.label);
-			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.alignment=0;
+			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.alignment= UnityEngine.TextAnchor.UpperLeft; // 0
 			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.fontSize=12;
 			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.fontStyle=0;
 			BehaviorDesignerUtility.taskCommentLeftAlignGUIStyle.wordWrap=false;
@@ -1778,7 +1780,7 @@ namespace BehaviorDesigner.Editor
 		private static void InitTaskCommentRightAlignGUIStyle()
 		{
 			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle = new GUIStyle(GUI.skin.label);
-			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.alignment=2;
+			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.alignment= UnityEngine.TextAnchor.UpperRight; // 2
 			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.fontSize=12;
 			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.fontStyle=0;
 			BehaviorDesignerUtility.taskCommentRightAlignGUIStyle.wordWrap=false;
@@ -1786,7 +1788,9 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitTaskDescriptionGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, TextureFormat.RGBA32, false, true);
+
 			if (EditorGUIUtility.isProSkin)
 			{
 				texture2D.SetPixel(1, 1, new Color(0.1647f, 0.1647f, 0.1647f));
@@ -1807,7 +1811,8 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitGraphBackgroundGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			//Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, TextureFormat.RGBA32, false, true);
 			if (EditorGUIUtility.isProSkin)
 			{
 				texture2D.SetPixel(1, 1, new Color(0.1647f, 0.1647f, 0.1647f));
@@ -1832,7 +1837,8 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitSelectionGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, TextureFormat.RGBA32, false, true);
 			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
 			texture2D.SetPixel(1, 1, color);
 			//texture2D.hideFlags=61;
@@ -1859,13 +1865,13 @@ namespace BehaviorDesigner.Editor
 		{
 			BehaviorDesignerUtility.labelWrapGUIStyle = new GUIStyle(GUI.skin.label);
 			BehaviorDesignerUtility.labelWrapGUIStyle.wordWrap=true;
-			BehaviorDesignerUtility.labelWrapGUIStyle.alignment=4;
+			BehaviorDesignerUtility.labelWrapGUIStyle.alignment= UnityEngine.TextAnchor.MiddleCenter; // 4
 		}
 
 		private static void InitToolbarButtonLeftAlignGUIStyle()
 		{
 			BehaviorDesignerUtility.tolbarButtonLeftAlignGUIStyle = new GUIStyle(EditorStyles.toolbarButton);
-			BehaviorDesignerUtility.tolbarButtonLeftAlignGUIStyle.alignment=3;
+			BehaviorDesignerUtility.tolbarButtonLeftAlignGUIStyle.alignment= UnityEngine.TextAnchor.MiddleLeft;  // 3
 		}
 
 		private static void InitToolbarLabelGUIStyle()
@@ -1883,7 +1889,7 @@ namespace BehaviorDesigner.Editor
 		private static void InitTaskInspectorGUIStyle()
 		{
 			BehaviorDesignerUtility.taskInspectorGUIStyle = new GUIStyle(GUI.skin.label);
-			BehaviorDesignerUtility.taskInspectorGUIStyle.alignment=3;
+			BehaviorDesignerUtility.taskInspectorGUIStyle.alignment= UnityEngine.TextAnchor.MiddleLeft; // 3
 			BehaviorDesignerUtility.taskInspectorGUIStyle.fontSize=11;
 			BehaviorDesignerUtility.taskInspectorGUIStyle.fontStyle=0;
 		}
@@ -1988,7 +1994,8 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitSelectedBackgroundGUIStyle()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, UnityEngine.TextureFormat.RGBA32, false, true);
 			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.243f, 0.5686f, 0.839f, 0.5f) : new Color(0.188f, 0.4588f, 0.6862f, 0.5f);
 			texture2D.SetPixel(1, 1, color);
 			//texture2D.hideFlags=61;
@@ -2005,7 +2012,8 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitErrorListDarkBackground()
 		{
-			Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			// Texture2D texture2D = new Texture2D(1, 1, 4, false, true);
+			Texture2D texture2D = new Texture2D(1, 1, UnityEngine.TextureFormat.RGBA32, false, true);
 			Color color = (!EditorGUIUtility.isProSkin) ? new Color(0.706f, 0.706f, 0.706f) : new Color(0.2f, 0.2f, 0.2f, 1f);
 			texture2D.SetPixel(1, 1, color);
 			//texture2D.hideFlags=61;
@@ -2018,7 +2026,7 @@ namespace BehaviorDesigner.Editor
 			BehaviorDesignerUtility.errorListDarkBackground.hover.background=texture2D;
 			BehaviorDesignerUtility.errorListDarkBackground.focused.background=texture2D;
 			BehaviorDesignerUtility.errorListDarkBackground.normal.textColor=(!EditorGUIUtility.isProSkin) ? new Color(0.206f, 0.206f, 0.206f) : new Color(0.706f, 0.706f, 0.706f);
-			BehaviorDesignerUtility.errorListDarkBackground.alignment=0;
+			BehaviorDesignerUtility.errorListDarkBackground.alignment= UnityEngine.TextAnchor.UpperLeft; // 0
 			BehaviorDesignerUtility.errorListDarkBackground.wordWrap=true;
 		}
 
@@ -2027,7 +2035,7 @@ namespace BehaviorDesigner.Editor
 			BehaviorDesignerUtility.errorListLightBackground = new GUIStyle();
 			BehaviorDesignerUtility.errorListLightBackground.padding=new RectOffset(2, 0, 2, 0);
 			BehaviorDesignerUtility.errorListLightBackground.normal.textColor=(!EditorGUIUtility.isProSkin) ? new Color(0.106f, 0.106f, 0.106f) : new Color(0.706f, 0.706f, 0.706f);
-			BehaviorDesignerUtility.errorListLightBackground.alignment=0;
+			BehaviorDesignerUtility.errorListLightBackground.alignment= UnityEngine.TextAnchor.UpperLeft; // 0
 			BehaviorDesignerUtility.errorListLightBackground.wordWrap=true;
 		}
 
@@ -2035,16 +2043,19 @@ namespace BehaviorDesigner.Editor
 		{
 			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle = new GUIStyle(GUI.skin.label);
 			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.fontSize=16;
-			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.fontStyle=1;
+			// BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.fontStyle=1;
+			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.fontStyle = UnityEngine.FontStyle.Bold;
 			BehaviorDesignerUtility.welcomeScreenIntroGUIStyle.normal.textColor=new Color(0.706f, 0.706f, 0.706f);
 		}
 
 		private static void InitWelcomeScreenTextHeaderGUIStyle()
 		{
 			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle = new GUIStyle(GUI.skin.label);
-			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.alignment=3;
+			// BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.alignment=3;
+			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.alignment = UnityEngine.TextAnchor.MiddleLeft;
 			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.fontSize=14;
-			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.fontStyle=1;
+			// BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.fontStyle=1;
+			BehaviorDesignerUtility.welcomeScreenTextHeaderGUIStyle.fontStyle = UnityEngine.FontStyle.Bold;
 		}
 
 		private static void InitWelcomeScreenTextDescriptionGUIStyle()
@@ -2275,7 +2286,8 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitScreenshotBackgroundTexture()
 		{
-			BehaviorDesignerUtility.screenshotBackgroundTexture = new Texture2D(1, 1, 3, false, true);
+			// BehaviorDesignerUtility.screenshotBackgroundTexture = new Texture2D(1, 1, 3, false, true);
+			BehaviorDesignerUtility.screenshotBackgroundTexture = new Texture2D(1, 1, UnityEngine.TextureFormat.RGB24, false, true);
 			if (EditorGUIUtility.isProSkin)
 			{
 				BehaviorDesignerUtility.screenshotBackgroundTexture.SetPixel(1, 1, new Color(0.1647f, 0.1647f, 0.1647f));

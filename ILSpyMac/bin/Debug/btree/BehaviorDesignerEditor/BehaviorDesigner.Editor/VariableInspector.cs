@@ -6,6 +6,8 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Editor
 {
 	public class VariableInspector : ScriptableObject
@@ -400,7 +402,8 @@ namespace BehaviorDesigner.Editor
 			}
 			BehaviorDesignerUtility.DrawContentSeperator(2);
 			GUILayout.Space(4f);
-			if (variableStartPosition == -1f && Event.current.type == 7)
+			// if (variableStartPosition == -1f && Event.current.type == 7)
+			if (variableStartPosition == -1f && Event.current.type == EventType.Repaint)
 			{
 				variableStartPosition = GUILayoutUtility.GetLastRect().yMax;
 			}
@@ -513,7 +516,8 @@ namespace BehaviorDesigner.Editor
 						}
 					}
 					GUILayout.Space(4f);
-					if (canSelect && Event.current.type == 7)
+					// if (canSelect && Event.current.type == 7)
+					if (canSelect && Event.current.type == EventType.Repaint)
 					{
 						if (variablePosition.Count <= i)
 						{
@@ -794,7 +798,8 @@ namespace BehaviorDesigner.Editor
 				{
 					if (!(components[i] == null))
 					{
-						PropertyInfo[] properties = components[i].GetType().GetProperties(20);
+						//PropertyInfo[] properties = components[i].GetType().GetProperties(20);
+						PropertyInfo[] properties = components[i].GetType().GetProperties(System.Reflection.BindingFlags.NonPublic);
 						for (int j = 0; j < properties.Length; j++)
 						{
 							if (properties[j].PropertyType.Equals(propertyType) && !properties[j].IsSpecialName)

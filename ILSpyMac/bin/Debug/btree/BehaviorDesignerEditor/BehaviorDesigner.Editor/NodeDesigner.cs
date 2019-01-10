@@ -268,7 +268,8 @@ namespace BehaviorDesigner.Editor
 				}
 			}
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(this.mTask.GetType());
-			BindingFlags bindingFlags = 54;
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
 				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
@@ -328,7 +329,8 @@ namespace BehaviorDesigner.Editor
 				}
 			}
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(this.mTask.GetType());
-			BindingFlags bindingFlags = 54;
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
 				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
@@ -776,7 +778,8 @@ namespace BehaviorDesigner.Editor
 			GUI.color=Color.white;
 			if (this.showHoverBar)
 			{
-				GUI.DrawTexture(this.disabledButtonTextureRect, (!this.mTask.Disabled) ? BehaviorDesignerUtility.DisableTaskTexture : BehaviorDesignerUtility.EnableTaskTexture, 2);
+				//GUI.DrawTexture(this.disabledButtonTextureRect, (!this.mTask.Disabled) ? BehaviorDesignerUtility.DisableTaskTexture : BehaviorDesignerUtility.EnableTaskTexture, 2);
+				GUI.DrawTexture(this.disabledButtonTextureRect, (!this.mTask.Disabled) ? BehaviorDesignerUtility.DisableTaskTexture : BehaviorDesignerUtility.EnableTaskTexture, UnityEngine.ScaleMode.ScaleToFit);
 				if (this.isParent || this.mTask is BehaviorReference)
 				{
 					bool collapsed = this.mTask.NodeData.Collapsed;
@@ -784,7 +787,8 @@ namespace BehaviorDesigner.Editor
 					{
 						collapsed = (this.mTask as BehaviorReference).collapsed;
 					}
-					GUI.DrawTexture(this.collapseButtonTextureRect, (!collapsed) ? BehaviorDesignerUtility.CollapseTaskTexture : BehaviorDesignerUtility.ExpandTaskTexture, 2);
+					// GUI.DrawTexture(this.collapseButtonTextureRect, (!collapsed) ? BehaviorDesignerUtility.CollapseTaskTexture : BehaviorDesignerUtility.ExpandTaskTexture, 2);
+					GUI.DrawTexture(this.collapseButtonTextureRect, (!collapsed) ? BehaviorDesignerUtility.CollapseTaskTexture : BehaviorDesignerUtility.ExpandTaskTexture, UnityEngine.ScaleMode.ScaleToFit);
 				}
 			}
 			return result;

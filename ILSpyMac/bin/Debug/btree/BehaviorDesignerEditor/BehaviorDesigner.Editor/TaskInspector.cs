@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 
 using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
+using HelpURLAttribute = BehaviorDesigner.Runtime.Tasks.HelpURLAttribute;
 
 namespace BehaviorDesigner.Editor
 {
@@ -138,7 +139,8 @@ namespace BehaviorDesigner.Editor
 			task.IsInstant=EditorGUILayout.Toggle(task.IsInstant, new GUILayoutOption[0]);
 			GUILayout.EndHorizontal();
 			EditorGUILayout.LabelField("Comment", new GUILayoutOption[0]);
-			task.NodeData.set_Comment(EditorGUILayout.TextArea(task.NodeData.Comment, BehaviorDesignerUtility.TaskInspectorCommentGUIStyle, new GUILayoutOption[]
+			//task.NodeData.set_Comment(EditorGUILayout.TextArea(task.NodeData.Comment, BehaviorDesignerUtility.TaskInspectorCommentGUIStyle, new GUILayoutOption[]
+			task.NodeData.Comment = (EditorGUILayout.TextArea(task.NodeData.Comment, BehaviorDesignerUtility.TaskInspectorCommentGUIStyle, new GUILayoutOption[]
 			{
 				GUILayout.Height(48f)
 			}));
@@ -177,7 +179,8 @@ namespace BehaviorDesigner.Editor
 				return;
 			}
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(obj.GetType());
-			BindingFlags bindingFlags = 54;
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 			bool flag = this.IsReflectionTask(obj.GetType());
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
@@ -613,7 +616,7 @@ namespace BehaviorDesigner.Editor
 						}
 						type = type2.GetGenericArguments()[0];
 					}
-					IList list = Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+					IList list = Activator.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 					{
 						type
 					})) as IList;
@@ -798,7 +801,8 @@ namespace BehaviorDesigner.Editor
 		{
 			(task as Task).OnReset();
 			List<Type> baseClasses = FieldInspector.GetBaseClasses(task.GetType());
-			BindingFlags bindingFlags = 54;
+			// BindingFlags bindingFlags = 54;
+			BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 			for (int i = baseClasses.Count - 1; i > -1; i--)
 			{
 				FieldInfo[] fields = baseClasses[i].GetFields(bindingFlags);
@@ -968,7 +972,8 @@ namespace BehaviorDesigner.Editor
 						List<Type> sharedVariableTypes = VariableInspector.FindAllSharedVariableTypes(false);
 						if (this.IsInvokeMethodTask(task.GetType()))
 						{
-							MethodInfo[] methods = component.GetType().GetMethods(20);
+							//MethodInfo[] methods = component.GetType().GetMethods(20);
+							MethodInfo[] methods = component.GetType().GetMethods(System.Reflection.BindingFlags.NonPublic);
 							for (int j = 0; j < methods.Length; j++)
 							{
 								if (!methods[j].IsSpecialName && !methods[j].IsGenericMethod && methods[j].GetParameters().Length <= 4)
@@ -992,7 +997,8 @@ namespace BehaviorDesigner.Editor
 						}
 						else if (this.IsFieldReflectionTask(task.GetType()))
 						{
-							FieldInfo[] fields = component.GetType().GetFields(20);
+							// FieldInfo[] fields = component.GetType().GetFields(20);
+							FieldInfo[] fields = component.GetType().GetFields(System.Reflection.BindingFlags.NonPublic);
 							for (int l = 0; l < fields.Length; l++)
 							{
 								if (!fields[l].IsSpecialName)
@@ -1006,7 +1012,8 @@ namespace BehaviorDesigner.Editor
 						}
 						else
 						{
-							PropertyInfo[] properties = component.GetType().GetProperties(20);
+							// PropertyInfo[] properties = component.GetType().GetProperties(20);
+							PropertyInfo[] properties = component.GetType().GetProperties(System.Reflection.BindingFlags.NonPublic);
 							for (int m = 0; m < properties.Length; m++)
 							{
 								if (!properties[m].IsSpecialName)

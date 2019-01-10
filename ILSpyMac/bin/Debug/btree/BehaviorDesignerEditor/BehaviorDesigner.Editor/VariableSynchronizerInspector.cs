@@ -318,7 +318,8 @@ namespace BehaviorDesigner.Editor
 			list.Add("None");
 			if (synchronizer.component != null)
 			{
-				PropertyInfo[] properties = synchronizer.component.GetType().GetProperties(20);
+				// PropertyInfo[] properties = synchronizer.component.GetType().GetProperties(20);
+				PropertyInfo[] properties = synchronizer.component.GetType().GetProperties(System.Reflection.BindingFlags.NonPublic);
 				for (int i = 0; i < properties.Length; i++)
 				{
 					if (properties[i].PropertyType.Equals(valueType) && !properties[i].IsSpecialName)

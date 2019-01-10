@@ -10,3 +10,5 @@ _ReSharper*/
 /packages
 *.ide/
 .vs
+
+ILSpyMac/bin/Debug/btree/BehaviorDesignerEditor/bin

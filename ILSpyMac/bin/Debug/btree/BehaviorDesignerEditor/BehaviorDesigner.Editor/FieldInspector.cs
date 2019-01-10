@@ -184,7 +184,7 @@ namespace BehaviorDesigner.Editor
 			{
 				if (fieldType.IsGenericType || fieldType.IsArray)
 				{
-					list = (Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+					list = (Activator.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 					{
 						type
 					}), true) as IList);
@@ -212,7 +212,9 @@ namespace BehaviorDesigner.Editor
 				bool flag = guiContent.text.GetHashCode() == FieldInspector.editingFieldHash;
 				int num = (!flag) ? list.Count : FieldInspector.savedArraySize;
 				int num2 = EditorGUILayout.IntField("Size", num, new GUILayoutOption[0]);
-				if (flag && FieldInspector.editingArray && (GUIUtility.keyboardControl != FieldInspector.currentKeyboardControl || Event.current.keyCode == 13))
+
+				// 枚举13
+				if (flag && FieldInspector.editingArray && (GUIUtility.keyboardControl != FieldInspector.currentKeyboardControl || Event.current.keyCode == KeyCode.Return))
 				{
 					if (num2 != list.Count)
 					{
@@ -243,7 +245,7 @@ namespace BehaviorDesigner.Editor
 						{
 							if (fieldType.IsGenericType)
 							{
-								list = (Activator.CreateInstance(typeof(List).MakeGenericType(new Type[]
+								list = (Activator.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 								{
 									type
 								}), true) as IList);
