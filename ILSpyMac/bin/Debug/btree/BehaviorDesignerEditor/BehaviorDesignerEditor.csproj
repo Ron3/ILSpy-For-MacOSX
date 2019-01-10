@@ -262,9 +262,8 @@
     <Compile Include="Properties/AssemblyInfo.cs" />
     <Compile Include="SharedGenericVariableDrawer.cs" />
     <Compile Include="SharedNamedVariableDrawer.cs" />
-    <Compile Include="BehaviorDesigner\Runtime\ExternalBehaviorTree.cs" />
   </ItemGroup>
-  <!--<ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="2DToolkitIcon.png" />
     <EmbeddedResource Include="AIForMecanimIcon.png" />
     <EmbeddedResource Include="AntiCheatToolkitIcon.png" />
@@ -606,6 +605,9 @@
     <EmbeddedResource Include="WelcomeScreenHeader.png" />
     <EmbeddedResource Include="WelcomeScreenSamplesIcon.png" />
     <EmbeddedResource Include="WelcomeScreenVideosIcon.png" />
-  </ItemGroup>-->
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BehaviorDesigner\Runtime\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2720,6 +2720,11 @@ namespace BehaviorDesigner.Editor
 				{
 					type = Type.GetType("BehaviorDesigner.Runtime.ExternalBehaviorTree, Assembly-CSharp-firstpass");
 				}
+				if (type == null)
+				{
+					type = Type.GetType("BehaviorDesigner.Runtime.ExternalBehaviorTree, Unity.ThirdParty");
+					UnityEngine.Debug.Log("找到ET40的行为树............");
+				}
 				if (BehaviorDesignerPreferences.GetBool(BDPreferences.BinarySerialization))
 				{
 					BinarySerialization.Save(this.mActiveBehaviorSource);
