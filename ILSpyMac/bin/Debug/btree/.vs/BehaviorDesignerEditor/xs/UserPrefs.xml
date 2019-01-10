@@ -1,16 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesigner/Runtime/ExternalBehaviorTree.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskInspector.cs">
     <Files>
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/NodeDesigner.cs" Line="764" Column="5" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="1" Column="1" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskInspector.cs" Line="1" Column="1" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/GizmoManager.cs" Line="1" Column="1" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskInspector.cs" Line="166" Column="5" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/FieldInspector.cs" Line="1" Column="1" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableInspector.cs" Line="406" Column="79" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableSynchronizerInspector.cs" Line="322" Column="122" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BinarySerialization.cs" Line="482" Column="27" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj" Line="609" Column="15" />
-      <File FileName="BehaviorDesignerEditor/BehaviorDesigner/Runtime/ExternalBehaviorTree.cs" Line="4" Column="38" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
