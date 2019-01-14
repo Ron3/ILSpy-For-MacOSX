@@ -1,5 +1,5 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesigner.Editor/TaskInspector.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj">
     <Files>
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/NodeDesigner.cs" Line="764" Column="5" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/BehaviorDesignerUtility.cs" Line="1" Column="1" />
@@ -7,7 +7,20 @@
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/FieldInspector.cs" Line="1" Column="1" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableInspector.cs" Line="406" Column="79" />
       <File FileName="BehaviorDesignerEditor/BehaviorDesigner.Editor/VariableSynchronizerInspector.cs" Line="322" Column="122" />
+      <File FileName="BehaviorDesignerEditor/BehaviorDesignerEditor.csproj" Line="218" Column="14" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="BehaviorDesignerEditor" expanded="True">
+            <Node name="BehaviorDesignerEditor" expanded="True" selected="True">
+              <Node name="References" expanded="True" />
+              <Node name="BehaviorDesigner.Editor" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <DisabledProjects>

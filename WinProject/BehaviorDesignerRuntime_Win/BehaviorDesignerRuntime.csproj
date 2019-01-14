@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\Users\Ron\Desktop\Runtime\BehaviorDesignerRuntime.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4FA68CCF-A2B4-4E79-BE05-2C3C40DBBF44}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>BehaviorDesignerRuntime</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ApplicationVersion>0.0.0.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>BehaviorDesigner.Runtime</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BinaryDeserializationDeprecated.cs" />
+    <Compile Include="BinaryDeserialization.cs" />
+    <Compile Include="AOTLinker.cs" />
+    <Compile Include="Behavior.cs" />
+    <Compile Include="BehaviorGameGUI.cs" />
+    <Compile Include="UpdateIntervalType.cs" />
+    <Compile Include="BehaviorManager.cs" />
+    <Compile Include="BehaviorSource.cs" />
+    <Compile Include="ExternalBehavior.cs" />
+    <Compile Include="GlobalVariables.cs" />
+    <Compile Include="IBehavior.cs" />
+    <Compile Include="IVariableSource.cs" />
+    <Compile Include="JSONDeserialization.cs" />
+    <Compile Include="JSONDeserializationDeprecated.cs" />
+    <Compile Include="MiniJSON.cs" />
+    <Compile Include="NodeData.cs" />
+    <Compile Include="ObjectPool.cs" />
+    <Compile Include="FieldSerializationData.cs" />
+    <Compile Include="TaskSerializationData.cs" />
+    <Compile Include="VariableSerializationData.cs" />
+    <Compile Include="TaskCoroutine.cs" />
+    <Compile Include="TaskUtility.cs" />
+    <Compile Include="VariableSynchronizer.cs" />
+    <Compile Include="SharedVariable.cs" />
+    <Compile Include="SharedVariable`1.cs" />
+    <Compile Include="NamedVariable.cs" />
+    <Compile Include="SharedNamedVariable.cs" />
+    <Compile Include="GenericVariable.cs" />
+    <Compile Include="SharedGenericVariable.cs" />
+    <Compile Include="Tasks\ParentTask.cs" />
+    <Compile Include="Tasks\TaskStatus.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\LinkedTaskAttribute.cs" />
+    <Compile Include="Tasks\InspectTaskAttribute.cs" />
+    <Compile Include="Tasks\ObjectDrawerAttribute.cs" />
+    <Compile Include="Tasks\RequiredFieldAttribute.cs" />
+    <Compile Include="Tasks\SharedRequiredAttribute.cs" />
+    <Compile Include="Tasks\TooltipAttribute.cs" />
+    <Compile Include="Tasks\TaskIconAttribute.cs" />
+    <Compile Include="Tasks\HelpURLAttribute.cs" />
+    <Compile Include="Tasks\TaskCategoryAttribute.cs" />
+    <Compile Include="Tasks\TaskDescriptionAttribute.cs" />
+    <Compile Include="Tasks\TaskNameAttribute.cs" />
+    <Compile Include="Tasks\RequiredComponentAttribute.cs" />
+    <Compile Include="Tasks\SkipErrorCheckAttribute.cs" />
+    <Compile Include="Tasks\UnknownParentTask.cs" />
+    <Compile Include="Tasks\UnknownTask.cs" />
+    <Compile Include="Tasks\Action.cs" />
+    <Compile Include="Tasks\BehaviorReference.cs" />
+    <Compile Include="Tasks\AbortType.cs" />
+    <Compile Include="Tasks\Composite.cs" />
+    <Compile Include="Tasks\Decorator.cs" />
+    <Compile Include="Tasks\Conditional.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
