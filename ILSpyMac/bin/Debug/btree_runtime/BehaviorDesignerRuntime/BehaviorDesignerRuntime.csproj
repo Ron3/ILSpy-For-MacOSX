@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{ABA9F338-4A7F-486A-9E19-2AF0BFE5DB6A}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <AssemblyName>BehaviorDesignerRuntime</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine" />
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine" />
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AOTLinker.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/AbortType.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/Action.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/BehaviorReference.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/Composite.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/Conditional.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/Decorator.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/HelpURLAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/InspectTaskAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/LinkedTaskAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/ObjectDrawerAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/ParentTask.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/RequiredComponentAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/RequiredFieldAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/SharedRequiredAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/SkipErrorCheckAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/Task.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/TaskCategoryAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/TaskDescriptionAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/TaskIconAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/TaskNameAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/TaskStatus.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/TooltipAttribute.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/UnknownParentTask.cs" />
+    <Compile Include="BehaviorDesigner.Runtime.Tasks/UnknownTask.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/Behavior.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/BehaviorGameGUI.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/BehaviorManager.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/BehaviorSource.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/ExternalBehavior.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/FieldSerializationData.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/GenericVariable.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/GlobalVariables.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/IBehavior.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/IVariableSource.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/JSONDeserialization.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/JSONDeserializationDeprecated.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/MiniJSON.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/NamedVariable.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/NodeData.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/ObjectPool.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/SharedGenericVariable.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/SharedNamedVariable.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/SharedVariable.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/TaskCoroutine.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/TaskSerializationData.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/TaskUtility.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/UpdateIntervalType.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/VariableSerializationData.cs" />
+    <Compile Include="BehaviorDesigner.Runtime/VariableSynchronizer.cs" />
+    <Compile Include="BinaryDeserialization.cs" />
+    <Compile Include="BinaryDeserializationDeprecated.cs" />
+    <Compile Include="Properties/AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
