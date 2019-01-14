@@ -34,7 +34,8 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<FieldInfo> list = ObjectPool.Get<List<FieldInfo>>();
 				list.Clear();
-				BindingFlags flags = 54;
+				//BindingFlags flags = 54;
+				BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 				TaskUtility.GetFields(t, ref list, flags);
 				array = list.ToArray();
 				ObjectPool.Return<List<FieldInfo>>(list);
@@ -50,7 +51,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<FieldInfo> list = ObjectPool.Get<List<FieldInfo>>();
 				list.Clear();
-				BindingFlags flags = 22;
+				BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;	// 22
 				TaskUtility.GetFields(t, ref list, flags);
 				array = list.ToArray();
 				ObjectPool.Return<List<FieldInfo>>(list);
@@ -59,7 +60,8 @@ namespace BehaviorDesigner.Runtime
 			return array;
 		}
 
-		private static void GetFields(Type t, ref List<FieldInfo> fieldList, int flags)
+		//private static void GetFields(Type t, ref List<FieldInfo> fieldList, int flags)
+		private static void GetFields(Type t, ref List<FieldInfo> fieldList, BindingFlags flags)
 		{
 			if (t == null || t.Equals(typeof(ParentTask)) || t.Equals(typeof(Task)) || t.Equals(typeof(SharedVariable)))
 			{

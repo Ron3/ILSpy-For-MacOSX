@@ -302,7 +302,8 @@ namespace BehaviorDesigner.Runtime
 			{
 				return false;
 			}
-			MethodInfo method = task.GetType().GetMethod(methodName, 54);
+			BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+			MethodInfo method = task.GetType().GetMethod(methodName, flags);		// 54
 			if (method != null && method.DeclaringType.IsAssignableFrom(task.GetType()))
 			{
 				return true;

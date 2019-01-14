@@ -336,7 +336,7 @@ namespace BehaviorDesigner.Runtime
 								case 'p':
 								case 'q':
 								case 's':
-									IL_A5:
+									//IL_A5:
 									if (c2 == '"' || c2 == '/' || c2 == '\\')
 									{
 										stringBuilder.Append(nextChar);
@@ -369,8 +369,10 @@ namespace BehaviorDesigner.Runtime
 									stringBuilder.Append((char)Convert.ToInt32(new string(array), 16));
 									continue;
 								}
+									default:
+										goto case 's';
 								}
-								goto IL_A5;
+								//goto IL_A5;
 							}
 							flag = false;
 						}
@@ -385,15 +387,25 @@ namespace BehaviorDesigner.Runtime
 
 			private object ParseNumber()
 			{
+				System.Globalization.NumberStyles tmpStyles = (System.Globalization.NumberStyles.AllowCurrencySymbol |
+				System.Globalization.NumberStyles.AllowExponent |
+					System.Globalization.NumberStyles.AllowThousands |
+				System.Globalization.NumberStyles.AllowDecimalPoint |
+				System.Globalization.NumberStyles.AllowParentheses |
+				System.Globalization.NumberStyles.AllowTrailingSign |
+				System.Globalization.NumberStyles.AllowLeadingSign |
+				System.Globalization.NumberStyles.AllowTrailingWhite |
+				System.Globalization.NumberStyles.AllowLeadingWhite);
+
 				string nextWord = this.NextWord;
 				if (nextWord.IndexOf('.') == -1)
 				{
 					long num;
-					long.TryParse(nextWord, 511, CultureInfo.InvariantCulture, out num);
+					long.TryParse(nextWord, tmpStyles, CultureInfo.InvariantCulture, out num);		// 511
 					return num;
 				}
 				double num2;
-				double.TryParse(nextWord, 511, CultureInfo.InvariantCulture, out num2);
+				double.TryParse(nextWord, tmpStyles, CultureInfo.InvariantCulture, out num2);		// 511
 				return num2;
 			}
 
@@ -546,7 +558,7 @@ namespace BehaviorDesigner.Runtime
 						this.builder.Append("\\n");
 						goto IL_14C;
 					case '\v':
-						IL_44:
+						//IL_44:
 						if (c2 == '"')
 						{
 							this.builder.Append("\\\"");
@@ -574,8 +586,13 @@ namespace BehaviorDesigner.Runtime
 					case '\r':
 						this.builder.Append("\\r");
 						goto IL_14C;
+					
+					default:
+						goto case '\v';
+
+
 					}
-					goto IL_44;
+					//goto IL_44;
 					IL_14C:;
 				}
 				this.builder.Append('"');

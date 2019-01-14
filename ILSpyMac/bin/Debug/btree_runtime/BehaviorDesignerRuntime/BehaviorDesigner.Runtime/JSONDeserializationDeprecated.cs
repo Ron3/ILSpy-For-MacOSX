@@ -671,11 +671,13 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (value.TryGetValue("PreWrapMode", out obj))
 			{
-				animationCurve.preWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				//animationCurve.preWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				animationCurve.preWrapMode = (UnityEngine.WrapMode)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
 			if (value.TryGetValue("PostWrapMode", out obj))
 			{
-				animationCurve.postWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				//animationCurve.postWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				animationCurve.postWrapMode = (UnityEngine.WrapMode)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
 			return animationCurve;
 		}

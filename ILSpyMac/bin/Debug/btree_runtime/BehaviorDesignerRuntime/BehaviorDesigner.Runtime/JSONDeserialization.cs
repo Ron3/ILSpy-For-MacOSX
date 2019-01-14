@@ -709,7 +709,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			AnimationCurve animationCurve = new AnimationCurve();
 			object obj;
-			if (value.TryGetValue("Keys", ref obj))
+			if (value.TryGetValue("Keys", out obj))
 			{
 				List<object> list = obj as List<object>;
 				for (int i = 0; i < list.Count; i++)
@@ -720,13 +720,15 @@ namespace BehaviorDesigner.Runtime
 					animationCurve.AddKey(keyframe);
 				}
 			}
-			if (value.TryGetValue("PreWrapMode", ref obj))
+			if (value.TryGetValue("PreWrapMode", out obj))
 			{
-				animationCurve.preWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				//animationCurve.preWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				animationCurve.preWrapMode = (UnityEngine.WrapMode)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
-			if (value.TryGetValue("PostWrapMode", ref obj))
+			if (value.TryGetValue("PostWrapMode", out obj))
 			{
-				animationCurve.postWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				//animationCurve.postWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
+				animationCurve.postWrapMode = (UnityEngine.WrapMode)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
 			return animationCurve;
 		}

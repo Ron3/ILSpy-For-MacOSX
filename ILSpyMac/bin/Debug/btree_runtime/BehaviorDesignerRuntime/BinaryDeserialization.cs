@@ -803,8 +803,12 @@ public static class BinaryDeserialization
 			animationCurve.AddKey(keyframe);
 			dataPosition += 20;
 		}
-		animationCurve.preWrapMode=BitConverter.ToInt32(bytes, dataPosition + 4);
-		animationCurve.postWrapMode=BitConverter.ToInt32(bytes, dataPosition + 8);
+		//animationCurve.preWrapMode= BitConverter.ToInt32(bytes, dataPosition + 4);
+		//animationCurve.postWrapMode= BitConverter.ToInt32(bytes, dataPosition + 8);
+
+		animationCurve.preWrapMode = (UnityEngine.WrapMode)BitConverter.ToInt32(bytes, dataPosition + 4);
+		animationCurve.postWrapMode = (UnityEngine.WrapMode)BitConverter.ToInt32(bytes, dataPosition + 8);
+
 		return animationCurve;
 	}
 
