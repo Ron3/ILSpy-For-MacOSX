@@ -488,7 +488,7 @@ namespace BehaviorDesigner.Runtime
 						this.SerializeString(current.ToString());
 						this.builder.Append(':');
 						indentationLevel++;
-						this.SerializeValue(obj.get_Item(current), indentationLevel);
+						this.SerializeValue(obj[current], indentationLevel);
 						indentationLevel--;
 						flag = false;
 					}

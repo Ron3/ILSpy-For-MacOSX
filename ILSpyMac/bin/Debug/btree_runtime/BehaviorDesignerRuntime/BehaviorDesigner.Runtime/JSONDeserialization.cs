@@ -109,7 +109,7 @@ namespace BehaviorDesigner.Runtime
 					while (enumerator2.MoveNext())
 					{
 						JSONDeserialization.TaskField current = enumerator2.Current;
-						List<int> list2 = JSONDeserialization.taskIDs.get_Item(current);
+						List<int> list2 = JSONDeserialization.taskIDs[current];
 						Type fieldType = current.fieldInfo.FieldType;
 						if (current.fieldInfo.FieldType.IsArray)
 						{

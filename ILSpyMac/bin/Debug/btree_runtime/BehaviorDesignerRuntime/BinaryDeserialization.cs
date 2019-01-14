@@ -94,7 +94,7 @@ public static class BinaryDeserialization
 				int num2;
 				if (i + 1 < taskData.variableStartIndex.Count)
 				{
-					num2 = taskData.variableStartIndex.get_Item(i + 1);
+					num2 = taskData.variableStartIndex[i+i];
 				}
 				else if (taskData.startIndex != null && taskData.startIndex.Count > 0)
 				{
@@ -169,7 +169,7 @@ public static class BinaryDeserialization
 				while (enumerator.MoveNext())
 				{
 					BinaryDeserialization.ObjectFieldMap current = enumerator.Current;
-					List<int> list3 = BinaryDeserialization.taskIDs.get_Item(current);
+					List<int> list3 = BinaryDeserialization.taskIDs[current];
 					Type fieldType = current.fieldInfo.FieldType;
 					if (typeof(IList).IsAssignableFrom(fieldType))
 					{
@@ -270,7 +270,7 @@ public static class BinaryDeserialization
 				int num2;
 				if (i + 1 < variableData.variableStartIndex.Count)
 				{
-					num2 = variableData.variableStartIndex.get_Item(i + 1);
+					num2 = variableData.variableStartIndex[i+i];
 				}
 				else
 				{
@@ -295,7 +295,7 @@ public static class BinaryDeserialization
 	public static void LoadTask(TaskSerializationData taskSerializationData, FieldSerializationData fieldSerializationData, ref List<Task> taskList, ref BehaviorSource behaviorSource)
 	{
 		int count = taskList.Count;
-		int num = taskSerializationData.startIndex.get_Item(count);
+		int num = taskSerializationData.startIndex[count];
 		int num2;
 		if (count + 1 < taskSerializationData.startIndex.Count)
 		{
@@ -314,7 +314,7 @@ public static class BinaryDeserialization
 				dictionary.Add(fieldSerializationData.fieldNameHash[i], fieldSerializationData.startIndex[i]);
 			}
 		}
-		Type type = TaskUtility.GetTypeWithinAssembly(taskSerializationData.types.get_Item(count));
+		Type type = TaskUtility.GetTypeWithinAssembly(taskSerializationData.types[count]);
 		if (type == null)
 		{
 			bool flag = false;
@@ -372,7 +372,7 @@ public static class BinaryDeserialization
 		{
 			task.Disabled = (bool)obj;
 		}
-		BinaryDeserialization.LoadNodeData(fieldSerializationData, dictionary, taskList.get_Item(count));
+		BinaryDeserialization.LoadNodeData(fieldSerializationData, dictionary, taskList[count]);
 		if (task.GetType().Equals(typeof(UnknownTask)) || task.GetType().Equals(typeof(UnknownParentTask)))
 		{
 			if (!task.FriendlyName.Contains("Unknown "))
@@ -381,7 +381,7 @@ public static class BinaryDeserialization
 			}
 			task.NodeData.Comment = "Unknown Task. Right click and Replace to locate new task.";
 		}
-		BinaryDeserialization.LoadFields(fieldSerializationData, dictionary, taskList.get_Item(count), 0, behaviorSource);
+		BinaryDeserialization.LoadFields(fieldSerializationData, dictionary, taskList[count], 0, behaviorSource);
 		ObjectPool.Return<Dictionary<int, int>>(dictionary);
 	}
 
