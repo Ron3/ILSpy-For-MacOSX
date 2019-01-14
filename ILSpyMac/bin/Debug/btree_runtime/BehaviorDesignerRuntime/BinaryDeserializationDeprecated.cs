@@ -353,7 +353,7 @@ public static class BinaryDeserializationDeprecated
 			object obj2 = null;
 			if (typeof(IList).IsAssignableFrom(fieldType))
 			{
-				int num2 = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				int num2 = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 				if (fieldType.IsArray)
 				{
 					Type elementType = fieldType.GetElementType();
@@ -401,7 +401,7 @@ public static class BinaryDeserializationDeprecated
 			{
 				if (fieldInfo != null && TaskUtility.HasAttribute(fieldInfo, typeof(InspectTaskAttribute)))
 				{
-					string text2 = BinaryDeserializationDeprecated.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num), BinaryDeserializationDeprecated.GetFieldSize(fieldSerializationData, num));
+					string text2 = BinaryDeserializationDeprecated.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num], BinaryDeserializationDeprecated.GetFieldSize(fieldSerializationData, num));
 					if (!string.IsNullOrEmpty(text2))
 					{
 						Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(text2);
@@ -418,7 +418,7 @@ public static class BinaryDeserializationDeprecated
 					{
 						BinaryDeserializationDeprecated.taskIDs = new Dictionary<BinaryDeserializationDeprecated.ObjectFieldMap, List<int>>(new BinaryDeserializationDeprecated.ObjectFieldMapComparer());
 					}
-					int num3 = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+					int num3 = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 					BinaryDeserializationDeprecated.ObjectFieldMap objectFieldMap = new BinaryDeserializationDeprecated.ObjectFieldMap(obj, fieldInfo);
 					if (BinaryDeserializationDeprecated.taskIDs.ContainsKey(objectFieldMap))
 					{
@@ -434,80 +434,80 @@ public static class BinaryDeserializationDeprecated
 			}
 			else if (typeof(SharedVariable).IsAssignableFrom(fieldType))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, fieldIndexMap, fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num), variableSource, true, text);
+				obj2 = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, fieldIndexMap, fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num], variableSource, true, text);
 			}
 			else if (typeof(Object).IsAssignableFrom(fieldType))
 			{
-				int index = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				int index = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 				obj2 = BinaryDeserializationDeprecated.IndexToUnityObject(index, fieldSerializationData);
 			}
 			else if (fieldType.Equals(typeof(int)) || fieldType.IsEnum)
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(uint)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToUInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToUInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(float)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToFloat(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToFloat(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(double)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToDouble(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToDouble(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(long)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToLong(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToLong(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(bool)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToBool(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToBool(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(string)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num), BinaryDeserializationDeprecated.GetFieldSize(fieldSerializationData, num));
+				obj2 = BinaryDeserializationDeprecated.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num], BinaryDeserializationDeprecated.GetFieldSize(fieldSerializationData, num));
 			}
 			else if (fieldType.Equals(typeof(byte)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToByte(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToByte(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(Vector2)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToVector2(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToVector2(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(Vector3)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToVector3(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToVector3(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(Vector4)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToVector4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToVector4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(Quaternion)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToQuaternion(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToQuaternion(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(Color)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToColor(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToColor(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(Rect)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToRect(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToRect(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(Matrix4x4)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToMatrix4x4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToMatrix4x4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(AnimationCurve)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToAnimationCurve(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToAnimationCurve(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.Equals(typeof(LayerMask)))
 			{
-				obj2 = BinaryDeserializationDeprecated.BytesToLayerMask(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num));
+				obj2 = BinaryDeserializationDeprecated.BytesToLayerMask(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num]);
 			}
 			else if (fieldType.IsClass || (fieldType.IsValueType && !fieldType.IsPrimitive))
 			{

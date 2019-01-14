@@ -862,7 +862,7 @@ namespace BehaviorDesigner.Runtime
 					{
 						behaviorTree.parentIndex.Add(num);
 						behaviorTree.relativeChildIndex.Add(m);
-						behaviorTree.childrenIndex.get_Item(num).Add(behaviorTree.taskList.Count);
+						behaviorTree.childrenIndex[num].Add(behaviorTree.taskList.Count);
 						data.parentTask = (task as ParentTask);
 						data.parentIndex = num;
 						if (task is Composite)
@@ -1150,7 +1150,7 @@ namespace BehaviorDesigner.Runtime
 					for (int j = this.behaviorTrees[i].activeStack.Count - 1; j > -1; j--)
 					{
 						int num = this.behaviorTrees[i].activeStack.get_Item(j).Peek();
-						this.behaviorTrees[i].taskList.get_Item(num).OnLateUpdate();
+						this.behaviorTrees[i].taskList[num].OnLateUpdate();
 					}
 				}
 			}
@@ -1165,7 +1165,7 @@ namespace BehaviorDesigner.Runtime
 					for (int j = this.behaviorTrees[i].activeStack.Count - 1; j > -1; j--)
 					{
 						int num = this.behaviorTrees[i].activeStack.get_Item(j).Peek();
-						this.behaviorTrees[i].taskList.get_Item(num).OnFixedUpdate();
+						this.behaviorTrees[i].taskList[num].OnFixedUpdate();
 					}
 				}
 			}
@@ -1220,11 +1220,11 @@ namespace BehaviorDesigner.Runtime
 							break;
 						}
 					}
-					if (i < behaviorTree.activeStack.Count && behaviorTree.activeStack[i].Count > 0 && behaviorTree.taskList.get_Item(num) == behaviorTree.taskList.get_Item(behaviorTree.activeStack[i].Peek()))
+					if (i < behaviorTree.activeStack.Count && behaviorTree.activeStack[i].Count > 0 && behaviorTree.taskList[num] == behaviorTree.taskList.get_Item(behaviorTree.activeStack[i].Peek()))
 					{
-						if (behaviorTree.taskList.get_Item(num) is ParentTask)
+						if (behaviorTree.taskList[num] is ParentTask)
 						{
-							taskStatus = (behaviorTree.taskList.get_Item(num) as ParentTask).OverrideStatus();
+							taskStatus = (behaviorTree.taskList[num] as ParentTask).OverrideStatus();
 						}
 						this.PopTask(behaviorTree, num, i, ref taskStatus, true);
 					}
@@ -1260,8 +1260,8 @@ namespace BehaviorDesigner.Runtime
 							{
 								this.RoundedTime(),
 								behaviorTree.behavior.ToString(),
-								behaviorTree.taskList.get_Item(num).FriendlyName,
-								behaviorTree.taskList.get_Item(num).GetType(),
+								behaviorTree.taskList[num].FriendlyName,
+								behaviorTree.taskList[num].GetType(),
 								num,
 								behaviorTree.taskList.get_Item(index).FriendlyName,
 								behaviorTree.taskList.get_Item(index).GetType(),
@@ -1367,16 +1367,16 @@ namespace BehaviorDesigner.Runtime
 			for (int i = behaviorTree.parentReevaluate.Count - 1; i > -1; i--)
 			{
 				int num = behaviorTree.parentReevaluate[i];
-				if (behaviorTree.taskList.get_Item(num) is Decorator)
+				if (behaviorTree.taskList[num] is Decorator)
 				{
-					if (behaviorTree.taskList.get_Item(num).OnUpdate() == TaskStatus.Failure)
+					if (behaviorTree.taskList[num].OnUpdate() == TaskStatus.Failure)
 					{
-						this.Interrupt(behaviorTree.behavior, behaviorTree.taskList.get_Item(num));
+						this.Interrupt(behaviorTree.behavior, behaviorTree.taskList[num]);
 					}
 				}
-				else if (behaviorTree.taskList.get_Item(num) is Composite)
+				else if (behaviorTree.taskList[num] is Composite)
 				{
-					ParentTask parentTask = behaviorTree.taskList.get_Item(num) as ParentTask;
+					ParentTask parentTask = behaviorTree.taskList[num] as ParentTask;
 					if (parentTask.OnReevaluationStarted())
 					{
 						int num2 = 0;
@@ -1606,7 +1606,7 @@ namespace BehaviorDesigner.Runtime
 						}
 					}
 				}
-				ParentTask parentTask = behaviorTree.taskList.get_Item(num) as ParentTask;
+				ParentTask parentTask = behaviorTree.taskList[num] as ParentTask;
 				if (!parentTask.CanRunParallelChildren())
 				{
 					parentTask.OnChildExecuted(status);
@@ -1766,7 +1766,7 @@ namespace BehaviorDesigner.Runtime
 			int num2;
 			for (int num = possibleChild; num != -1; num = num2)
 			{
-				num2 = behaviorTree.parentIndex.get_Item(num);
+				num2 = behaviorTree.parentIndex[num];
 				if (num2 == possibleParent)
 				{
 					return true;
@@ -1889,14 +1889,14 @@ namespace BehaviorDesigner.Runtime
 			HashSet<int> hashSet = ObjectPool.Get<HashSet<int>>();
 			hashSet.Clear();
 			int num;
-			for (num = taskIndex1; num != -1; num = behaviorTree.parentIndex.get_Item(num))
+			for (num = taskIndex1; num != -1; num = behaviorTree.parentIndex[num])
 			{
 				hashSet.Add(num);
 			}
 			num = taskIndex2;
 			while (!hashSet.Contains(num))
 			{
-				num = behaviorTree.parentIndex.get_Item(num);
+				num = behaviorTree.parentIndex[num];
 			}
 			ObjectPool.Return<HashSet<int>>(hashSet);
 			return num;
@@ -1904,7 +1904,7 @@ namespace BehaviorDesigner.Runtime
 
 		private bool IsChild(BehaviorManager.BehaviorTree behaviorTree, int taskIndex1, int taskIndex2)
 		{
-			for (int num = taskIndex1; num != -1; num = behaviorTree.parentIndex.get_Item(num))
+			for (int num = taskIndex1; num != -1; num = behaviorTree.parentIndex[num])
 			{
 				if (num == taskIndex2)
 				{
@@ -1944,24 +1944,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnCollisionEnter(collision);
+						behaviorTree.taskList[num].OnCollisionEnter(collision);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnCollisionEnter(collision);
+						behaviorTree.taskList[num].OnCollisionEnter(collision);
 					}
 				}
 			}
@@ -1978,24 +1978,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnCollisionExit(collision);
+						behaviorTree.taskList[num].OnCollisionExit(collision);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnCollisionExit(collision);
+						behaviorTree.taskList[num].OnCollisionExit(collision);
 					}
 				}
 			}
@@ -2012,24 +2012,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnTriggerEnter(other);
+						behaviorTree.taskList[num].OnTriggerEnter(other);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnTriggerEnter(other);
+						behaviorTree.taskList[num].OnTriggerEnter(other);
 					}
 				}
 			}
@@ -2046,24 +2046,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnTriggerExit(other);
+						behaviorTree.taskList[num].OnTriggerExit(other);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnTriggerExit(other);
+						behaviorTree.taskList[num].OnTriggerExit(other);
 					}
 				}
 			}
@@ -2080,24 +2080,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnCollisionEnter2D(collision);
+						behaviorTree.taskList[num].OnCollisionEnter2D(collision);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnCollisionEnter2D(collision);
+						behaviorTree.taskList[num].OnCollisionEnter2D(collision);
 					}
 				}
 			}
@@ -2114,24 +2114,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnCollisionExit2D(collision);
+						behaviorTree.taskList[num].OnCollisionExit2D(collision);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnCollisionExit2D(collision);
+						behaviorTree.taskList[num].OnCollisionExit2D(collision);
 					}
 				}
 			}
@@ -2148,24 +2148,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnTriggerEnter2D(other);
+						behaviorTree.taskList[num].OnTriggerEnter2D(other);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnTriggerEnter2D(other);
+						behaviorTree.taskList[num].OnTriggerEnter2D(other);
 					}
 				}
 			}
@@ -2182,24 +2182,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnTriggerExit2D(other);
+						behaviorTree.taskList[num].OnTriggerExit2D(other);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnTriggerExit2D(other);
+						behaviorTree.taskList[num].OnTriggerExit2D(other);
 					}
 				}
 			}
@@ -2216,24 +2216,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnControllerColliderHit(hit);
+						behaviorTree.taskList[num].OnControllerColliderHit(hit);
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnControllerColliderHit(hit);
+						behaviorTree.taskList[num].OnControllerColliderHit(hit);
 					}
 				}
 			}
@@ -2250,24 +2250,24 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (behaviorTree.activeStack[i].Count != 0)
 				{
-					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex.get_Item(num))
+					for (int num = behaviorTree.activeStack[i].Peek(); num != -1; num = behaviorTree.parentIndex[num])
 					{
-						if (behaviorTree.taskList.get_Item(num).Disabled)
+						if (behaviorTree.taskList[num].Disabled)
 						{
 							break;
 						}
-						behaviorTree.taskList.get_Item(num).OnAnimatorIK();
+						behaviorTree.taskList[num].OnAnimatorIK();
 					}
 				}
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
 				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
-				if (!behaviorTree.taskList.get_Item(num).Disabled)
+				if (!behaviorTree.taskList[num].Disabled)
 				{
 					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
 					{
-						behaviorTree.taskList.get_Item(num).OnAnimatorIK();
+						behaviorTree.taskList[num].OnAnimatorIK();
 					}
 				}
 			}

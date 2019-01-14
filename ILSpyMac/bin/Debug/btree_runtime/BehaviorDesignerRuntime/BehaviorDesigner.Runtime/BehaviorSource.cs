@@ -201,7 +201,7 @@ namespace BehaviorDesigner.Runtime
 				int num;
 				if (this.mSharedVariableIndex.TryGetValue(name, ref num))
 				{
-					return this.mVariables.get_Item(num);
+					return this.mVariables[num];
 				}
 			}
 			return null;
@@ -227,7 +227,7 @@ namespace BehaviorDesigner.Runtime
 			int num;
 			if (this.mSharedVariableIndex != null && this.mSharedVariableIndex.TryGetValue(name, ref num))
 			{
-				SharedVariable sharedVariable2 = this.mVariables.get_Item(num);
+				SharedVariable sharedVariable2 = this.mVariables[num];
 				if (!sharedVariable2.GetType().Equals(typeof(SharedVariable)) && !sharedVariable2.GetType().Equals(sharedVariable.GetType()))
 				{
 					Debug.LogError(string.Format("Error: Unable to set SharedVariable {0} - the variable type {1} does not match the existing type {2}", name, sharedVariable2.GetType(), sharedVariable.GetType()));

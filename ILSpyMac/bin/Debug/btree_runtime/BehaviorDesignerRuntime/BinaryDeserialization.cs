@@ -342,11 +342,11 @@ public static class BinaryDeserialization
 			for (int k = num; k < num2; k++)
 			{
 				unknownTask.fieldNameHash.Add(fieldSerializationData.fieldNameHash.get_Item(k));
-				unknownTask.startIndex.Add(fieldSerializationData.startIndex.get_Item(k) - fieldSerializationData.startIndex.get_Item(num));
+				unknownTask.startIndex.Add(fieldSerializationData.startIndex.get_Item(k) - fieldSerializationData.startIndex[num]);
 			}
-			for (int l = fieldSerializationData.startIndex.get_Item(num); l <= fieldSerializationData.startIndex.get_Item(num2 - 1); l++)
+			for (int l = fieldSerializationData.startIndex[num]; l <= fieldSerializationData.startIndex.get_Item(num2 - 1); l++)
 			{
-				unknownTask.dataPosition.Add(fieldSerializationData.dataPosition.get_Item(l) - fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex.get_Item(num)));
+				unknownTask.dataPosition.Add(fieldSerializationData.dataPosition.get_Item(l) - fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex[num]));
 			}
 			if (count + 1 < taskSerializationData.startIndex.Count && taskSerializationData.startIndex.get_Item(count + 1) < fieldSerializationData.dataPosition.Count)
 			{
@@ -356,7 +356,7 @@ public static class BinaryDeserialization
 			{
 				num2 = fieldSerializationData.byteData.Count;
 			}
-			for (int m = fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex.get_Item(num)); m < num2; m++)
+			for (int m = fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex[num]); m < num2; m++)
 			{
 				unknownTask.byteData.Add(fieldSerializationData.byteData.get_Item(m));
 			}
