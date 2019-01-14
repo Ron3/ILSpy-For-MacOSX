@@ -8,6 +8,8 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 public static class BinaryDeserialization
 {
 	private class ObjectFieldMap

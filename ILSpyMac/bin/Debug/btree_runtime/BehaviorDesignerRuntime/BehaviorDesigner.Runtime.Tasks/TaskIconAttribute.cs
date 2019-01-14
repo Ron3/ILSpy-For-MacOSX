@@ -2,7 +2,8 @@ using System;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
-	[AttributeUsage]
+	//[AttributeUsage]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 	public class TaskIconAttribute : Attribute
 	{
 		public readonly string mIconPath;

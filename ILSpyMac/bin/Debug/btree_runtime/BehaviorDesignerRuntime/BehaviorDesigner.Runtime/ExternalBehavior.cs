@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Runtime
 {
 	[Serializable]
@@ -188,7 +190,7 @@ namespace BehaviorDesigner.Runtime
 			}
 		}
 
-		virtual int GetInstanceID()
+		public int GetInstanceID()
 		{
 			return base.GetInstanceID();
 		}

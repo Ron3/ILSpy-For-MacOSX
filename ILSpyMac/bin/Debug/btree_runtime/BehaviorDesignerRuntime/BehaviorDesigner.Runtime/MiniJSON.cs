@@ -111,7 +111,8 @@ namespace BehaviorDesigner.Runtime
 							string nextWord = this.NextWord;
 							if (nextWord != null)
 							{
-								if (MiniJSON.Parser.<>f__switch$map0 == null)
+								//if (MiniJSON.Parser.<>f__switch$map0 == null)
+								if (MiniJSON.Parser.fswitchMap0 == null)
 								{
 									Dictionary<string, int> dictionary = new Dictionary<string, int>(5);
 									dictionary.Add("false", 0);
@@ -119,10 +120,10 @@ namespace BehaviorDesigner.Runtime
 									dictionary.Add("null", 2);
 									dictionary.Add("Infinity", 3);
 									dictionary.Add("-Infinity", 4);
-									MiniJSON.Parser.<>f__switch$map0 = dictionary;
+									MiniJSON.Parser.fswitchMap0 = dictionary;
 								}
 								int num;
-								if (MiniJSON.Parser.<>f__switch$map0.TryGetValue(nextWord, ref num))
+								if (MiniJSON.Parser.fswitchMap0.TryGetValue(nextWord, out num))
 								{
 									switch (num)
 									{

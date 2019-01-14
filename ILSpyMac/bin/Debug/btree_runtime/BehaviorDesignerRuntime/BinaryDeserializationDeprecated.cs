@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 public static class BinaryDeserializationDeprecated
 {
 	private class ObjectFieldMap

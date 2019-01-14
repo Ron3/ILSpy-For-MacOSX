@@ -2,7 +2,8 @@ using System;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
-	[AttributeUsage]
+	//[AttributeUsage]
+	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
 	public class RequiredFieldAttribute : Attribute
 	{
 	}

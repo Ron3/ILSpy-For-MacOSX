@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Runtime
 {
 	public interface IBehavior

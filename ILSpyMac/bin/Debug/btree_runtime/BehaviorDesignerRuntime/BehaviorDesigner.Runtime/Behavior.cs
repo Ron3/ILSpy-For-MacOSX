@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
+
 namespace BehaviorDesigner.Runtime
 {
 	[Serializable]
@@ -1121,7 +1124,7 @@ namespace BehaviorDesigner.Runtime
 			return null;
 		}
 
-		virtual int GetInstanceID()
+		public int GetInstanceID()
 		{
 			return base.GetInstanceID();
 		}

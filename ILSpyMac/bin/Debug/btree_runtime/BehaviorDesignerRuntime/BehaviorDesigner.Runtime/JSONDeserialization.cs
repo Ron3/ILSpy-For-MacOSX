@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Runtime
 {
 	public class JSONDeserialization : Object

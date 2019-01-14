@@ -2,7 +2,8 @@ using System;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
-	[AttributeUsage]
+	//[AttributeUsage]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 	public class RequiredComponentAttribute : Attribute
 	{
 		public readonly Type mComponentType;

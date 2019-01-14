@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+using Object = UnityEngine.Object;
+
 namespace BehaviorDesigner.Runtime
 {
 	public class JSONDeserializationDeprecated : Object
