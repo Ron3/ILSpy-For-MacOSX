@@ -360,24 +360,24 @@ namespace BehaviorDesigner.Runtime
 			if (sharedVariable == null || !(flag = sharedVariable.GetType().Equals(typeWithinAssembly)))
 			{
 				sharedVariable = (TaskUtility.CreateInstance(typeWithinAssembly) as SharedVariable);
-				sharedVariable.Name = (dict.get_Item("Name") as string);
+				sharedVariable.Name = (dict["Name"] as string);
 				object obj3;
-				if (dict.TryGetValue("IsShared", ref obj3))
+				if (dict.TryGetValue("IsShared", out obj3))
 				{
 					sharedVariable.IsShared = Convert.ToBoolean(obj3, CultureInfo.InvariantCulture);
 				}
-				if (dict.TryGetValue("IsGlobal", ref obj3))
+				if (dict.TryGetValue("IsGlobal", out obj3))
 				{
 					sharedVariable.IsGlobal = Convert.ToBoolean(obj3, CultureInfo.InvariantCulture);
 				}
-				if (dict.TryGetValue("NetworkSync", ref obj3))
+				if (dict.TryGetValue("NetworkSync", out obj3))
 				{
 					sharedVariable.NetworkSync = Convert.ToBoolean(obj3, CultureInfo.InvariantCulture);
 				}
-				if (!sharedVariable.IsGlobal && dict.TryGetValue("PropertyMapping", ref obj3))
+				if (!sharedVariable.IsGlobal && dict.TryGetValue("PropertyMapping", out obj3))
 				{
 					sharedVariable.PropertyMapping = (obj3 as string);
-					if (dict.TryGetValue("PropertyMappingOwner", ref obj3))
+					if (dict.TryGetValue("PropertyMappingOwner", out obj3))
 					{
 						sharedVariable.PropertyMappingOwner = (JSONDeserialization.IndexToUnityObject(Convert.ToInt32(obj3, CultureInfo.InvariantCulture), unityObjects) as GameObject);
 					}

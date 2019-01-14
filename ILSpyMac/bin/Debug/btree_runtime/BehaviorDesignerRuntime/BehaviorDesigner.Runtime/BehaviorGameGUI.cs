@@ -37,10 +37,10 @@ namespace BehaviorDesigner.Runtime
 					Stack<int> stack = behaviorTree.activeStack[j];
 					if (stack.Count != 0)
 					{
-						Task task = behaviorTree.taskList.get_Item(stack.Peek());
+						Task task = behaviorTree.taskList[stack.Peek()];
 						if (task is Action)
 						{
-							text = text + behaviorTree.taskList.get_Item(behaviorTree.activeStack[j].Peek()).FriendlyName + ((j >= behaviorTree.activeStack.Count - 1) ? string.Empty : "\n");
+							text = text + behaviorTree.taskList[behaviorTree.activeStack[j].Peek()].FriendlyName + ((j >= behaviorTree.activeStack.Count - 1) ? string.Empty : "\n");
 						}
 					}
 				}

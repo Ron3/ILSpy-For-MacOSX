@@ -847,7 +847,7 @@ namespace BehaviorDesigner.Runtime
 					if (parentTask2.Children == null || parentTask2.Children.Count == 0)
 					{
 						data.errorTask = behaviorTree.taskList.Count - 1;
-						data.errorTaskName = (string.IsNullOrEmpty(behaviorTree.taskList.get_Item(data.errorTask).FriendlyName) ? behaviorTree.taskList.get_Item(data.errorTask).GetType().ToString() : behaviorTree.taskList.get_Item(data.errorTask).FriendlyName);
+						data.errorTaskName = (string.IsNullOrEmpty(behaviorTree.taskList[data.errorTask].FriendlyName) ? behaviorTree.taskList[data.errorTask].GetType().ToString() : behaviorTree.taskList[data.errorTask].FriendlyName);
 						return -1;
 					}
 					int num = behaviorTree.taskList.Count - 1;
@@ -876,7 +876,7 @@ namespace BehaviorDesigner.Runtime
 							if (num2 == -3)
 							{
 								data.errorTask = num;
-								data.errorTaskName = (string.IsNullOrEmpty(behaviorTree.taskList.get_Item(data.errorTask).FriendlyName) ? behaviorTree.taskList.get_Item(data.errorTask).GetType().ToString() : behaviorTree.taskList.get_Item(data.errorTask).FriendlyName);
+								data.errorTaskName = (string.IsNullOrEmpty(behaviorTree.taskList[data.errorTask].FriendlyName) ? behaviorTree.taskList[data.errorTask].GetType().ToString() : behaviorTree.taskList[data.errorTask].FriendlyName);
 							}
 							return num2;
 						}
@@ -1304,18 +1304,18 @@ namespace BehaviorDesigner.Runtime
 						for (int l = i - 1; l > -1; l--)
 						{
 							BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate2 = behaviorTree.conditionalReevaluate[l];
-							if (composite.AbortType == AbortType.LowerPriority && behaviorTree.parentCompositeIndex.get_Item(conditionalReevaluate2.index) == behaviorTree.parentCompositeIndex[index])
+							if (composite.AbortType == AbortType.LowerPriority && behaviorTree.parentCompositeIndex[conditionalReevaluate2.index] == behaviorTree.parentCompositeIndex[index])
 							{
-								behaviorTree.taskList.get_Item(behaviorTree.conditionalReevaluate[l].index).NodeData.IsReevaluating = false;
+								behaviorTree.taskList[behaviorTree.conditionalReevaluate[l].index].NodeData.IsReevaluating = false;
 								behaviorTree.conditionalReevaluate[l].compositeIndex = -1;
 							}
-							else if (behaviorTree.parentCompositeIndex.get_Item(conditionalReevaluate2.index) == behaviorTree.parentCompositeIndex[index])
+							else if (behaviorTree.parentCompositeIndex[conditionalReevaluate2.index] == behaviorTree.parentCompositeIndex[index])
 							{
-								for (int m = 0; m < behaviorTree.childrenIndex.get_Item(compositeIndex).Count; m++)
+								for (int m = 0; m < behaviorTree.childrenIndex[compositeIndex].Count; m++)
 								{
-									if (this.IsParentTask(behaviorTree, behaviorTree.childrenIndex.get_Item(compositeIndex)[m], conditionalReevaluate2.index))
+									if (this.IsParentTask(behaviorTree, behaviorTree.childrenIndex[compositeIndex][m], conditionalReevaluate2.index))
 									{
-										int num4 = behaviorTree.childrenIndex.get_Item(compositeIndex)[m];
+										int num4 = behaviorTree.childrenIndex[compositeIndex][m];
 										while (!(behaviorTree.taskList[num4] is Composite))
 										{
 											if (behaviorTree.childrenIndex[num4] == null)
@@ -1342,7 +1342,7 @@ namespace BehaviorDesigner.Runtime
 						{
 							this.conditionalParentIndexes.Add(behaviorTree.parentIndex[index]);
 						}
-						ParentTask parentTask = behaviorTree.taskList.get_Item(compositeIndex) as ParentTask;
+						ParentTask parentTask = behaviorTree.taskList[compositeIndex] as ParentTask;
 						parentTask.OnConditionalAbort(behaviorTree.relativeChildIndex.get_Item(this.conditionalParentIndexes.get_Item(this.conditionalParentIndexes.Count - 1)));
 						for (int n = this.conditionalParentIndexes.Count - 1; n > -1; n--)
 						{

@@ -167,7 +167,7 @@ namespace BehaviorDesigner.Runtime
 			Task task = null;
 			try
 			{
-				Type type = TaskUtility.GetTypeWithinAssembly(dict.get_Item("ObjectType") as string);
+				Type type = TaskUtility.GetTypeWithinAssembly(dict["ObjectType"] as string);
 				if (type == null)
 				{
 					if (dict.ContainsKey("Children"))
@@ -329,7 +329,7 @@ namespace BehaviorDesigner.Runtime
 			if (sharedVariable == null || !(flag = sharedVariable.GetType().Equals(typeWithinAssembly)))
 			{
 				sharedVariable = (TaskUtility.CreateInstance(typeWithinAssembly) as SharedVariable);
-				sharedVariable.Name = (dict.get_Item("Name") as string);
+				sharedVariable.Name = (dict["Name"] as string);
 				object obj3;
 				if (dict.TryGetValue("IsShared", ref obj3))
 				{
@@ -444,7 +444,7 @@ namespace BehaviorDesigner.Runtime
 							if (TaskUtility.HasAttribute(allFields[i], typeof(InspectTaskAttribute)))
 							{
 								Dictionary<string, object> dictionary = obj2 as Dictionary<string, object>;
-								Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dictionary.get_Item("ObjectType") as string);
+								Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dictionary["ObjectType"] as string);
 								if (typeWithinAssembly != null)
 								{
 									Task task2 = TaskUtility.CreateInstance(typeWithinAssembly) as Task;
