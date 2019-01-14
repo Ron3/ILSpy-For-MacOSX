@@ -235,7 +235,8 @@ namespace BehaviorDesigner.Runtime
 				this.watchedFields = new List<FieldInfo>();
 				for (int i = 0; i < this.watchedFieldNames.Count; i++)
 				{
-					FieldInfo field = task.GetType().GetField(this.watchedFieldNames[i], 52);
+					//FieldInfo field = task.GetType().GetField(this.watchedFieldNames[i], 52);
+					FieldInfo field = task.GetType().GetField(this.watchedFieldNames[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 					if (field != null)
 					{
 						this.watchedFields.Add(field);
@@ -257,7 +258,7 @@ namespace BehaviorDesigner.Runtime
 				this.watchedFieldNames = new List<string>();
 				for (int i = 0; i < nodeData.watchedFields.Count; i++)
 				{
-					FieldInfo field = task.GetType().GetField(nodeData.WatchedFields[i].Name, 52);
+					FieldInfo field = task.GetType().GetField(nodeData.WatchedFields[i].Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance); // 52
 					if (field != null)
 					{
 						this.watchedFields.Add(field);

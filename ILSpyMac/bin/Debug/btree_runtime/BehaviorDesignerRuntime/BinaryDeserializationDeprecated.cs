@@ -317,7 +317,7 @@ public static class BinaryDeserializationDeprecated
 			IList list = obj as IList;
 			for (int i = 0; i < list.Count; i++)
 			{
-				FieldInfo field = task.GetType().GetField((string)list[i], 52);
+				FieldInfo field = task.GetType().GetField((string)list[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance); // 52
 				if (field != null)
 				{
 					nodeData.WatchedFieldNames.Add(field.Name);
@@ -348,7 +348,7 @@ public static class BinaryDeserializationDeprecated
 	{
 		string text = fieldType.Name + fieldName;
 		int num;
-		if (fieldIndexMap.TryGetValue(text, ref num))
+		if (fieldIndexMap.TryGetValue(text, out num))
 		{
 			object obj2 = null;
 			if (typeof(IList).IsAssignableFrom(fieldType))
@@ -380,7 +380,7 @@ public static class BinaryDeserializationDeprecated
 					IList list;
 					if (fieldType.IsGenericType)
 					{
-						list = (TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
+						list = (TaskUtility.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 						{
 							type2
 						})) as IList);

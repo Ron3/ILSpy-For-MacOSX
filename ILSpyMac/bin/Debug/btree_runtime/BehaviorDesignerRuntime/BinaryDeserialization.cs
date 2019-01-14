@@ -407,7 +407,7 @@ public static class BinaryDeserialization
 			IList list = obj as IList;
 			for (int i = 0; i < list.Count; i++)
 			{
-				FieldInfo field = task.GetType().GetField((string)list[i], 52);
+				FieldInfo field = task.GetType().GetField((string)list[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance); // 52
 				if (field != null)
 				{
 					nodeData.WatchedFieldNames.Add(field.Name);
@@ -446,7 +446,7 @@ public static class BinaryDeserialization
 			num = hashPrefix + (fieldType.Name.GetHashCode() + fieldName.GetHashCode());
 		}
 		int num2;
-		if (fieldIndexMap.TryGetValue(num, ref num2))
+		if (fieldIndexMap.TryGetValue(num, out num2))
 		{
 			object obj2 = null;
 			if (typeof(IList).IsAssignableFrom(fieldType))
@@ -478,7 +478,7 @@ public static class BinaryDeserialization
 					IList list;
 					if (fieldType.IsGenericType)
 					{
-						list = (TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
+						list = (TaskUtility.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 						{
 							type2
 						})) as IList);
@@ -659,7 +659,10 @@ public static class BinaryDeserialization
 
 	private static int GetFieldSize(FieldSerializationData fieldSerializationData, int fieldIndex)
 	{
-		return ((fieldIndex + 1 >= fieldSerializationData.dataPosition.Count) ? fieldSerializationData.byteData.Count : fieldSerializationData.dataPosition[fieldIndex + 1)) - fieldSerializationData.dataPosition[fieldIndex);
+		return (
+		(fieldIndex + 1 >= fieldSerializationData.dataPosition.Count) ? 
+			fieldSerializationData.byteData.Count : 
+		fieldSerializationData.dataPosition[fieldIndex + 1]) - fieldSerializationData.dataPosition[fieldIndex];
 	}
 
 	private static int BytesToInt(byte[] bytes, int dataPosition)

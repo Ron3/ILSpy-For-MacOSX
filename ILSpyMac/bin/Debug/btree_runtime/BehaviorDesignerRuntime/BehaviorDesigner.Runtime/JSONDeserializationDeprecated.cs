@@ -37,7 +37,7 @@ namespace BehaviorDesigner.Runtime
 			behaviorSource.DetachedTasks = null;
 			behaviorSource.Variables = null;
 			Dictionary<string, object> dictionary;
-			if (!JSONDeserializationDeprecated.serializationCache.TryGetValue(taskData.JSONSerialization.GetHashCode(), ref dictionary))
+			if (!JSONDeserializationDeprecated.serializationCache.TryGetValue(taskData.JSONSerialization.GetHashCode(), out dictionary))
 			{
 				dictionary = (MiniJSON.Deserialize(taskData.JSONSerialization) as Dictionary<string, object>);
 				JSONDeserializationDeprecated.serializationCache.Add(taskData.JSONSerialization.GetHashCode(), dictionary);
@@ -149,7 +149,7 @@ namespace BehaviorDesigner.Runtime
 		private static void DeserializeVariables(IVariableSource variableSource, Dictionary<string, object> dict, List<Object> unityObjects)
 		{
 			object obj;
-			if (dict.TryGetValue("Variables", ref obj))
+			if (dict.TryGetValue("Variables", out obj))
 			{
 				List<SharedVariable> list = new List<SharedVariable>();
 				IList list2 = obj as IList;
@@ -191,15 +191,15 @@ namespace BehaviorDesigner.Runtime
 			task.Owner = (behaviorSource.Owner.GetObject() as Behavior);
 			task.ID = Convert.ToInt32(dict["ID"]);
 			object obj;
-			if (dict.TryGetValue("Name", ref obj))
+			if (dict.TryGetValue("Name", out obj))
 			{
 				task.FriendlyName = (string)obj;
 			}
-			if (dict.TryGetValue("Instant", ref obj))
+			if (dict.TryGetValue("Instant", out obj))
 			{
 				task.IsInstant = Convert.ToBoolean(obj);
 			}
-			if (dict.TryGetValue("Disabled", ref obj))
+			if (dict.TryGetValue("Disabled", out obj))
 			{
 				task.Disabled = Convert.ToBoolean(obj);
 			}
@@ -217,7 +217,7 @@ namespace BehaviorDesigner.Runtime
 				}
 			}
 			JSONDeserializationDeprecated.DeserializeObject(task, task, dict, behaviorSource, unityObjects);
-			if (task is ParentTask && dict.TryGetValue("Children", ref obj))
+			if (task is ParentTask && dict.TryGetValue("Children", out obj))
 			{
 				ParentTask parentTask = task as ParentTask;
 				if (parentTask != null)
@@ -250,38 +250,38 @@ namespace BehaviorDesigner.Runtime
 		{
 			NodeData nodeData = new NodeData();
 			object obj;
-			if (dict.TryGetValue("Offset", ref obj))
+			if (dict.TryGetValue("Offset", out obj))
 			{
 				nodeData.Offset = JSONDeserializationDeprecated.StringToVector2((string)obj);
 			}
-			if (dict.TryGetValue("FriendlyName", ref obj))
+			if (dict.TryGetValue("FriendlyName", out obj))
 			{
 				task.FriendlyName = (string)obj;
 			}
-			if (dict.TryGetValue("Comment", ref obj))
+			if (dict.TryGetValue("Comment", out obj))
 			{
 				nodeData.Comment = (string)obj;
 			}
-			if (dict.TryGetValue("IsBreakpoint", ref obj))
+			if (dict.TryGetValue("IsBreakpoint", out obj))
 			{
 				nodeData.IsBreakpoint = Convert.ToBoolean(obj);
 			}
-			if (dict.TryGetValue("Collapsed", ref obj))
+			if (dict.TryGetValue("Collapsed", out obj))
 			{
 				nodeData.Collapsed = Convert.ToBoolean(obj);
 			}
-			if (dict.TryGetValue("ColorIndex", ref obj))
+			if (dict.TryGetValue("ColorIndex", out obj))
 			{
 				nodeData.ColorIndex = Convert.ToInt32(obj);
 			}
-			if (dict.TryGetValue("WatchedFields", ref obj))
+			if (dict.TryGetValue("WatchedFields", out obj))
 			{
 				nodeData.WatchedFieldNames = new List<string>();
 				nodeData.WatchedFields = new List<FieldInfo>();
 				IList list = obj as IList;
 				for (int i = 0; i < list.Count; i++)
 				{
-					FieldInfo field = task.GetType().GetField((string)list[i], 52);
+					FieldInfo field = task.GetType().GetField((string)list[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);  // 52
 					if (field != null)
 					{
 						nodeData.WatchedFieldNames.Add(field.Name);
@@ -300,11 +300,11 @@ namespace BehaviorDesigner.Runtime
 			}
 			SharedVariable sharedVariable = null;
 			object obj;
-			if (!fromSource && variableSource != null && dict.TryGetValue("Name", ref obj))
+			if (!fromSource && variableSource != null && dict.TryGetValue("Name", out obj))
 			{
 				object obj2;
-				dict.TryGetValue("IsGlobal", ref obj2);
-				if (!dict.TryGetValue("IsGlobal", ref obj2) || !Convert.ToBoolean(obj2))
+				dict.TryGetValue("IsGlobal", out obj2);
+				if (!dict.TryGetValue("IsGlobal", out obj2) || !Convert.ToBoolean(obj2))
 				{
 					sharedVariable = variableSource.GetVariable(obj as string);
 				}
@@ -331,22 +331,22 @@ namespace BehaviorDesigner.Runtime
 				sharedVariable = (TaskUtility.CreateInstance(typeWithinAssembly) as SharedVariable);
 				sharedVariable.Name = (dict["Name"] as string);
 				object obj3;
-				if (dict.TryGetValue("IsShared", ref obj3))
+				if (dict.TryGetValue("IsShared", out obj3))
 				{
 					sharedVariable.IsShared = Convert.ToBoolean(obj3);
 				}
-				if (dict.TryGetValue("IsGlobal", ref obj3))
+				if (dict.TryGetValue("IsGlobal", out obj3))
 				{
 					sharedVariable.IsGlobal = Convert.ToBoolean(obj3);
 				}
-				if (dict.TryGetValue("NetworkSync", ref obj3))
+				if (dict.TryGetValue("NetworkSync", out obj3))
 				{
 					sharedVariable.NetworkSync = Convert.ToBoolean(obj3);
 				}
-				if (!sharedVariable.IsGlobal && dict.TryGetValue("PropertyMapping", ref obj3))
+				if (!sharedVariable.IsGlobal && dict.TryGetValue("PropertyMapping", out obj3))
 				{
 					sharedVariable.PropertyMapping = (obj3 as string);
-					if (dict.TryGetValue("PropertyMappingOwner", ref obj3))
+					if (dict.TryGetValue("PropertyMappingOwner", out obj3))
 					{
 						sharedVariable.PropertyMappingOwner = (JSONDeserializationDeprecated.IndexToUnityObject(Convert.ToInt32(obj3), unityObjects) as GameObject);
 					}
@@ -371,7 +371,7 @@ namespace BehaviorDesigner.Runtime
 			for (int i = 0; i < allFields.Length; i++)
 			{
 				object obj2;
-				if (dict.TryGetValue(allFields[i].FieldType + "," + allFields[i].Name, ref obj2) || dict.TryGetValue(allFields[i].Name, ref obj2))
+				if (dict.TryGetValue(allFields[i].FieldType + "," + allFields[i].Name, out obj2) || dict.TryGetValue(allFields[i].Name, out obj2))
 				{
 					if (typeof(IList).IsAssignableFrom(allFields[i].FieldType))
 					{
@@ -419,7 +419,7 @@ namespace BehaviorDesigner.Runtime
 								IList list3;
 								if (allFields[i].FieldType.IsGenericType)
 								{
-									list3 = (TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
+									list3 = (TaskUtility.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 									{
 										type
 									})) as IList);
@@ -467,7 +467,7 @@ namespace BehaviorDesigner.Runtime
 				}
 				else if (typeof(SharedVariable).IsAssignableFrom(allFields[i].FieldType) && !allFields[i].FieldType.IsAbstract)
 				{
-					if (dict.TryGetValue(allFields[i].FieldType + "," + allFields[i].Name, ref obj2))
+					if (dict.TryGetValue(allFields[i].FieldType + "," + allFields[i].Name, out obj2))
 					{
 						SharedVariable sharedVariable = TaskUtility.CreateInstance(allFields[i].FieldType) as SharedVariable;
 						sharedVariable.SetValue(JSONDeserializationDeprecated.ValueToObject(task, allFields[i].FieldType, obj2, variableSource, unityObjects));

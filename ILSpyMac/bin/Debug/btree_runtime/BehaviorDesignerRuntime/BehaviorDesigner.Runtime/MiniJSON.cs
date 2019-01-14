@@ -223,7 +223,7 @@ namespace BehaviorDesigner.Runtime
 							goto Block_3;
 						}
 						this.json.Read();
-						dictionary.Item=text, this.ParseValue();
+						dictionary[text] = this.ParseValue();
 						continue;
 					}
 					case MiniJSON.Parser.TOKEN.CURLY_CLOSE:
@@ -389,11 +389,11 @@ namespace BehaviorDesigner.Runtime
 				if (nextWord.IndexOf('.') == -1)
 				{
 					long num;
-					long.TryParse(nextWord, 511, CultureInfo.InvariantCulture, ref num);
+					long.TryParse(nextWord, 511, CultureInfo.InvariantCulture, out num);
 					return num;
 				}
 				double num2;
-				double.TryParse(nextWord, 511, CultureInfo.InvariantCulture, ref num2);
+				double.TryParse(nextWord, 511, CultureInfo.InvariantCulture, out num2);
 				return num2;
 			}
 

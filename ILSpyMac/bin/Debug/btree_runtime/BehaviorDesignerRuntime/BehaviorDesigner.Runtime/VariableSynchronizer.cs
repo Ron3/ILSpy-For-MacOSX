@@ -6,6 +6,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using UnityEngine;
 
+using Debug = UnityEngine.Debug;
+
 namespace BehaviorDesigner.Runtime
 {
 	[AddComponentMenu("Behavior Designer/Variable Synchronizer")]

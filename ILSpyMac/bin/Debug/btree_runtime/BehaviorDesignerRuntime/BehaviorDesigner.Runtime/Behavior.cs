@@ -737,7 +737,8 @@ namespace BehaviorDesigner.Runtime
 
 		public Coroutine StartTaskCoroutine(Task task, string methodName)
 		{
-			MethodInfo method = task.GetType().GetMethod(methodName, 52);
+			//MethodInfo method = task.GetType().GetMethod(methodName, 52);
+			MethodInfo method = task.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 			if (method == null)
 			{
 				Debug.LogError("Unable to start coroutine " + methodName + ": method not found");
@@ -752,7 +753,8 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<TaskCoroutine> list = this.activeTaskCoroutines[methodName];
 				list.Add(taskCoroutine);
-				this.activeTaskCoroutines.Item=methodName, list;
+				//this.activeTaskCoroutines.Item=methodName, list;
+				this.activeTaskCoroutines[methodName] = list;
 			}
 			else
 			{
@@ -765,7 +767,7 @@ namespace BehaviorDesigner.Runtime
 
 		public Coroutine StartTaskCoroutine(Task task, string methodName, object value)
 		{
-			MethodInfo method = task.GetType().GetMethod(methodName, 52);
+			MethodInfo method = task.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance); //52
 			if (method == null)
 			{
 				Debug.LogError("Unable to start coroutine " + methodName + ": method not found");
@@ -783,7 +785,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<TaskCoroutine> list = this.activeTaskCoroutines[methodName];
 				list.Add(taskCoroutine);
-				this.activeTaskCoroutines.Item=methodName, list;
+				this.activeTaskCoroutines[methodName] = list;
 			}
 			else
 			{
@@ -836,7 +838,8 @@ namespace BehaviorDesigner.Runtime
 				else
 				{
 					list.Remove(taskCoroutine);
-					this.activeTaskCoroutines.Item=coroutineName, list;
+					//this.activeTaskCoroutines.Item=coroutineName, list;
+					this.activeTaskCoroutines[coroutineName] = list;
 				}
 			}
 		}
@@ -872,15 +875,16 @@ namespace BehaviorDesigner.Runtime
 				this.eventTable = new Dictionary<Type, Dictionary<string, Delegate>>();
 			}
 			Dictionary<string, Delegate> dictionary;
-			if (!this.eventTable.TryGetValue(handler.GetType(), ref dictionary))
+			if (!this.eventTable.TryGetValue(handler.GetType(), out dictionary))
 			{
 				dictionary = new Dictionary<string, Delegate>();
 				this.eventTable.Add(handler.GetType(), dictionary);
 			}
 			Delegate @delegate;
-			if (dictionary.TryGetValue(name, ref @delegate))
+			if (dictionary.TryGetValue(name, out @delegate))
 			{
-				dictionary.Item=name, Delegate.Combine(@delegate, handler);
+				//dictionary.Item=name, Delegate.Combine(@delegate, handler);
+				dictionary[name] = Delegate.Combine(@delegate, handler);
 			}
 			else
 			{
@@ -912,7 +916,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			Dictionary<string, Delegate> dictionary;
 			Delegate result;
-			if (this.eventTable != null && this.eventTable.TryGetValue(type, ref dictionary) && dictionary.TryGetValue(name, ref result))
+			if (this.eventTable != null && this.eventTable.TryGetValue(type, out dictionary) && dictionary.TryGetValue(name, out result))
 			{
 				return result;
 			}
@@ -963,9 +967,9 @@ namespace BehaviorDesigner.Runtime
 			}
 			Dictionary<string, Delegate> dictionary;
 			Delegate @delegate;
-			if (this.eventTable.TryGetValue(handler.GetType(), ref dictionary) && dictionary.TryGetValue(name, ref @delegate))
+			if (this.eventTable.TryGetValue(handler.GetType(), out dictionary) && dictionary.TryGetValue(name, out @delegate))
 			{
-				dictionary.Item=name, Delegate.Remove(@delegate, handler);
+				dictionary[name] = Delegate.Remove(@delegate, handler);
 			}
 		}
 
@@ -1079,7 +1083,7 @@ namespace BehaviorDesigner.Runtime
 				return;
 			}
 			Dictionary<string, object> dictionary;
-			if (!this.defaultValues.TryGetValue(task, ref dictionary))
+			if (!this.defaultValues.TryGetValue(task, out dictionary))
 			{
 				return;
 			}

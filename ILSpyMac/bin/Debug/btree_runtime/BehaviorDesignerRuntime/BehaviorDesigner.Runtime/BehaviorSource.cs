@@ -199,7 +199,7 @@ namespace BehaviorDesigner.Runtime
 					this.UpdateVariablesIndex();
 				}
 				int num;
-				if (this.mSharedVariableIndex.TryGetValue(name, ref num))
+				if (this.mSharedVariableIndex.TryGetValue(name, out num))
 				{
 					return this.mVariables[num];
 				}
@@ -225,7 +225,7 @@ namespace BehaviorDesigner.Runtime
 			}
 			sharedVariable.Name = name;
 			int num;
-			if (this.mSharedVariableIndex != null && this.mSharedVariableIndex.TryGetValue(name, ref num))
+			if (this.mSharedVariableIndex != null && this.mSharedVariableIndex.TryGetValue(name, out num))
 			{
 				SharedVariable sharedVariable2 = this.mVariables[num];
 				if (!sharedVariable2.GetType().Equals(typeof(SharedVariable)) && !sharedVariable2.GetType().Equals(sharedVariable.GetType()))

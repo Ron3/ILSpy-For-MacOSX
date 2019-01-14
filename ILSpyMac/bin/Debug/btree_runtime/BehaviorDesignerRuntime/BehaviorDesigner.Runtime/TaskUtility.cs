@@ -30,7 +30,7 @@ namespace BehaviorDesigner.Runtime
 		public static FieldInfo[] GetAllFields(Type t)
 		{
 			FieldInfo[] array = null;
-			if (!TaskUtility.allFieldsLookup.TryGetValue(t, ref array))
+			if (!TaskUtility.allFieldsLookup.TryGetValue(t, out array))
 			{
 				List<FieldInfo> list = ObjectPool.Get<List<FieldInfo>>();
 				list.Clear();
@@ -46,7 +46,7 @@ namespace BehaviorDesigner.Runtime
 		public static FieldInfo[] GetPublicFields(Type t)
 		{
 			FieldInfo[] array = null;
-			if (!TaskUtility.publicFieldsLookup.TryGetValue(t, ref array))
+			if (!TaskUtility.publicFieldsLookup.TryGetValue(t, out array))
 			{
 				List<FieldInfo> list = ObjectPool.Get<List<FieldInfo>>();
 				list.Clear();
@@ -76,7 +76,7 @@ namespace BehaviorDesigner.Runtime
 		public static Type GetTypeWithinAssembly(string typeName)
 		{
 			Type type;
-			if (TaskUtility.typeLookup.TryGetValue(typeName, ref type))
+			if (TaskUtility.typeLookup.TryGetValue(typeName, out type))
 			{
 				return type;
 			}
@@ -125,13 +125,13 @@ namespace BehaviorDesigner.Runtime
 				return false;
 			}
 			Dictionary<Type, bool> dictionary;
-			if (!TaskUtility.hasFieldLookup.TryGetValue(field, ref dictionary))
+			if (!TaskUtility.hasFieldLookup.TryGetValue(field, out dictionary))
 			{
 				dictionary = new Dictionary<Type, bool>();
 				TaskUtility.hasFieldLookup.Add(field, dictionary);
 			}
 			bool flag;
-			if (!dictionary.TryGetValue(attribute, ref flag))
+			if (!dictionary.TryGetValue(attribute, out flag))
 			{
 				flag = (field.GetCustomAttributes(attribute, false).Length > 0);
 				dictionary.Add(attribute, flag);
