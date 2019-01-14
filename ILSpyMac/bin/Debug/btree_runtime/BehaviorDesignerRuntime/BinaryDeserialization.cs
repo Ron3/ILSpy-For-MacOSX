@@ -107,7 +107,7 @@ public static class BinaryDeserialization
 				dictionary.Clear();
 				for (int j = num; j < num2; j++)
 				{
-					dictionary.Add(fieldSerializationData.fieldNameHash.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
+					dictionary.Add(fieldSerializationData.fieldNameHash[j], fieldSerializationData.startIndex[j]);
 				}
 				SharedVariable sharedVariable = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, taskData.variableStartIndex[i], behaviorSource, false, 0);
 				if (sharedVariable != null)
@@ -279,7 +279,7 @@ public static class BinaryDeserialization
 				dictionary.Clear();
 				for (int j = num; j < num2; j++)
 				{
-					dictionary.Add(fieldSerializationData.fieldNameHash.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
+					dictionary.Add(fieldSerializationData.fieldNameHash[j], fieldSerializationData.startIndex[j]);
 				}
 				SharedVariable sharedVariable = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, variableData.variableStartIndex[i], globalVariables, false, 0);
 				if (sharedVariable != null)
@@ -320,7 +320,7 @@ public static class BinaryDeserialization
 			bool flag = false;
 			for (int j = 0; j < taskSerializationData.parentIndex.Count; j++)
 			{
-				if (count == taskSerializationData.parentIndex.get_Item(j))
+				if (count == taskSerializationData.parentIndex[j])
 				{
 					flag = true;
 					break;
@@ -341,8 +341,8 @@ public static class BinaryDeserialization
 			UnknownTask unknownTask = task as UnknownTask;
 			for (int k = num; k < num2; k++)
 			{
-				unknownTask.fieldNameHash.Add(fieldSerializationData.fieldNameHash.get_Item(k));
-				unknownTask.startIndex.Add(fieldSerializationData.startIndex.get_Item(k) - fieldSerializationData.startIndex[num]);
+				unknownTask.fieldNameHash.Add(fieldSerializationData.fieldNameHash[k]);
+				unknownTask.startIndex.Add(fieldSerializationData.startIndex[k] - fieldSerializationData.startIndex[num]);
 			}
 			for (int l = fieldSerializationData.startIndex[num]; l <= fieldSerializationData.startIndex.get_Item(num2 - 1); l++)
 			{

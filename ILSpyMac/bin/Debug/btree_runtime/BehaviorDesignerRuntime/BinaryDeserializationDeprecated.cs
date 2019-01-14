@@ -82,7 +82,7 @@ public static class BinaryDeserializationDeprecated
 				dictionary.Clear();
 				for (int j = num; j < num2; j++)
 				{
-					dictionary.Add(fieldSerializationData.typeName.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
+					dictionary.Add(fieldSerializationData.typeName[j], fieldSerializationData.startIndex[j]);
 				}
 				SharedVariable sharedVariable = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, taskData.variableStartIndex[i], behaviorSource, false, string.Empty);
 				if (sharedVariable != null)
@@ -214,7 +214,7 @@ public static class BinaryDeserializationDeprecated
 				dictionary.Clear();
 				for (int j = num; j < num2; j++)
 				{
-					dictionary.Add(fieldSerializationData.typeName.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
+					dictionary.Add(fieldSerializationData.typeName[j], fieldSerializationData.startIndex[j]);
 				}
 				SharedVariable sharedVariable = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, variableData.variableStartIndex[i], globalVariables, false, string.Empty);
 				if (sharedVariable != null)
@@ -268,9 +268,9 @@ public static class BinaryDeserializationDeprecated
 		dictionary.Clear();
 		for (int j = num; j < num2; j++)
 		{
-			if (!dictionary.ContainsKey(fieldSerializationData.typeName.get_Item(j)))
+			if (!dictionary.ContainsKey(fieldSerializationData.typeName[j]))
 			{
-				dictionary.Add(fieldSerializationData.typeName.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
+				dictionary.Add(fieldSerializationData.typeName[j], fieldSerializationData.startIndex[j]);
 			}
 		}
 		task.ID = (int)BinaryDeserializationDeprecated.LoadField(fieldSerializationData, dictionary, typeof(int), "ID", null, null, null);

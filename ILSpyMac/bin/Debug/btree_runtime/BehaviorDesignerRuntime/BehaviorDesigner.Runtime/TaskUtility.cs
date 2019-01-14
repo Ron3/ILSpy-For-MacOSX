@@ -94,7 +94,7 @@ namespace BehaviorDesigner.Runtime
 				}
 				for (int j = 0; j < TaskUtility.loadedAssemblies.Count; j++)
 				{
-					type = Type.GetType(typeName + "," + TaskUtility.loadedAssemblies.get_Item(j));
+					type = Type.GetType(typeName + "," + TaskUtility.loadedAssemblies[j]);
 					if (type != null)
 					{
 						break;

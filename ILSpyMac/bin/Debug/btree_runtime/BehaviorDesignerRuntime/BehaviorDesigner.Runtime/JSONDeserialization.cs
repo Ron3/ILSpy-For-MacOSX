@@ -126,7 +126,7 @@ namespace BehaviorDesigner.Runtime
 							int num2 = 0;
 							for (int j = 0; j < list2.Count; j++)
 							{
-								Task task2 = dictionary2.get_Item(list2.get_Item(j));
+								Task task2 = dictionary2.get_Item(list2[j]);
 								if (task2.GetType().Equals(fieldType.GetElementType()) || task2.GetType().IsSubclassOf(fieldType.GetElementType()))
 								{
 									array.SetValue(task2, num2);
@@ -432,7 +432,7 @@ namespace BehaviorDesigner.Runtime
 									List<int> list2 = new List<int>();
 									for (int j = 0; j < list.Count; j++)
 									{
-										list2.Add(Convert.ToInt32(list.get_Item(j), CultureInfo.InvariantCulture));
+										list2.Add(Convert.ToInt32(list[j], CultureInfo.InvariantCulture));
 									}
 									JSONDeserialization.taskIDs.Add(new JSONDeserialization.TaskField(task, allFields[i]), list2);
 								}
@@ -442,13 +442,13 @@ namespace BehaviorDesigner.Runtime
 								Array array = Array.CreateInstance(type, list.Count);
 								for (int k = 0; k < list.Count; k++)
 								{
-									if (list.get_Item(k) == null)
+									if (list[k] == null)
 									{
 										array.SetValue(null, k);
 									}
 									else
 									{
-										array.SetValue(JSONDeserialization.ValueToObject(task, type, list.get_Item(k), variableSource, unityObjects), k);
+										array.SetValue(JSONDeserialization.ValueToObject(task, type, list[k], variableSource, unityObjects), k);
 									}
 								}
 								allFields[i].SetValue(obj, array);

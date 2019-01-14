@@ -34,13 +34,13 @@ namespace BehaviorDesigner.Runtime
 				string text = string.Empty;
 				for (int j = 0; j < behaviorTree.activeStack.Count; j++)
 				{
-					Stack<int> stack = behaviorTree.activeStack.get_Item(j);
+					Stack<int> stack = behaviorTree.activeStack[j];
 					if (stack.Count != 0)
 					{
 						Task task = behaviorTree.taskList.get_Item(stack.Peek());
 						if (task is Action)
 						{
-							text = text + behaviorTree.taskList.get_Item(behaviorTree.activeStack.get_Item(j).Peek()).FriendlyName + ((j >= behaviorTree.activeStack.Count - 1) ? string.Empty : "\n");
+							text = text + behaviorTree.taskList.get_Item(behaviorTree.activeStack[j].Peek()).FriendlyName + ((j >= behaviorTree.activeStack.Count - 1) ? string.Empty : "\n");
 						}
 					}
 				}

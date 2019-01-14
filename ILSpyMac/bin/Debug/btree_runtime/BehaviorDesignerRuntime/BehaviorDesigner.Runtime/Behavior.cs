@@ -1053,7 +1053,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int j = 0; j < parentTask.Children.Count; j++)
 					{
-						this.SaveValue(parentTask.Children.get_Item(j));
+						this.SaveValue(parentTask.Children[j]);
 					}
 				}
 			}

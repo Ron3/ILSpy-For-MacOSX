@@ -77,11 +77,11 @@ namespace BehaviorDesigner.Runtime
 				}
 				for (int j = this.activeStack.Count - 1; j > -1; j--)
 				{
-					ObjectPool.Return<Stack<int>>(this.activeStack.get_Item(j));
+					ObjectPool.Return<Stack<int>>(this.activeStack[j]);
 				}
 				for (int k = this.childConditionalIndex.Count - 1; k > -1; k--)
 				{
-					ObjectPool.Return<List<int>>(this.childConditionalIndex.get_Item(k));
+					ObjectPool.Return<List<int>>(this.childConditionalIndex[k]);
 				}
 				this.taskList.Clear();
 				this.parentIndex.Clear();
@@ -593,16 +593,16 @@ namespace BehaviorDesigner.Runtime
 					Debug.Log(string.Format("{0}: Task {1} ({2}, index {3}) {4}", new object[]
 					{
 						this.RoundedTime(),
-						behaviorTree.taskList.get_Item(j).FriendlyName,
-						behaviorTree.taskList.get_Item(j).GetType(),
+						behaviorTree.taskList[j].FriendlyName,
+						behaviorTree.taskList[j].GetType(),
 						j,
-						behaviorTree.taskList.get_Item(j).GetHashCode()
+						behaviorTree.taskList[j].GetHashCode()
 					}));
 				}
 			}
 			for (int k = 0; k < behaviorTree.taskList.Count; k++)
 			{
-				behaviorTree.taskList.get_Item(k).OnAwake();
+				behaviorTree.taskList[k].OnAwake();
 			}
 			this.behaviorTrees.Add(behaviorTree);
 			this.behaviorTreeMap.Add(behavior, behaviorTree);
@@ -930,7 +930,7 @@ namespace BehaviorDesigner.Runtime
 							{
 								for (int j = 0; j < list.Count; j++)
 								{
-									SharedVariable sharedVariable2 = this.OverrideSharedVariable(behaviorTree, data, fieldType, list.get_Item(j));
+									SharedVariable sharedVariable2 = this.OverrideSharedVariable(behaviorTree, data, fieldType, list[j]);
 									if (sharedVariable2 != null)
 									{
 										//list.Item=j, sharedVariable2;
@@ -1085,10 +1085,10 @@ namespace BehaviorDesigner.Runtime
 			TaskStatus executionStatus2 = executionStatus;
 			for (int j = behaviorTree.activeStack.Count - 1; j > -1; j--)
 			{
-				while (behaviorTree.activeStack.get_Item(j).Count > 0)
+				while (behaviorTree.activeStack[j].Count > 0)
 				{
-					int count = behaviorTree.activeStack.get_Item(j).Count;
-					this.PopTask(behaviorTree, behaviorTree.activeStack.get_Item(j).Peek(), j, ref executionStatus2, true, false);
+					int count = behaviorTree.activeStack[j].Count;
+					this.PopTask(behaviorTree, behaviorTree.activeStack[j].Peek(), j, ref executionStatus2, true, false);
 					if (count == 1)
 					{
 						break;
@@ -1098,7 +1098,7 @@ namespace BehaviorDesigner.Runtime
 			this.RemoveChildConditionalReevaluate(behaviorTree, -1);
 			for (int k = 0; k < behaviorTree.taskList.Count; k++)
 			{
-				behaviorTree.taskList.get_Item(k).OnBehaviorComplete();
+				behaviorTree.taskList[k].OnBehaviorComplete();
 			}
 			this.behaviorTreeMap.Remove(behavior);
 			this.behaviorTrees.Remove(behaviorTree);
@@ -1149,7 +1149,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int j = this.behaviorTrees[i].activeStack.Count - 1; j > -1; j--)
 					{
-						int num = this.behaviorTrees[i].activeStack.get_Item(j).Peek();
+						int num = this.behaviorTrees[i].activeStack[j].Peek();
 						this.behaviorTrees[i].taskList[num].OnLateUpdate();
 					}
 				}
@@ -1164,7 +1164,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int j = this.behaviorTrees[i].activeStack.Count - 1; j > -1; j--)
 					{
-						int num = this.behaviorTrees[i].activeStack.get_Item(j).Peek();
+						int num = this.behaviorTrees[i].activeStack[j].Peek();
 						this.behaviorTrees[i].taskList[num].OnFixedUpdate();
 					}
 				}
@@ -1272,9 +1272,9 @@ namespace BehaviorDesigner.Runtime
 						int compositeIndex = behaviorTree.conditionalReevaluate[i].compositeIndex;
 						for (int j = behaviorTree.activeStack.Count - 1; j > -1; j--)
 						{
-							if (behaviorTree.activeStack.get_Item(j).Count > 0)
+							if (behaviorTree.activeStack[j].Count > 0)
 							{
-								int num2 = behaviorTree.activeStack.get_Item(j).Peek();
+								int num2 = behaviorTree.activeStack[j].Peek();
 								int num3 = this.FindLCA(behaviorTree, index, num2);
 								if (this.IsChild(behaviorTree, num3, compositeIndex))
 								{
@@ -1291,12 +1291,12 @@ namespace BehaviorDesigner.Runtime
 						}
 						for (int k = behaviorTree.conditionalReevaluate.Count - 1; k > i - 1; k--)
 						{
-							BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate = behaviorTree.conditionalReevaluate.get_Item(k);
+							BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate = behaviorTree.conditionalReevaluate[k];
 							if (this.FindLCA(behaviorTree, compositeIndex, conditionalReevaluate.index) == compositeIndex)
 							{
-								behaviorTree.taskList.get_Item(behaviorTree.conditionalReevaluate.get_Item(k).index).NodeData.IsReevaluating = false;
-								ObjectPool.Return<BehaviorManager.BehaviorTree.ConditionalReevaluate>(behaviorTree.conditionalReevaluate.get_Item(k));
-								behaviorTree.conditionalReevaluateMap.Remove(behaviorTree.conditionalReevaluate.get_Item(k).index);
+								behaviorTree.taskList.get_Item(behaviorTree.conditionalReevaluate[k].index).NodeData.IsReevaluating = false;
+								ObjectPool.Return<BehaviorManager.BehaviorTree.ConditionalReevaluate>(behaviorTree.conditionalReevaluate[k]);
+								behaviorTree.conditionalReevaluateMap.Remove(behaviorTree.conditionalReevaluate[k].index);
 								behaviorTree.conditionalReevaluate.RemoveAt(k);
 							}
 						}
@@ -1647,7 +1647,7 @@ namespace BehaviorDesigner.Runtime
 							{
 								for (int j = 0; j < behaviorTree.childConditionalIndex.get_Item(taskIndex).Count; j++)
 								{
-									int num4 = behaviorTree.childConditionalIndex.get_Item(taskIndex).get_Item(j);
+									int num4 = behaviorTree.childConditionalIndex.get_Item(taskIndex)[j];
 									BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate3;
 									if (behaviorTree.conditionalReevaluateMap.TryGetValue(num4, ref conditionalReevaluate3))
 									{
@@ -1660,12 +1660,12 @@ namespace BehaviorDesigner.Runtime
 										{
 											for (int k = behaviorTree.conditionalReevaluate.Count - 1; k > j - 1; k--)
 											{
-												BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate4 = behaviorTree.conditionalReevaluate.get_Item(k);
+												BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate4 = behaviorTree.conditionalReevaluate[k];
 												if (this.FindLCA(behaviorTree, num3, conditionalReevaluate4.index) == num3)
 												{
-													behaviorTree.taskList.get_Item(behaviorTree.conditionalReevaluate.get_Item(k).index).NodeData.IsReevaluating = false;
-													ObjectPool.Return<BehaviorManager.BehaviorTree.ConditionalReevaluate>(behaviorTree.conditionalReevaluate.get_Item(k));
-													behaviorTree.conditionalReevaluateMap.Remove(behaviorTree.conditionalReevaluate.get_Item(k).index);
+													behaviorTree.taskList.get_Item(behaviorTree.conditionalReevaluate[k].index).NodeData.IsReevaluating = false;
+													ObjectPool.Return<BehaviorManager.BehaviorTree.ConditionalReevaluate>(behaviorTree.conditionalReevaluate[k]);
+													behaviorTree.conditionalReevaluateMap.Remove(behaviorTree.conditionalReevaluate[k].index);
 													behaviorTree.conditionalReevaluate.RemoveAt(k);
 												}
 											}
@@ -1800,9 +1800,9 @@ namespace BehaviorDesigner.Runtime
 			{
 				for (int j = 0; j < behaviorTree.activeStack.Count; j++)
 				{
-					if (behaviorTree.activeStack.get_Item(j).Count > 0)
+					if (behaviorTree.activeStack[j].Count > 0)
 					{
-						for (int num2 = behaviorTree.activeStack.get_Item(j).Peek(); num2 != -1; num2 = behaviorTree.parentIndex.get_Item(num2))
+						for (int num2 = behaviorTree.activeStack[j].Peek(); num2 != -1; num2 = behaviorTree.parentIndex.get_Item(num2))
 						{
 							if (num2 == num)
 							{
@@ -1956,10 +1956,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnCollisionEnter(collision);
 					}
@@ -1990,10 +1990,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnCollisionExit(collision);
 					}
@@ -2024,10 +2024,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnTriggerEnter(other);
 					}
@@ -2058,10 +2058,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnTriggerExit(other);
 					}
@@ -2092,10 +2092,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnCollisionEnter2D(collision);
 					}
@@ -2126,10 +2126,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnCollisionExit2D(collision);
 					}
@@ -2160,10 +2160,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnTriggerEnter2D(other);
 					}
@@ -2194,10 +2194,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnTriggerExit2D(other);
 					}
@@ -2228,10 +2228,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnControllerColliderHit(hit);
 					}
@@ -2262,10 +2262,10 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int j = 0; j < behaviorTree.conditionalReevaluate.Count; j++)
 			{
-				int num = behaviorTree.conditionalReevaluate.get_Item(j).index;
+				int num = behaviorTree.conditionalReevaluate[j].index;
 				if (!behaviorTree.taskList[num].Disabled)
 				{
-					if (behaviorTree.conditionalReevaluate.get_Item(j).compositeIndex != -1)
+					if (behaviorTree.conditionalReevaluate[j].compositeIndex != -1)
 					{
 						behaviorTree.taskList[num].OnAnimatorIK();
 					}
