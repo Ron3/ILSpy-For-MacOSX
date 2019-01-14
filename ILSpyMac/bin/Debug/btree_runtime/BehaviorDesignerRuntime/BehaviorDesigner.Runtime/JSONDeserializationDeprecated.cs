@@ -52,16 +52,16 @@ namespace BehaviorDesigner.Runtime
 			JSONDeserializationDeprecated.DeserializeVariables(behaviorSource, dictionary, taskData.fieldSerializationData.unityObjects);
 			if (dictionary.ContainsKey("EntryTask"))
 			{
-				behaviorSource.EntryTask = JSONDeserializationDeprecated.DeserializeTask(behaviorSource, dictionary.get_Item("EntryTask") as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
+				behaviorSource.EntryTask = JSONDeserializationDeprecated.DeserializeTask(behaviorSource, dictionary["EntryTask"] as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
 			}
 			if (dictionary.ContainsKey("RootTask"))
 			{
-				behaviorSource.RootTask = JSONDeserializationDeprecated.DeserializeTask(behaviorSource, dictionary.get_Item("RootTask") as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
+				behaviorSource.RootTask = JSONDeserializationDeprecated.DeserializeTask(behaviorSource, dictionary["RootTask"] as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
 			}
 			if (dictionary.ContainsKey("DetachedTasks"))
 			{
 				List<Task> list = new List<Task>();
-				IEnumerator enumerator = (dictionary.get_Item("DetachedTasks") as IEnumerable).GetEnumerator();
+				IEnumerator enumerator = (dictionary["DetachedTasks"] as IEnumerable).GetEnumerator();
 				try
 				{
 					while (enumerator.MoveNext())
@@ -189,7 +189,7 @@ namespace BehaviorDesigner.Runtime
 				return null;
 			}
 			task.Owner = (behaviorSource.Owner.GetObject() as Behavior);
-			task.ID = Convert.ToInt32(dict.get_Item("ID"));
+			task.ID = Convert.ToInt32(dict["ID"]);
 			object obj;
 			if (dict.TryGetValue("Name", ref obj))
 			{
@@ -204,7 +204,7 @@ namespace BehaviorDesigner.Runtime
 				task.Disabled = Convert.ToBoolean(obj);
 			}
 			IDtoTask.Add(task.ID, task);
-			task.NodeData = JSONDeserializationDeprecated.DeserializeNodeData(dict.get_Item("NodeData") as Dictionary<string, object>, task);
+			task.NodeData = JSONDeserializationDeprecated.DeserializeNodeData(dict["NodeData"] as Dictionary<string, object>, task);
 			if (task.GetType().Equals(typeof(UnknownTask)) || task.GetType().Equals(typeof(UnknownParentTask)))
 			{
 				if (!task.FriendlyName.Contains("Unknown "))
@@ -320,7 +320,7 @@ namespace BehaviorDesigner.Runtime
 					}
 				}
 			}
-			Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dict.get_Item("Type") as string);
+			Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dict["Type"] as string);
 			if (typeWithinAssembly == null)
 			{
 				return null;
@@ -658,22 +658,22 @@ namespace BehaviorDesigner.Runtime
 		{
 			AnimationCurve animationCurve = new AnimationCurve();
 			object obj;
-			if (value.TryGetValue("Keys", ref obj))
+			if (value.TryGetValue("Keys", out obj))
 			{
 				List<object> list = obj as List<object>;
 				for (int i = 0; i < list.Count; i++)
 				{
 					List<object> list2 = list[i] as List<object>;
-					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2[0], typeof(float)), (float)Convert.ChangeType(list2.get_Item(1), typeof(float)), (float)Convert.ChangeType(list2.get_Item(2), typeof(float)), (float)Convert.ChangeType(list2.get_Item(3), typeof(float)));
-					keyframe.tangentMode=(int)Convert.ChangeType(list2.get_Item(4), typeof(int));
+					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2[0], typeof(float)), (float)Convert.ChangeType(list2[1], typeof(float)), (float)Convert.ChangeType(list2[2], typeof(float)), (float)Convert.ChangeType(list2[3], typeof(float)));
+					keyframe.tangentMode=(int)Convert.ChangeType(list2[4], typeof(int));
 					animationCurve.AddKey(keyframe);
 				}
 			}
-			if (value.TryGetValue("PreWrapMode", ref obj))
+			if (value.TryGetValue("PreWrapMode", out obj))
 			{
 				animationCurve.preWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
-			if (value.TryGetValue("PostWrapMode", ref obj))
+			if (value.TryGetValue("PostWrapMode", out obj))
 			{
 				animationCurve.postWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
 			}

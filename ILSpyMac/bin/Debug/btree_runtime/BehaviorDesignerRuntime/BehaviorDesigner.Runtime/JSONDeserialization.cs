@@ -74,16 +74,16 @@ namespace BehaviorDesigner.Runtime
 			JSONDeserialization.DeserializeVariables(behaviorSource, dictionary, taskData.fieldSerializationData.unityObjects);
 			if (dictionary.ContainsKey("EntryTask"))
 			{
-				behaviorSource.EntryTask = JSONDeserialization.DeserializeTask(behaviorSource, dictionary.get_Item("EntryTask") as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
+				behaviorSource.EntryTask = JSONDeserialization.DeserializeTask(behaviorSource, dictionary["EntryTask"] as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
 			}
 			if (dictionary.ContainsKey("RootTask"))
 			{
-				behaviorSource.RootTask = JSONDeserialization.DeserializeTask(behaviorSource, dictionary.get_Item("RootTask") as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
+				behaviorSource.RootTask = JSONDeserialization.DeserializeTask(behaviorSource, dictionary["RootTask"] as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
 			}
 			if (dictionary.ContainsKey("DetachedTasks"))
 			{
 				List<Task> list = new List<Task>();
-				IEnumerator enumerator = (dictionary.get_Item("DetachedTasks") as IEnumerable).GetEnumerator();
+				IEnumerator enumerator = (dictionary["DetachedTasks"] as IEnumerable).GetEnumerator();
 				try
 				{
 					while (enumerator.MoveNext())
@@ -196,7 +196,7 @@ namespace BehaviorDesigner.Runtime
 			Task task = null;
 			try
 			{
-				Type type = TaskUtility.GetTypeWithinAssembly(dict.get_Item("Type") as string);
+				Type type = TaskUtility.GetTypeWithinAssembly(dict["Type"] as string);
 				if (type == null)
 				{
 					if (dict.ContainsKey("Children"))
@@ -223,22 +223,22 @@ namespace BehaviorDesigner.Runtime
 				return null;
 			}
 			task.Owner = (behaviorSource.Owner.GetObject() as Behavior);
-			task.ID = Convert.ToInt32(dict.get_Item("ID"), CultureInfo.InvariantCulture);
+			task.ID = Convert.ToInt32(dict["ID"], CultureInfo.InvariantCulture);
 			object obj;
-			if (dict.TryGetValue("Name", ref obj))
+			if (dict.TryGetValue("Name", out obj))
 			{
 				task.FriendlyName = (string)obj;
 			}
-			if (dict.TryGetValue("Instant", ref obj))
+			if (dict.TryGetValue("Instant", out obj))
 			{
 				task.IsInstant = Convert.ToBoolean(obj, CultureInfo.InvariantCulture);
 			}
-			if (dict.TryGetValue("Disabled", ref obj))
+			if (dict.TryGetValue("Disabled", out obj))
 			{
 				task.Disabled = Convert.ToBoolean(obj, CultureInfo.InvariantCulture);
 			}
 			IDtoTask.Add(task.ID, task);
-			task.NodeData = JSONDeserialization.DeserializeNodeData(dict.get_Item("NodeData") as Dictionary<string, object>, task);
+			task.NodeData = JSONDeserialization.DeserializeNodeData(dict["NodeData"] as Dictionary<string, object>, task);
 			if (task.GetType().Equals(typeof(UnknownTask)) || task.GetType().Equals(typeof(UnknownParentTask)))
 			{
 				if (!task.FriendlyName.Contains("Unknown "))
@@ -248,7 +248,7 @@ namespace BehaviorDesigner.Runtime
 				task.NodeData.Comment = "Unknown Task. Right click and Replace to locate new task.";
 			}
 			JSONDeserialization.DeserializeObject(task, task, dict, behaviorSource, unityObjects);
-			if (task is ParentTask && dict.TryGetValue("Children", ref obj))
+			if (task is ParentTask && dict.TryGetValue("Children", out obj))
 			{
 				ParentTask parentTask = task as ParentTask;
 				if (parentTask != null)
@@ -351,7 +351,7 @@ namespace BehaviorDesigner.Runtime
 					}
 				}
 			}
-			Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dict.get_Item("Type") as string);
+			Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dict["Type"] as string);
 			if (typeWithinAssembly == null)
 			{
 				return null;
@@ -490,7 +490,7 @@ namespace BehaviorDesigner.Runtime
 							if (TaskUtility.HasAttribute(allFields[i], typeof(InspectTaskAttribute)))
 							{
 								Dictionary<string, object> dictionary = obj2 as Dictionary<string, object>;
-								Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dictionary.get_Item("Type") as string);
+								Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(dictionary["Type"] as string);
 								if (typeWithinAssembly != null)
 								{
 									Task task2 = TaskUtility.CreateInstance(typeWithinAssembly) as Task;
@@ -715,8 +715,8 @@ namespace BehaviorDesigner.Runtime
 				for (int i = 0; i < list.Count; i++)
 				{
 					List<object> list2 = list[i] as List<object>;
-					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2[0], typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2.get_Item(1), typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2.get_Item(2), typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2.get_Item(3), typeof(float), CultureInfo.InvariantCulture));
-					keyframe.tangentMode=(int)Convert.ChangeType(list2.get_Item(4), typeof(int));
+					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2[0], typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2[1], typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2[2], typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2[3], typeof(float), CultureInfo.InvariantCulture));
+					keyframe.tangentMode=(int)Convert.ChangeType(list2[4], typeof(int));
 					animationCurve.AddKey(keyframe);
 				}
 			}

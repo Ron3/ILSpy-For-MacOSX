@@ -258,7 +258,7 @@ public static class BinaryDeserializationDeprecated
 		int num2;
 		if (count + 1 < taskSerializationData.startIndex.Count)
 		{
-			num2 = taskSerializationData.startIndex.get_Item(count + 1);
+			num2 = taskSerializationData.startIndex[count + 1];
 		}
 		else
 		{
