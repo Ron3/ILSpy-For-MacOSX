@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -74,7 +74,7 @@ namespace BehaviorDesigner.Runtime
 
 		public void CheckForSerialization(bool force)
 		{
-			if (force || this.mVariables == null || (this.mVariables.get_Count() > 0 && this.mVariables.get_Item(0) == null))
+			if (force || this.mVariables == null || (this.mVariables.Count > 0 && this.mVariables.get_Item(0) == null))
 			{
 				if (this.VariableData != null && !string.IsNullOrEmpty(this.VariableData.JSONSerialization))
 				{
@@ -96,7 +96,7 @@ namespace BehaviorDesigner.Runtime
 			this.CheckForSerialization(false);
 			if (this.mVariables != null)
 			{
-				if (this.mSharedVariableIndex == null || this.mSharedVariableIndex.get_Count() != this.mVariables.get_Count())
+				if (this.mSharedVariableIndex == null || this.mSharedVariableIndex.Count != this.mVariables.Count)
 				{
 					this.UpdateVariablesIndex();
 				}
@@ -181,13 +181,13 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (this.mSharedVariableIndex == null)
 			{
-				this.mSharedVariableIndex = new Dictionary<string, int>(this.mVariables.get_Count());
+				this.mSharedVariableIndex = new Dictionary<string, int>(this.mVariables.Count);
 			}
 			else
 			{
 				this.mSharedVariableIndex.Clear();
 			}
-			for (int i = 0; i < this.mVariables.get_Count(); i++)
+			for (int i = 0; i < this.mVariables.Count; i++)
 			{
 				if (this.mVariables.get_Item(i) != null)
 				{

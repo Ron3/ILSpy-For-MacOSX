@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -88,7 +88,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					while (enumerator.MoveNext())
 					{
-						Dictionary<string, object> dict = (Dictionary<string, object>)enumerator.get_Current();
+						Dictionary<string, object> dict = (Dictionary<string, object>)enumerator.Current;
 						list.Add(JSONDeserialization.DeserializeTask(behaviorSource, dict, ref dictionary2, taskData.fieldSerializationData.unityObjects));
 					}
 				}
@@ -102,19 +102,19 @@ namespace BehaviorDesigner.Runtime
 				}
 				behaviorSource.DetachedTasks = list;
 			}
-			if (JSONDeserialization.taskIDs != null && JSONDeserialization.taskIDs.get_Count() > 0)
+			if (JSONDeserialization.taskIDs != null && JSONDeserialization.taskIDs.Count > 0)
 			{
-				using (Dictionary<JSONDeserialization.TaskField, List<int>>.KeyCollection.Enumerator enumerator2 = JSONDeserialization.taskIDs.get_Keys().GetEnumerator())
+				using (Dictionary<JSONDeserialization.TaskField, List<int>>.KeyCollection.Enumerator enumerator2 = JSONDeserialization.taskIDs.Keys.GetEnumerator())
 				{
 					while (enumerator2.MoveNext())
 					{
-						JSONDeserialization.TaskField current = enumerator2.get_Current();
+						JSONDeserialization.TaskField current = enumerator2.Current;
 						List<int> list2 = JSONDeserialization.taskIDs.get_Item(current);
-						Type fieldType = current.fieldInfo.get_FieldType();
-						if (current.fieldInfo.get_FieldType().get_IsArray())
+						Type fieldType = current.fieldInfo.FieldType;
+						if (current.fieldInfo.FieldType.IsArray)
 						{
 							int num = 0;
-							for (int i = 0; i < list2.get_Count(); i++)
+							for (int i = 0; i < list2.Count; i++)
 							{
 								Task task = dictionary2.get_Item(list2.get_Item(i));
 								if (task.GetType().Equals(fieldType.GetElementType()) || task.GetType().IsSubclassOf(fieldType.GetElementType()))
@@ -124,7 +124,7 @@ namespace BehaviorDesigner.Runtime
 							}
 							Array array = Array.CreateInstance(fieldType.GetElementType(), num);
 							int num2 = 0;
-							for (int j = 0; j < list2.get_Count(); j++)
+							for (int j = 0; j < list2.Count; j++)
 							{
 								Task task2 = dictionary2.get_Item(list2.get_Item(j));
 								if (task2.GetType().Equals(fieldType.GetElementType()) || task2.GetType().IsSubclassOf(fieldType.GetElementType()))
@@ -138,7 +138,7 @@ namespace BehaviorDesigner.Runtime
 						else
 						{
 							Task task3 = dictionary2.get_Item(list2.get_Item(0));
-							if (task3.GetType().Equals(current.fieldInfo.get_FieldType()) || task3.GetType().IsSubclassOf(current.fieldInfo.get_FieldType()))
+							if (task3.GetType().Equals(current.fieldInfo.FieldType) || task3.GetType().IsSubclassOf(current.fieldInfo.FieldType))
 							{
 								current.fieldInfo.SetValue(current.task, task3);
 							}
@@ -182,7 +182,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<SharedVariable> list = new List<SharedVariable>();
 				IList list2 = obj as IList;
-				for (int i = 0; i < list2.get_Count(); i++)
+				for (int i = 0; i < list2.Count; i++)
 				{
 					SharedVariable sharedVariable = JSONDeserialization.DeserializeSharedVariable(list2.get_Item(i) as Dictionary<string, object>, variableSource, true, unityObjects);
 					list.Add(sharedVariable);
@@ -223,7 +223,7 @@ namespace BehaviorDesigner.Runtime
 				return null;
 			}
 			task.Owner = (behaviorSource.Owner.GetObject() as Behavior);
-			task.ID = Convert.ToInt32(dict.get_Item("ID"), CultureInfo.get_InvariantCulture());
+			task.ID = Convert.ToInt32(dict.get_Item("ID"), CultureInfo.InvariantCulture);
 			object obj;
 			if (dict.TryGetValue("Name", ref obj))
 			{
@@ -231,11 +231,11 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (dict.TryGetValue("Instant", ref obj))
 			{
-				task.IsInstant = Convert.ToBoolean(obj, CultureInfo.get_InvariantCulture());
+				task.IsInstant = Convert.ToBoolean(obj, CultureInfo.InvariantCulture);
 			}
 			if (dict.TryGetValue("Disabled", ref obj))
 			{
-				task.Disabled = Convert.ToBoolean(obj, CultureInfo.get_InvariantCulture());
+				task.Disabled = Convert.ToBoolean(obj, CultureInfo.InvariantCulture);
 			}
 			IDtoTask.Add(task.ID, task);
 			task.NodeData = JSONDeserialization.DeserializeNodeData(dict.get_Item("NodeData") as Dictionary<string, object>, task);
@@ -258,9 +258,9 @@ namespace BehaviorDesigner.Runtime
 					{
 						while (enumerator.MoveNext())
 						{
-							Dictionary<string, object> dict2 = (Dictionary<string, object>)enumerator.get_Current();
+							Dictionary<string, object> dict2 = (Dictionary<string, object>)enumerator.Current;
 							Task child = JSONDeserialization.DeserializeTask(behaviorSource, dict2, ref IDtoTask, unityObjects);
-							int index = (parentTask.Children != null) ? parentTask.Children.get_Count() : 0;
+							int index = (parentTask.Children != null) ? parentTask.Children.Count : 0;
 							parentTask.AddChild(child, index);
 						}
 					}
@@ -295,27 +295,27 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (dict.TryGetValue("IsBreakpoint", ref obj))
 			{
-				nodeData.IsBreakpoint = Convert.ToBoolean(obj, CultureInfo.get_InvariantCulture());
+				nodeData.IsBreakpoint = Convert.ToBoolean(obj, CultureInfo.InvariantCulture);
 			}
 			if (dict.TryGetValue("Collapsed", ref obj))
 			{
-				nodeData.Collapsed = Convert.ToBoolean(obj, CultureInfo.get_InvariantCulture());
+				nodeData.Collapsed = Convert.ToBoolean(obj, CultureInfo.InvariantCulture);
 			}
 			if (dict.TryGetValue("ColorIndex", ref obj))
 			{
-				nodeData.ColorIndex = Convert.ToInt32(obj, CultureInfo.get_InvariantCulture());
+				nodeData.ColorIndex = Convert.ToInt32(obj, CultureInfo.InvariantCulture);
 			}
 			if (dict.TryGetValue("WatchedFields", ref obj))
 			{
 				nodeData.WatchedFieldNames = new List<string>();
 				nodeData.WatchedFields = new List<FieldInfo>();
 				IList list = obj as IList;
-				for (int i = 0; i < list.get_Count(); i++)
+				for (int i = 0; i < list.Count; i++)
 				{
 					FieldInfo field = task.GetType().GetField((string)list.get_Item(i), 52);
 					if (field != null)
 					{
-						nodeData.WatchedFieldNames.Add(field.get_Name());
+						nodeData.WatchedFieldNames.Add(field.Name);
 						nodeData.WatchedFields.Add(field);
 					}
 				}
@@ -335,7 +335,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				object obj2;
 				dict.TryGetValue("IsGlobal", ref obj2);
-				if (!dict.TryGetValue("IsGlobal", ref obj2) || !Convert.ToBoolean(obj2, CultureInfo.get_InvariantCulture()))
+				if (!dict.TryGetValue("IsGlobal", ref obj2) || !Convert.ToBoolean(obj2, CultureInfo.InvariantCulture))
 				{
 					sharedVariable = variableSource.GetVariable(obj as string);
 				}
@@ -364,22 +364,22 @@ namespace BehaviorDesigner.Runtime
 				object obj3;
 				if (dict.TryGetValue("IsShared", ref obj3))
 				{
-					sharedVariable.IsShared = Convert.ToBoolean(obj3, CultureInfo.get_InvariantCulture());
+					sharedVariable.IsShared = Convert.ToBoolean(obj3, CultureInfo.InvariantCulture);
 				}
 				if (dict.TryGetValue("IsGlobal", ref obj3))
 				{
-					sharedVariable.IsGlobal = Convert.ToBoolean(obj3, CultureInfo.get_InvariantCulture());
+					sharedVariable.IsGlobal = Convert.ToBoolean(obj3, CultureInfo.InvariantCulture);
 				}
 				if (dict.TryGetValue("NetworkSync", ref obj3))
 				{
-					sharedVariable.NetworkSync = Convert.ToBoolean(obj3, CultureInfo.get_InvariantCulture());
+					sharedVariable.NetworkSync = Convert.ToBoolean(obj3, CultureInfo.InvariantCulture);
 				}
 				if (!sharedVariable.IsGlobal && dict.TryGetValue("PropertyMapping", ref obj3))
 				{
 					sharedVariable.PropertyMapping = (obj3 as string);
 					if (dict.TryGetValue("PropertyMappingOwner", ref obj3))
 					{
-						sharedVariable.PropertyMappingOwner = (JSONDeserialization.IndexToUnityObject(Convert.ToInt32(obj3, CultureInfo.get_InvariantCulture()), unityObjects) as GameObject);
+						sharedVariable.PropertyMappingOwner = (JSONDeserialization.IndexToUnityObject(Convert.ToInt32(obj3, CultureInfo.InvariantCulture), unityObjects) as GameObject);
 					}
 					sharedVariable.InitializePropertyMapping(variableSource as BehaviorSource);
 				}
@@ -401,26 +401,26 @@ namespace BehaviorDesigner.Runtime
 			FieldInfo[] allFields = TaskUtility.GetAllFields(obj.GetType());
 			for (int i = 0; i < allFields.Length; i++)
 			{
-				string text = (!JSONDeserialization.updatedSerialization) ? (allFields[i].get_FieldType().get_Name().GetHashCode() + allFields[i].get_Name().GetHashCode()).ToString() : (allFields[i].get_FieldType().get_Name() + allFields[i].get_Name());
+				string text = (!JSONDeserialization.updatedSerialization) ? (allFields[i].FieldType.Name.GetHashCode() + allFields[i].Name.GetHashCode()).ToString() : (allFields[i].FieldType.Name + allFields[i].Name);
 				object obj2;
 				if (dict.TryGetValue(text, ref obj2))
 				{
-					if (typeof(IList).IsAssignableFrom(allFields[i].get_FieldType()))
+					if (typeof(IList).IsAssignableFrom(allFields[i].FieldType))
 					{
 						IList list = obj2 as IList;
 						if (list != null)
 						{
 							Type type;
-							if (allFields[i].get_FieldType().get_IsArray())
+							if (allFields[i].FieldType.IsArray)
 							{
-								type = allFields[i].get_FieldType().GetElementType();
+								type = allFields[i].FieldType.GetElementType();
 							}
 							else
 							{
-								Type type2 = allFields[i].get_FieldType();
-								while (!type2.get_IsGenericType())
+								Type type2 = allFields[i].FieldType;
+								while (!type2.IsGenericType)
 								{
-									type2 = type2.get_BaseType();
+									type2 = type2.BaseType;
 								}
 								type = type2.GetGenericArguments()[0];
 							}
@@ -430,17 +430,17 @@ namespace BehaviorDesigner.Runtime
 								if (JSONDeserialization.taskIDs != null)
 								{
 									List<int> list2 = new List<int>();
-									for (int j = 0; j < list.get_Count(); j++)
+									for (int j = 0; j < list.Count; j++)
 									{
-										list2.Add(Convert.ToInt32(list.get_Item(j), CultureInfo.get_InvariantCulture()));
+										list2.Add(Convert.ToInt32(list.get_Item(j), CultureInfo.InvariantCulture));
 									}
 									JSONDeserialization.taskIDs.Add(new JSONDeserialization.TaskField(task, allFields[i]), list2);
 								}
 							}
-							else if (allFields[i].get_FieldType().get_IsArray())
+							else if (allFields[i].FieldType.IsArray)
 							{
-								Array array = Array.CreateInstance(type, list.get_Count());
-								for (int k = 0; k < list.get_Count(); k++)
+								Array array = Array.CreateInstance(type, list.Count);
+								for (int k = 0; k < list.Count; k++)
 								{
 									if (list.get_Item(k) == null)
 									{
@@ -456,7 +456,7 @@ namespace BehaviorDesigner.Runtime
 							else
 							{
 								IList list3;
-								if (allFields[i].get_FieldType().get_IsGenericType())
+								if (allFields[i].FieldType.IsGenericType)
 								{
 									list3 = (TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
 									{
@@ -465,9 +465,9 @@ namespace BehaviorDesigner.Runtime
 								}
 								else
 								{
-									list3 = (TaskUtility.CreateInstance(allFields[i].get_FieldType()) as IList);
+									list3 = (TaskUtility.CreateInstance(allFields[i].FieldType) as IList);
 								}
-								for (int l = 0; l < list.get_Count(); l++)
+								for (int l = 0; l < list.Count; l++)
 								{
 									if (list.get_Item(l) == null)
 									{
@@ -484,7 +484,7 @@ namespace BehaviorDesigner.Runtime
 					}
 					else
 					{
-						Type fieldType = allFields[i].get_FieldType();
+						Type fieldType = allFields[i].FieldType;
 						if (fieldType.Equals(typeof(Task)) || fieldType.IsSubclassOf(typeof(Task)))
 						{
 							if (TaskUtility.HasAttribute(allFields[i], typeof(InspectTaskAttribute)))
@@ -501,7 +501,7 @@ namespace BehaviorDesigner.Runtime
 							else if (JSONDeserialization.taskIDs != null)
 							{
 								List<int> list4 = new List<int>();
-								list4.Add(Convert.ToInt32(obj2, CultureInfo.get_InvariantCulture()));
+								list4.Add(Convert.ToInt32(obj2, CultureInfo.InvariantCulture));
 								JSONDeserialization.taskIDs.Add(new JSONDeserialization.TaskField(task, allFields[i]), list4);
 							}
 						}
@@ -511,17 +511,17 @@ namespace BehaviorDesigner.Runtime
 						}
 					}
 				}
-				else if (typeof(SharedVariable).IsAssignableFrom(allFields[i].get_FieldType()) && !allFields[i].get_FieldType().get_IsAbstract())
+				else if (typeof(SharedVariable).IsAssignableFrom(allFields[i].FieldType) && !allFields[i].FieldType.IsAbstract)
 				{
-					if (dict.TryGetValue((allFields[i].get_FieldType().get_Name().GetHashCode() + allFields[i].get_Name().GetHashCode()).ToString(), ref obj2))
+					if (dict.TryGetValue((allFields[i].FieldType.Name.GetHashCode() + allFields[i].Name.GetHashCode()).ToString(), ref obj2))
 					{
-						SharedVariable sharedVariable = TaskUtility.CreateInstance(allFields[i].get_FieldType()) as SharedVariable;
-						sharedVariable.SetValue(JSONDeserialization.ValueToObject(task, allFields[i].get_FieldType(), obj2, variableSource, unityObjects));
+						SharedVariable sharedVariable = TaskUtility.CreateInstance(allFields[i].FieldType) as SharedVariable;
+						sharedVariable.SetValue(JSONDeserialization.ValueToObject(task, allFields[i].FieldType, obj2, variableSource, unityObjects));
 						allFields[i].SetValue(obj, sharedVariable);
 					}
 					else
 					{
-						SharedVariable sharedVariable2 = TaskUtility.CreateInstance(allFields[i].get_FieldType()) as SharedVariable;
+						SharedVariable sharedVariable2 = TaskUtility.CreateInstance(allFields[i].FieldType) as SharedVariable;
 						SharedVariable sharedVariable3 = allFields[i].GetValue(obj) as SharedVariable;
 						if (sharedVariable3 != null)
 						{
@@ -546,9 +546,9 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (type.Equals(typeof(Object)) || type.IsSubclassOf(typeof(Object)))
 			{
-				return JSONDeserialization.IndexToUnityObject(Convert.ToInt32(obj, CultureInfo.get_InvariantCulture()), unityObjects);
+				return JSONDeserialization.IndexToUnityObject(Convert.ToInt32(obj, CultureInfo.InvariantCulture), unityObjects);
 			}
-			if (!type.get_IsPrimitive())
+			if (!type.IsPrimitive)
 			{
 				if (!type.Equals(typeof(string)))
 				{
@@ -609,7 +609,7 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (type.Equals(typeof(LayerMask)))
 			{
-				return JSONDeserialization.ValueToLayerMask(Convert.ToInt32(obj, CultureInfo.get_InvariantCulture()));
+				return JSONDeserialization.ValueToLayerMask(Convert.ToInt32(obj, CultureInfo.InvariantCulture));
 			}
 			if (type.Equals(typeof(AnimationCurve)))
 			{
@@ -622,38 +622,38 @@ namespace BehaviorDesigner.Runtime
 
 		private static Vector2 StringToVector2(string vector2String)
 		{
-			string[] array = vector2String.Substring(1, vector2String.get_Length() - 2).Split(new char[]
+			string[] array = vector2String.Substring(1, vector2String.Length - 2).Split(new char[]
 			{
 				','
 			});
-			return new Vector2(float.Parse(array[0], CultureInfo.get_InvariantCulture()), float.Parse(array[1], CultureInfo.get_InvariantCulture()));
+			return new Vector2(float.Parse(array[0], CultureInfo.InvariantCulture), float.Parse(array[1], CultureInfo.InvariantCulture));
 		}
 
 		private static Vector3 StringToVector3(string vector3String)
 		{
-			string[] array = vector3String.Substring(1, vector3String.get_Length() - 2).Split(new char[]
+			string[] array = vector3String.Substring(1, vector3String.Length - 2).Split(new char[]
 			{
 				','
 			});
-			return new Vector3(float.Parse(array[0], CultureInfo.get_InvariantCulture()), float.Parse(array[1], CultureInfo.get_InvariantCulture()), float.Parse(array[2], CultureInfo.get_InvariantCulture()));
+			return new Vector3(float.Parse(array[0], CultureInfo.InvariantCulture), float.Parse(array[1], CultureInfo.InvariantCulture), float.Parse(array[2], CultureInfo.InvariantCulture));
 		}
 
 		private static Vector4 StringToVector4(string vector4String)
 		{
-			string[] array = vector4String.Substring(1, vector4String.get_Length() - 2).Split(new char[]
+			string[] array = vector4String.Substring(1, vector4String.Length - 2).Split(new char[]
 			{
 				','
 			});
-			return new Vector4(float.Parse(array[0], CultureInfo.get_InvariantCulture()), float.Parse(array[1], CultureInfo.get_InvariantCulture()), float.Parse(array[2], CultureInfo.get_InvariantCulture()), float.Parse(array[3], CultureInfo.get_InvariantCulture()));
+			return new Vector4(float.Parse(array[0], CultureInfo.InvariantCulture), float.Parse(array[1], CultureInfo.InvariantCulture), float.Parse(array[2], CultureInfo.InvariantCulture), float.Parse(array[3], CultureInfo.InvariantCulture));
 		}
 
 		private static Quaternion StringToQuaternion(string quaternionString)
 		{
-			string[] array = quaternionString.Substring(1, quaternionString.get_Length() - 2).Split(new char[]
+			string[] array = quaternionString.Substring(1, quaternionString.Length - 2).Split(new char[]
 			{
 				','
 			});
-			return new Quaternion(float.Parse(array[0]), float.Parse(array[1], CultureInfo.get_InvariantCulture()), float.Parse(array[2], CultureInfo.get_InvariantCulture()), float.Parse(array[3], CultureInfo.get_InvariantCulture()));
+			return new Quaternion(float.Parse(array[0]), float.Parse(array[1], CultureInfo.InvariantCulture), float.Parse(array[2], CultureInfo.InvariantCulture), float.Parse(array[3], CultureInfo.InvariantCulture));
 		}
 
 		private static Matrix4x4 StringToMatrix4x4(string matrixString)
@@ -661,47 +661,47 @@ namespace BehaviorDesigner.Runtime
 			string[] array = matrixString.Split(null);
 			return new Matrix4x4
 			{
-				m00 = float.Parse(array[0], CultureInfo.get_InvariantCulture()),
-				m01 = float.Parse(array[1], CultureInfo.get_InvariantCulture()),
-				m02 = float.Parse(array[2], CultureInfo.get_InvariantCulture()),
-				m03 = float.Parse(array[3], CultureInfo.get_InvariantCulture()),
-				m10 = float.Parse(array[4], CultureInfo.get_InvariantCulture()),
-				m11 = float.Parse(array[5], CultureInfo.get_InvariantCulture()),
-				m12 = float.Parse(array[6], CultureInfo.get_InvariantCulture()),
-				m13 = float.Parse(array[7], CultureInfo.get_InvariantCulture()),
-				m20 = float.Parse(array[8], CultureInfo.get_InvariantCulture()),
-				m21 = float.Parse(array[9], CultureInfo.get_InvariantCulture()),
-				m22 = float.Parse(array[10], CultureInfo.get_InvariantCulture()),
-				m23 = float.Parse(array[11], CultureInfo.get_InvariantCulture()),
-				m30 = float.Parse(array[12], CultureInfo.get_InvariantCulture()),
-				m31 = float.Parse(array[13], CultureInfo.get_InvariantCulture()),
-				m32 = float.Parse(array[14], CultureInfo.get_InvariantCulture()),
-				m33 = float.Parse(array[15], CultureInfo.get_InvariantCulture())
+				m00 = float.Parse(array[0], CultureInfo.InvariantCulture),
+				m01 = float.Parse(array[1], CultureInfo.InvariantCulture),
+				m02 = float.Parse(array[2], CultureInfo.InvariantCulture),
+				m03 = float.Parse(array[3], CultureInfo.InvariantCulture),
+				m10 = float.Parse(array[4], CultureInfo.InvariantCulture),
+				m11 = float.Parse(array[5], CultureInfo.InvariantCulture),
+				m12 = float.Parse(array[6], CultureInfo.InvariantCulture),
+				m13 = float.Parse(array[7], CultureInfo.InvariantCulture),
+				m20 = float.Parse(array[8], CultureInfo.InvariantCulture),
+				m21 = float.Parse(array[9], CultureInfo.InvariantCulture),
+				m22 = float.Parse(array[10], CultureInfo.InvariantCulture),
+				m23 = float.Parse(array[11], CultureInfo.InvariantCulture),
+				m30 = float.Parse(array[12], CultureInfo.InvariantCulture),
+				m31 = float.Parse(array[13], CultureInfo.InvariantCulture),
+				m32 = float.Parse(array[14], CultureInfo.InvariantCulture),
+				m33 = float.Parse(array[15], CultureInfo.InvariantCulture)
 			};
 		}
 
 		private static Color StringToColor(string colorString)
 		{
-			string[] array = colorString.Substring(5, colorString.get_Length() - 6).Split(new char[]
+			string[] array = colorString.Substring(5, colorString.Length - 6).Split(new char[]
 			{
 				','
 			});
-			return new Color(float.Parse(array[0], CultureInfo.get_InvariantCulture()), float.Parse(array[1], CultureInfo.get_InvariantCulture()), float.Parse(array[2], CultureInfo.get_InvariantCulture()), float.Parse(array[3], CultureInfo.get_InvariantCulture()));
+			return new Color(float.Parse(array[0], CultureInfo.InvariantCulture), float.Parse(array[1], CultureInfo.InvariantCulture), float.Parse(array[2], CultureInfo.InvariantCulture), float.Parse(array[3], CultureInfo.InvariantCulture));
 		}
 
 		private static Rect StringToRect(string rectString)
 		{
-			string[] array = rectString.Substring(1, rectString.get_Length() - 2).Split(new char[]
+			string[] array = rectString.Substring(1, rectString.Length - 2).Split(new char[]
 			{
 				','
 			});
-			return new Rect(float.Parse(array[0].Substring(2, array[0].get_Length() - 2), CultureInfo.get_InvariantCulture()), float.Parse(array[1].Substring(3, array[1].get_Length() - 3), CultureInfo.get_InvariantCulture()), float.Parse(array[2].Substring(7, array[2].get_Length() - 7), CultureInfo.get_InvariantCulture()), float.Parse(array[3].Substring(8, array[3].get_Length() - 8), CultureInfo.get_InvariantCulture()));
+			return new Rect(float.Parse(array[0].Substring(2, array[0].Length - 2), CultureInfo.InvariantCulture), float.Parse(array[1].Substring(3, array[1].Length - 3), CultureInfo.InvariantCulture), float.Parse(array[2].Substring(7, array[2].Length - 7), CultureInfo.InvariantCulture), float.Parse(array[3].Substring(8, array[3].Length - 8), CultureInfo.InvariantCulture));
 		}
 
 		private static LayerMask ValueToLayerMask(int value)
 		{
 			LayerMask result = default(LayerMask);
-			result.set_value(value);
+			result.value=value;
 			return result;
 		}
 
@@ -712,28 +712,28 @@ namespace BehaviorDesigner.Runtime
 			if (value.TryGetValue("Keys", ref obj))
 			{
 				List<object> list = obj as List<object>;
-				for (int i = 0; i < list.get_Count(); i++)
+				for (int i = 0; i < list.Count; i++)
 				{
 					List<object> list2 = list.get_Item(i) as List<object>;
-					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2.get_Item(0), typeof(float), CultureInfo.get_InvariantCulture()), (float)Convert.ChangeType(list2.get_Item(1), typeof(float), CultureInfo.get_InvariantCulture()), (float)Convert.ChangeType(list2.get_Item(2), typeof(float), CultureInfo.get_InvariantCulture()), (float)Convert.ChangeType(list2.get_Item(3), typeof(float), CultureInfo.get_InvariantCulture()));
-					keyframe.set_tangentMode((int)Convert.ChangeType(list2.get_Item(4), typeof(int)));
+					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2.get_Item(0), typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2.get_Item(1), typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2.get_Item(2), typeof(float), CultureInfo.InvariantCulture), (float)Convert.ChangeType(list2.get_Item(3), typeof(float), CultureInfo.InvariantCulture));
+					keyframe.tangentMode=(int)Convert.ChangeType(list2.get_Item(4), typeof(int));
 					animationCurve.AddKey(keyframe);
 				}
 			}
 			if (value.TryGetValue("PreWrapMode", ref obj))
 			{
-				animationCurve.set_preWrapMode((int)Enum.Parse(typeof(WrapMode), (string)obj));
+				animationCurve.preWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
 			if (value.TryGetValue("PostWrapMode", ref obj))
 			{
-				animationCurve.set_postWrapMode((int)Enum.Parse(typeof(WrapMode), (string)obj));
+				animationCurve.postWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
 			return animationCurve;
 		}
 
 		private static Object IndexToUnityObject(int index, List<Object> unityObjects)
 		{
-			if (index < 0 || index >= unityObjects.get_Count())
+			if (index < 0 || index >= unityObjects.Count)
 			{
 				return null;
 			}

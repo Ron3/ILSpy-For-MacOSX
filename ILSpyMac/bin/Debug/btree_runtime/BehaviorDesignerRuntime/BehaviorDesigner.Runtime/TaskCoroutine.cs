@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
@@ -47,7 +47,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					break;
 				}
-				yield return this.mCoroutineEnumerator.get_Current();
+				yield return this.mCoroutineEnumerator.Current;
 			}
 			this.mParent.TaskCoroutineEnded(this, this.mCoroutineName);
 			yield break;

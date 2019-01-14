@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -151,7 +151,7 @@ namespace BehaviorDesigner.Runtime
 
 		public override void InitializePropertyMapping(BehaviorSource behaviorSource)
 		{
-			if (!Application.get_isPlaying() || !(behaviorSource.Owner.GetObject() is Behavior))
+			if (!Application.isPlaying || !(behaviorSource.Owner.GetObject() is Behavior))
 			{
 				return;
 			}
@@ -168,7 +168,7 @@ namespace BehaviorDesigner.Runtime
 				}
 				else
 				{
-					gameObject = (behaviorSource.Owner.GetObject() as Behavior).get_gameObject();
+					gameObject = (behaviorSource.Owner.GetObject() as Behavior).gameObject;
 				}
 				if (gameObject == null)
 				{

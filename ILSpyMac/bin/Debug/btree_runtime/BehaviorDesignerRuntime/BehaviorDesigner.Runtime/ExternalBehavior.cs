@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,7 +52,7 @@ namespace BehaviorDesigner.Runtime
 
 		public string GetOwnerName()
 		{
-			return base.get_name();
+			return base.name;
 		}
 
 		public void Init()
@@ -98,7 +98,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					T result = (T)((object)null);
 					if ((result = this.FindTask<T>(parentTask.Children.get_Item(i))) != null)
@@ -127,7 +127,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					this.FindTasks<T>(parentTask.Children.get_Item(i), ref taskList);
 				}
@@ -155,7 +155,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					Task result;
 					if ((result = this.FindTaskWithName(taskName, parentTask.Children.get_Item(i))) != null)
@@ -183,7 +183,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					this.FindTasksWithName(taskName, parentTask.Children.get_Item(i), ref taskList);
 				}

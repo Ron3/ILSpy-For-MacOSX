@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -194,7 +194,7 @@ namespace BehaviorDesigner.Runtime
 			this.CheckForSerialization(false, null);
 			if (this.mVariables != null)
 			{
-				if (this.mSharedVariableIndex == null || this.mSharedVariableIndex.get_Count() != this.mVariables.get_Count())
+				if (this.mSharedVariableIndex == null || this.mSharedVariableIndex.Count != this.mVariables.Count)
 				{
 					this.UpdateVariablesIndex();
 				}
@@ -275,13 +275,13 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (this.mSharedVariableIndex == null)
 			{
-				this.mSharedVariableIndex = new Dictionary<string, int>(this.mVariables.get_Count());
+				this.mSharedVariableIndex = new Dictionary<string, int>(this.mVariables.Count);
 			}
 			else
 			{
 				this.mSharedVariableIndex.Clear();
 			}
-			for (int i = 0; i < this.mVariables.get_Count(); i++)
+			for (int i = 0; i < this.mVariables.Count; i++)
 			{
 				if (this.mVariables.get_Item(i) != null)
 				{

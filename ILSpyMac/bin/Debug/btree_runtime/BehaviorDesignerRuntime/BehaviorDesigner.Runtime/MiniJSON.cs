@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -223,7 +223,7 @@ namespace BehaviorDesigner.Runtime
 							goto Block_3;
 						}
 						this.json.Read();
-						dictionary.set_Item(text, this.ParseValue());
+						dictionary.Item=text, this.ParseValue();
 						continue;
 					}
 					case MiniJSON.Parser.TOKEN.CURLY_CLOSE:
@@ -389,11 +389,11 @@ namespace BehaviorDesigner.Runtime
 				if (nextWord.IndexOf('.') == -1)
 				{
 					long num;
-					long.TryParse(nextWord, 511, CultureInfo.get_InvariantCulture(), ref num);
+					long.TryParse(nextWord, 511, CultureInfo.InvariantCulture, ref num);
 					return num;
 				}
 				double num2;
-				double.TryParse(nextWord, 511, CultureInfo.get_InvariantCulture(), ref num2);
+				double.TryParse(nextWord, 511, CultureInfo.InvariantCulture, ref num2);
 				return num2;
 			}
 
@@ -470,12 +470,12 @@ namespace BehaviorDesigner.Runtime
 				{
 					this.builder.Append('\t');
 				}
-				IEnumerator enumerator = obj.get_Keys().GetEnumerator();
+				IEnumerator enumerator = obj.Keys.GetEnumerator();
 				try
 				{
 					while (enumerator.MoveNext())
 					{
-						object current = enumerator.get_Current();
+						object current = enumerator.Current;
 						if (!flag)
 						{
 							this.builder.Append(',');
@@ -513,7 +513,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				this.builder.Append('[');
 				bool flag = true;
-				for (int i = 0; i < anArray.get_Count(); i++)
+				for (int i = 0; i < anArray.Count; i++)
 				{
 					object value = anArray.get_Item(i);
 					if (!flag)
@@ -585,7 +585,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				if (value is float)
 				{
-					this.builder.Append(((float)value).ToString("R", CultureInfo.get_InvariantCulture()));
+					this.builder.Append(((float)value).ToString("R", CultureInfo.InvariantCulture));
 				}
 				else if (value is int || value is uint || value is long || value is sbyte || value is byte || value is short || value is ushort || value is ulong)
 				{
@@ -593,7 +593,7 @@ namespace BehaviorDesigner.Runtime
 				}
 				else if (value is double || value is decimal)
 				{
-					this.builder.Append(Convert.ToDouble(value).ToString("R", CultureInfo.get_InvariantCulture()));
+					this.builder.Append(Convert.ToDouble(value).ToString("R", CultureInfo.InvariantCulture));
 				}
 				else if (value is Vector2)
 				{
@@ -601,9 +601,9 @@ namespace BehaviorDesigner.Runtime
 					this.builder.Append(string.Concat(new string[]
 					{
 						"\"(",
-						vector.x.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector.x.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						vector.y.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector.y.ToString("R", CultureInfo.InvariantCulture),
 						")\""
 					}));
 				}
@@ -613,11 +613,11 @@ namespace BehaviorDesigner.Runtime
 					this.builder.Append(string.Concat(new string[]
 					{
 						"\"(",
-						vector2.x.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector2.x.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						vector2.y.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector2.y.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						vector2.z.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector2.z.ToString("R", CultureInfo.InvariantCulture),
 						")\""
 					}));
 				}
@@ -627,13 +627,13 @@ namespace BehaviorDesigner.Runtime
 					this.builder.Append(string.Concat(new string[]
 					{
 						"\"(",
-						vector3.x.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector3.x.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						vector3.y.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector3.y.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						vector3.z.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector3.z.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						vector3.w.ToString("R", CultureInfo.get_InvariantCulture()),
+						vector3.w.ToString("R", CultureInfo.InvariantCulture),
 						")\""
 					}));
 				}
@@ -643,13 +643,13 @@ namespace BehaviorDesigner.Runtime
 					this.builder.Append(string.Concat(new string[]
 					{
 						"\"(",
-						quaternion.x.ToString("R", CultureInfo.get_InvariantCulture()),
+						quaternion.x.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						quaternion.y.ToString("R", CultureInfo.get_InvariantCulture()),
+						quaternion.y.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						quaternion.z.ToString("R", CultureInfo.get_InvariantCulture()),
+						quaternion.z.ToString("R", CultureInfo.InvariantCulture),
 						",",
-						quaternion.w.ToString("R", CultureInfo.get_InvariantCulture()),
+						quaternion.w.ToString("R", CultureInfo.InvariantCulture),
 						")\""
 					}));
 				}

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace BehaviorDesigner.Runtime
@@ -12,7 +12,7 @@ namespace BehaviorDesigner.Runtime
 			if (ObjectPool.poolDictionary.ContainsKey(typeof(T)))
 			{
 				Stack<T> stack = ObjectPool.poolDictionary.get_Item(typeof(T)) as Stack<T>;
-				if (stack.get_Count() > 0)
+				if (stack.Count > 0)
 				{
 					return stack.Pop();
 				}

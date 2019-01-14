@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -185,7 +185,7 @@ namespace BehaviorDesigner.Runtime
 					this.mBehaviorSource.HasSerialized = true;
 					if (allVariables != null)
 					{
-						for (int i = 0; i < allVariables.get_Count(); i++)
+						for (int i = 0; i < allVariables.Count; i++)
 						{
 							if (allVariables.get_Item(i) != null)
 							{
@@ -285,7 +285,7 @@ namespace BehaviorDesigner.Runtime
 
 		public string GetOwnerName()
 		{
-			return base.get_gameObject().get_name();
+			return base.gameObject.name;
 		}
 
 		public void Start()
@@ -303,7 +303,7 @@ namespace BehaviorDesigner.Runtime
 				return false;
 			}
 			MethodInfo method = task.GetType().GetMethod(methodName, 54);
-			if (method != null && method.get_DeclaringType().IsAssignableFrom(task.GetType()))
+			if (method != null && method.DeclaringType.IsAssignableFrom(task.GetType()))
 			{
 				return true;
 			}
@@ -312,7 +312,7 @@ namespace BehaviorDesigner.Runtime
 				ParentTask parentTask = task as ParentTask;
 				if (parentTask.Children != null)
 				{
-					for (int i = 0; i < parentTask.Children.get_Count(); i++)
+					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
 						if (this.TaskContainsMethod(methodName, parentTask.Children.get_Item(i)))
 						{
@@ -471,7 +471,7 @@ namespace BehaviorDesigner.Runtime
 				this.externalBehavior.BehaviorSource.EntryTask = this.mBehaviorSource.EntryTask;
 				if (list != null)
 				{
-					for (int i = 0; i < list.get_Count(); i++)
+					for (int i = 0; i < list.Count; i++)
 					{
 						if (list.get_Item(i) != null)
 						{
@@ -575,7 +575,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			if (this.showBehaviorDesignerGizmo)
 			{
-				Gizmos.DrawIcon(base.get_transform().get_position(), "Behavior Designer Scene Icon.png");
+				Gizmos.DrawIcon(base.transform.position, "Behavior Designer Scene Icon.png");
 			}
 			this.DrawTaskGizmos(true);
 		}
@@ -586,14 +586,14 @@ namespace BehaviorDesigner.Runtime
 			{
 				return;
 			}
-			if (this.gizmoViewMode == Behavior.GizmoViewMode.Running || this.gizmoViewMode == Behavior.GizmoViewMode.Always || (Application.get_isPlaying() && this.ExecutionStatus == TaskStatus.Running) || !Application.get_isPlaying())
+			if (this.gizmoViewMode == Behavior.GizmoViewMode.Running || this.gizmoViewMode == Behavior.GizmoViewMode.Always || (Application.isPlaying && this.ExecutionStatus == TaskStatus.Running) || !Application.isPlaying)
 			{
 				this.CheckForSerialization();
 				this.DrawTaskGizmos(this.mBehaviorSource.RootTask);
 				List<Task> detachedTasks = this.mBehaviorSource.DetachedTasks;
 				if (detachedTasks != null)
 				{
-					for (int i = 0; i < detachedTasks.get_Count(); i++)
+					for (int i = 0; i < detachedTasks.Count; i++)
 					{
 						this.DrawTaskGizmos(detachedTasks.get_Item(i));
 					}
@@ -617,7 +617,7 @@ namespace BehaviorDesigner.Runtime
 				ParentTask parentTask = task as ParentTask;
 				if (parentTask.Children != null)
 				{
-					for (int i = 0; i < parentTask.Children.get_Count(); i++)
+					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
 						this.DrawTaskGizmos(parentTask.Children.get_Item(i));
 					}
@@ -639,7 +639,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					T result = (T)((object)null);
 					if ((result = this.FindTask<T>(parentTask.Children.get_Item(i))) != null)
@@ -668,7 +668,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					this.FindTasks<T>(parentTask.Children.get_Item(i), ref taskList);
 				}
@@ -690,7 +690,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					Task result;
 					if ((result = this.FindTaskWithName(taskName, parentTask.Children.get_Item(i))) != null)
@@ -719,7 +719,7 @@ namespace BehaviorDesigner.Runtime
 			ParentTask parentTask;
 			if ((parentTask = (task as ParentTask)) != null && parentTask.Children != null)
 			{
-				for (int i = 0; i < parentTask.Children.get_Count(); i++)
+				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					this.FindTasksWithName(taskName, parentTask.Children.get_Item(i), ref taskList);
 				}
@@ -752,7 +752,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(methodName);
 				list.Add(taskCoroutine);
-				this.activeTaskCoroutines.set_Item(methodName, list);
+				this.activeTaskCoroutines.Item=methodName, list;
 			}
 			else
 			{
@@ -783,7 +783,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(methodName);
 				list.Add(taskCoroutine);
-				this.activeTaskCoroutines.set_Item(methodName, list);
+				this.activeTaskCoroutines.Item=methodName, list;
 			}
 			else
 			{
@@ -801,7 +801,7 @@ namespace BehaviorDesigner.Runtime
 				return;
 			}
 			List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(methodName);
-			for (int i = 0; i < list.get_Count(); i++)
+			for (int i = 0; i < list.Count; i++)
 			{
 				list.get_Item(i).Stop();
 			}
@@ -814,9 +814,9 @@ namespace BehaviorDesigner.Runtime
 			{
 				while (enumerator.MoveNext())
 				{
-					KeyValuePair<string, List<TaskCoroutine>> current = enumerator.get_Current();
-					List<TaskCoroutine> value = current.get_Value();
-					for (int i = 0; i < value.get_Count(); i++)
+					KeyValuePair<string, List<TaskCoroutine>> current = enumerator.Current;
+					List<TaskCoroutine> value = current.Value;
+					for (int i = 0; i < value.Count; i++)
 					{
 						value.get_Item(i).Stop();
 					}
@@ -829,14 +829,14 @@ namespace BehaviorDesigner.Runtime
 			if (this.activeTaskCoroutines.ContainsKey(coroutineName))
 			{
 				List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(coroutineName);
-				if (list.get_Count() == 1)
+				if (list.Count == 1)
 				{
 					this.activeTaskCoroutines.Remove(coroutineName);
 				}
 				else
 				{
 					list.Remove(taskCoroutine);
-					this.activeTaskCoroutines.set_Item(coroutineName, list);
+					this.activeTaskCoroutines.Item=coroutineName, list;
 				}
 			}
 		}
@@ -880,7 +880,7 @@ namespace BehaviorDesigner.Runtime
 			Delegate @delegate;
 			if (dictionary.TryGetValue(name, ref @delegate))
 			{
-				dictionary.set_Item(name, Delegate.Combine(@delegate, handler));
+				dictionary.Item=name, Delegate.Combine(@delegate, handler);
 			}
 			else
 			{
@@ -965,7 +965,7 @@ namespace BehaviorDesigner.Runtime
 			Delegate @delegate;
 			if (this.eventTable.TryGetValue(handler.GetType(), ref dictionary) && dictionary.TryGetValue(name, ref @delegate))
 			{
-				dictionary.set_Item(name, Delegate.Remove(@delegate, handler));
+				dictionary.Item=name, Delegate.Remove(@delegate, handler);
 			}
 		}
 
@@ -1009,7 +1009,7 @@ namespace BehaviorDesigner.Runtime
 			List<SharedVariable> allVariables = this.mBehaviorSource.GetAllVariables();
 			if (allVariables != null)
 			{
-				for (int i = 0; i < allVariables.get_Count(); i++)
+				for (int i = 0; i < allVariables.Count; i++)
 				{
 					this.defaultVariableValues.Add(allVariables.get_Item(i).Name, allVariables.get_Item(i).GetValue());
 				}
@@ -1042,7 +1042,7 @@ namespace BehaviorDesigner.Runtime
 				i++;
 				continue;
 				IL_5A:
-				dictionary.Add(publicFields[i].get_Name(), publicFields[i].GetValue(task));
+				dictionary.Add(publicFields[i].Name, publicFields[i].GetValue(task));
 				goto IL_71;
 			}
 			this.defaultValues.Add(task, dictionary);
@@ -1051,7 +1051,7 @@ namespace BehaviorDesigner.Runtime
 				ParentTask parentTask = task as ParentTask;
 				if (parentTask.Children != null)
 				{
-					for (int j = 0; j < parentTask.Children.get_Count(); j++)
+					for (int j = 0; j < parentTask.Children.Count; j++)
 					{
 						this.SaveValue(parentTask.Children.get_Item(j));
 					}
@@ -1065,8 +1065,8 @@ namespace BehaviorDesigner.Runtime
 			{
 				while (enumerator.MoveNext())
 				{
-					KeyValuePair<string, object> current = enumerator.get_Current();
-					this.SetVariableValue(current.get_Key(), current.get_Value());
+					KeyValuePair<string, object> current = enumerator.Current;
+					this.SetVariableValue(current.Key, current.Value);
 				}
 			}
 			this.ResetValue(this.mBehaviorSource.RootTask);
@@ -1087,11 +1087,11 @@ namespace BehaviorDesigner.Runtime
 			{
 				while (enumerator.MoveNext())
 				{
-					KeyValuePair<string, object> current = enumerator.get_Current();
-					FieldInfo field = task.GetType().GetField(current.get_Key());
+					KeyValuePair<string, object> current = enumerator.Current;
+					FieldInfo field = task.GetType().GetField(current.Key);
 					if (field != null)
 					{
-						field.SetValue(task, current.get_Value());
+						field.SetValue(task, current.Value);
 					}
 				}
 			}
@@ -1100,7 +1100,7 @@ namespace BehaviorDesigner.Runtime
 				ParentTask parentTask = task as ParentTask;
 				if (parentTask.Children != null)
 				{
-					for (int i = 0; i < parentTask.Children.get_Count(); i++)
+					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
 						this.ResetValue(parentTask.Children.get_Item(i));
 					}
@@ -1115,10 +1115,10 @@ namespace BehaviorDesigner.Runtime
 
 		public static BehaviorManager CreateBehaviorManager()
 		{
-			if (BehaviorManager.instance == null && Application.get_isPlaying())
+			if (BehaviorManager.instance == null && Application.isPlaying)
 			{
 				GameObject gameObject = new GameObject();
-				gameObject.set_name("Behavior Manager");
+				gameObject.name="Behavior Manager";
 				return gameObject.AddComponent<BehaviorManager>();
 			}
 			return null;

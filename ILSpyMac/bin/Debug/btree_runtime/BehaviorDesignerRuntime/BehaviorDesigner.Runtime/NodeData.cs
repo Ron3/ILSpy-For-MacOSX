@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -230,10 +230,10 @@ namespace BehaviorDesigner.Runtime
 
 		public void InitWatchedFields(Task task)
 		{
-			if (this.watchedFieldNames != null && this.watchedFieldNames.get_Count() > 0)
+			if (this.watchedFieldNames != null && this.watchedFieldNames.Count > 0)
 			{
 				this.watchedFields = new List<FieldInfo>();
-				for (int i = 0; i < this.watchedFieldNames.get_Count(); i++)
+				for (int i = 0; i < this.watchedFieldNames.Count; i++)
 				{
 					FieldInfo field = task.GetType().GetField(this.watchedFieldNames.get_Item(i), 52);
 					if (field != null)
@@ -251,17 +251,17 @@ namespace BehaviorDesigner.Runtime
 			this.comment = nodeData.Comment;
 			this.isBreakpoint = nodeData.IsBreakpoint;
 			this.collapsed = nodeData.Collapsed;
-			if (nodeData.WatchedFields != null && nodeData.WatchedFields.get_Count() > 0)
+			if (nodeData.WatchedFields != null && nodeData.WatchedFields.Count > 0)
 			{
 				this.watchedFields = new List<FieldInfo>();
 				this.watchedFieldNames = new List<string>();
-				for (int i = 0; i < nodeData.watchedFields.get_Count(); i++)
+				for (int i = 0; i < nodeData.watchedFields.Count; i++)
 				{
-					FieldInfo field = task.GetType().GetField(nodeData.WatchedFields.get_Item(i).get_Name(), 52);
+					FieldInfo field = task.GetType().GetField(nodeData.WatchedFields.get_Item(i).Name, 52);
 					if (field != null)
 					{
 						this.watchedFields.Add(field);
-						this.watchedFieldNames.Add(field.get_Name());
+						this.watchedFieldNames.Add(field.Name);
 					}
 				}
 			}
@@ -280,7 +280,7 @@ namespace BehaviorDesigner.Runtime
 				this.watchedFieldNames = new List<string>();
 			}
 			this.watchedFields.Add(field);
-			this.watchedFieldNames.Add(field.get_Name());
+			this.watchedFieldNames.Add(field.Name);
 		}
 
 		public void RemoveWatchedField(FieldInfo field)
@@ -288,13 +288,13 @@ namespace BehaviorDesigner.Runtime
 			if (this.watchedFields != null)
 			{
 				this.watchedFields.Remove(field);
-				this.watchedFieldNames.Remove(field.get_Name());
+				this.watchedFieldNames.Remove(field.Name);
 			}
 		}
 
 		private static Vector2 StringToVector2(string vector2String)
 		{
-			string[] array = vector2String.Substring(1, vector2String.get_Length() - 2).Split(new char[]
+			string[] array = vector2String.Substring(1, vector2String.Length - 2).Split(new char[]
 			{
 				','
 			});

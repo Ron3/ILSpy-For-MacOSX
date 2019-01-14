@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,7 +66,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					while (enumerator.MoveNext())
 					{
-						Dictionary<string, object> dict = (Dictionary<string, object>)enumerator.get_Current();
+						Dictionary<string, object> dict = (Dictionary<string, object>)enumerator.Current;
 						list.Add(JSONDeserializationDeprecated.DeserializeTask(behaviorSource, dict, ref dictionary2, taskData.fieldSerializationData.unityObjects));
 					}
 				}
@@ -80,19 +80,19 @@ namespace BehaviorDesigner.Runtime
 				}
 				behaviorSource.DetachedTasks = list;
 			}
-			if (JSONDeserializationDeprecated.taskIDs != null && JSONDeserializationDeprecated.taskIDs.get_Count() > 0)
+			if (JSONDeserializationDeprecated.taskIDs != null && JSONDeserializationDeprecated.taskIDs.Count > 0)
 			{
-				using (Dictionary<JSONDeserializationDeprecated.TaskField, List<int>>.KeyCollection.Enumerator enumerator2 = JSONDeserializationDeprecated.taskIDs.get_Keys().GetEnumerator())
+				using (Dictionary<JSONDeserializationDeprecated.TaskField, List<int>>.KeyCollection.Enumerator enumerator2 = JSONDeserializationDeprecated.taskIDs.Keys.GetEnumerator())
 				{
 					while (enumerator2.MoveNext())
 					{
-						JSONDeserializationDeprecated.TaskField current = enumerator2.get_Current();
+						JSONDeserializationDeprecated.TaskField current = enumerator2.Current;
 						List<int> list2 = JSONDeserializationDeprecated.taskIDs.get_Item(current);
-						Type fieldType = current.fieldInfo.get_FieldType();
-						if (current.fieldInfo.get_FieldType().get_IsArray())
+						Type fieldType = current.fieldInfo.FieldType;
+						if (current.fieldInfo.FieldType.IsArray)
 						{
 							int num = 0;
-							for (int i = 0; i < list2.get_Count(); i++)
+							for (int i = 0; i < list2.Count; i++)
 							{
 								Task task = dictionary2.get_Item(list2.get_Item(i));
 								if (task.GetType().Equals(fieldType.GetElementType()) || task.GetType().IsSubclassOf(fieldType.GetElementType()))
@@ -102,7 +102,7 @@ namespace BehaviorDesigner.Runtime
 							}
 							Array array = Array.CreateInstance(fieldType.GetElementType(), num);
 							int num2 = 0;
-							for (int j = 0; j < list2.get_Count(); j++)
+							for (int j = 0; j < list2.Count; j++)
 							{
 								Task task2 = dictionary2.get_Item(list2.get_Item(j));
 								if (task2.GetType().Equals(fieldType.GetElementType()) || task2.GetType().IsSubclassOf(fieldType.GetElementType()))
@@ -116,7 +116,7 @@ namespace BehaviorDesigner.Runtime
 						else
 						{
 							Task task3 = dictionary2.get_Item(list2.get_Item(0));
-							if (task3.GetType().Equals(current.fieldInfo.get_FieldType()) || task3.GetType().IsSubclassOf(current.fieldInfo.get_FieldType()))
+							if (task3.GetType().Equals(current.fieldInfo.FieldType) || task3.GetType().IsSubclassOf(current.fieldInfo.FieldType))
 							{
 								current.fieldInfo.SetValue(current.task, task3);
 							}
@@ -153,7 +153,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				List<SharedVariable> list = new List<SharedVariable>();
 				IList list2 = obj as IList;
-				for (int i = 0; i < list2.get_Count(); i++)
+				for (int i = 0; i < list2.Count; i++)
 				{
 					SharedVariable sharedVariable = JSONDeserializationDeprecated.DeserializeSharedVariable(list2.get_Item(i) as Dictionary<string, object>, variableSource, true, unityObjects);
 					list.Add(sharedVariable);
@@ -227,9 +227,9 @@ namespace BehaviorDesigner.Runtime
 					{
 						while (enumerator.MoveNext())
 						{
-							Dictionary<string, object> dict2 = (Dictionary<string, object>)enumerator.get_Current();
+							Dictionary<string, object> dict2 = (Dictionary<string, object>)enumerator.Current;
 							Task child = JSONDeserializationDeprecated.DeserializeTask(behaviorSource, dict2, ref IDtoTask, unityObjects);
-							int index = (parentTask.Children != null) ? parentTask.Children.get_Count() : 0;
+							int index = (parentTask.Children != null) ? parentTask.Children.Count : 0;
 							parentTask.AddChild(child, index);
 						}
 					}
@@ -279,12 +279,12 @@ namespace BehaviorDesigner.Runtime
 				nodeData.WatchedFieldNames = new List<string>();
 				nodeData.WatchedFields = new List<FieldInfo>();
 				IList list = obj as IList;
-				for (int i = 0; i < list.get_Count(); i++)
+				for (int i = 0; i < list.Count; i++)
 				{
 					FieldInfo field = task.GetType().GetField((string)list.get_Item(i), 52);
 					if (field != null)
 					{
-						nodeData.WatchedFieldNames.Add(field.get_Name());
+						nodeData.WatchedFieldNames.Add(field.Name);
 						nodeData.WatchedFields.Add(field);
 					}
 				}
@@ -371,24 +371,24 @@ namespace BehaviorDesigner.Runtime
 			for (int i = 0; i < allFields.Length; i++)
 			{
 				object obj2;
-				if (dict.TryGetValue(allFields[i].get_FieldType() + "," + allFields[i].get_Name(), ref obj2) || dict.TryGetValue(allFields[i].get_Name(), ref obj2))
+				if (dict.TryGetValue(allFields[i].FieldType + "," + allFields[i].Name, ref obj2) || dict.TryGetValue(allFields[i].Name, ref obj2))
 				{
-					if (typeof(IList).IsAssignableFrom(allFields[i].get_FieldType()))
+					if (typeof(IList).IsAssignableFrom(allFields[i].FieldType))
 					{
 						IList list = obj2 as IList;
 						if (list != null)
 						{
 							Type type;
-							if (allFields[i].get_FieldType().get_IsArray())
+							if (allFields[i].FieldType.IsArray)
 							{
-								type = allFields[i].get_FieldType().GetElementType();
+								type = allFields[i].FieldType.GetElementType();
 							}
 							else
 							{
-								Type type2 = allFields[i].get_FieldType();
-								while (!type2.get_IsGenericType())
+								Type type2 = allFields[i].FieldType;
+								while (!type2.IsGenericType)
 								{
-									type2 = type2.get_BaseType();
+									type2 = type2.BaseType;
 								}
 								type = type2.GetGenericArguments()[0];
 							}
@@ -398,17 +398,17 @@ namespace BehaviorDesigner.Runtime
 								if (JSONDeserializationDeprecated.taskIDs != null)
 								{
 									List<int> list2 = new List<int>();
-									for (int j = 0; j < list.get_Count(); j++)
+									for (int j = 0; j < list.Count; j++)
 									{
 										list2.Add(Convert.ToInt32(list.get_Item(j)));
 									}
 									JSONDeserializationDeprecated.taskIDs.Add(new JSONDeserializationDeprecated.TaskField(task, allFields[i]), list2);
 								}
 							}
-							else if (allFields[i].get_FieldType().get_IsArray())
+							else if (allFields[i].FieldType.IsArray)
 							{
-								Array array = Array.CreateInstance(type, list.get_Count());
-								for (int k = 0; k < list.get_Count(); k++)
+								Array array = Array.CreateInstance(type, list.Count);
+								for (int k = 0; k < list.Count; k++)
 								{
 									array.SetValue(JSONDeserializationDeprecated.ValueToObject(task, type, list.get_Item(k), variableSource, unityObjects), k);
 								}
@@ -417,7 +417,7 @@ namespace BehaviorDesigner.Runtime
 							else
 							{
 								IList list3;
-								if (allFields[i].get_FieldType().get_IsGenericType())
+								if (allFields[i].FieldType.IsGenericType)
 								{
 									list3 = (TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
 									{
@@ -426,9 +426,9 @@ namespace BehaviorDesigner.Runtime
 								}
 								else
 								{
-									list3 = (TaskUtility.CreateInstance(allFields[i].get_FieldType()) as IList);
+									list3 = (TaskUtility.CreateInstance(allFields[i].FieldType) as IList);
 								}
-								for (int l = 0; l < list.get_Count(); l++)
+								for (int l = 0; l < list.Count; l++)
 								{
 									list3.Add(JSONDeserializationDeprecated.ValueToObject(task, type, list.get_Item(l), variableSource, unityObjects));
 								}
@@ -438,7 +438,7 @@ namespace BehaviorDesigner.Runtime
 					}
 					else
 					{
-						Type fieldType = allFields[i].get_FieldType();
+						Type fieldType = allFields[i].FieldType;
 						if (fieldType.Equals(typeof(Task)) || fieldType.IsSubclassOf(typeof(Task)))
 						{
 							if (TaskUtility.HasAttribute(allFields[i], typeof(InspectTaskAttribute)))
@@ -465,17 +465,17 @@ namespace BehaviorDesigner.Runtime
 						}
 					}
 				}
-				else if (typeof(SharedVariable).IsAssignableFrom(allFields[i].get_FieldType()) && !allFields[i].get_FieldType().get_IsAbstract())
+				else if (typeof(SharedVariable).IsAssignableFrom(allFields[i].FieldType) && !allFields[i].FieldType.IsAbstract)
 				{
-					if (dict.TryGetValue(allFields[i].get_FieldType() + "," + allFields[i].get_Name(), ref obj2))
+					if (dict.TryGetValue(allFields[i].FieldType + "," + allFields[i].Name, ref obj2))
 					{
-						SharedVariable sharedVariable = TaskUtility.CreateInstance(allFields[i].get_FieldType()) as SharedVariable;
-						sharedVariable.SetValue(JSONDeserializationDeprecated.ValueToObject(task, allFields[i].get_FieldType(), obj2, variableSource, unityObjects));
+						SharedVariable sharedVariable = TaskUtility.CreateInstance(allFields[i].FieldType) as SharedVariable;
+						sharedVariable.SetValue(JSONDeserializationDeprecated.ValueToObject(task, allFields[i].FieldType, obj2, variableSource, unityObjects));
 						allFields[i].SetValue(obj, sharedVariable);
 					}
 					else
 					{
-						SharedVariable sharedVariable2 = TaskUtility.CreateInstance(allFields[i].get_FieldType()) as SharedVariable;
+						SharedVariable sharedVariable2 = TaskUtility.CreateInstance(allFields[i].FieldType) as SharedVariable;
 						allFields[i].SetValue(obj, sharedVariable2);
 					}
 				}
@@ -497,7 +497,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				return JSONDeserializationDeprecated.IndexToUnityObject(Convert.ToInt32(obj), unityObjects);
 			}
-			if (!type.get_IsPrimitive())
+			if (!type.IsPrimitive)
 			{
 				if (!type.Equals(typeof(string)))
 				{
@@ -571,7 +571,7 @@ namespace BehaviorDesigner.Runtime
 
 		private static Vector2 StringToVector2(string vector2String)
 		{
-			string[] array = vector2String.Substring(1, vector2String.get_Length() - 2).Split(new char[]
+			string[] array = vector2String.Substring(1, vector2String.Length - 2).Split(new char[]
 			{
 				','
 			});
@@ -580,7 +580,7 @@ namespace BehaviorDesigner.Runtime
 
 		private static Vector3 StringToVector3(string vector3String)
 		{
-			string[] array = vector3String.Substring(1, vector3String.get_Length() - 2).Split(new char[]
+			string[] array = vector3String.Substring(1, vector3String.Length - 2).Split(new char[]
 			{
 				','
 			});
@@ -589,7 +589,7 @@ namespace BehaviorDesigner.Runtime
 
 		private static Vector4 StringToVector4(string vector4String)
 		{
-			string[] array = vector4String.Substring(1, vector4String.get_Length() - 2).Split(new char[]
+			string[] array = vector4String.Substring(1, vector4String.Length - 2).Split(new char[]
 			{
 				','
 			});
@@ -598,7 +598,7 @@ namespace BehaviorDesigner.Runtime
 
 		private static Quaternion StringToQuaternion(string quaternionString)
 		{
-			string[] array = quaternionString.Substring(1, quaternionString.get_Length() - 2).Split(new char[]
+			string[] array = quaternionString.Substring(1, quaternionString.Length - 2).Split(new char[]
 			{
 				','
 			});
@@ -631,7 +631,7 @@ namespace BehaviorDesigner.Runtime
 
 		private static Color StringToColor(string colorString)
 		{
-			string[] array = colorString.Substring(5, colorString.get_Length() - 6).Split(new char[]
+			string[] array = colorString.Substring(5, colorString.Length - 6).Split(new char[]
 			{
 				','
 			});
@@ -640,17 +640,17 @@ namespace BehaviorDesigner.Runtime
 
 		private static Rect StringToRect(string rectString)
 		{
-			string[] array = rectString.Substring(1, rectString.get_Length() - 2).Split(new char[]
+			string[] array = rectString.Substring(1, rectString.Length - 2).Split(new char[]
 			{
 				','
 			});
-			return new Rect(float.Parse(array[0].Substring(2, array[0].get_Length() - 2)), float.Parse(array[1].Substring(3, array[1].get_Length() - 3)), float.Parse(array[2].Substring(7, array[2].get_Length() - 7)), float.Parse(array[3].Substring(8, array[3].get_Length() - 8)));
+			return new Rect(float.Parse(array[0].Substring(2, array[0].Length - 2)), float.Parse(array[1].Substring(3, array[1].Length - 3)), float.Parse(array[2].Substring(7, array[2].Length - 7)), float.Parse(array[3].Substring(8, array[3].Length - 8)));
 		}
 
 		private static LayerMask ValueToLayerMask(int value)
 		{
 			LayerMask result = default(LayerMask);
-			result.set_value(value);
+			result.value=value;
 			return result;
 		}
 
@@ -661,28 +661,28 @@ namespace BehaviorDesigner.Runtime
 			if (value.TryGetValue("Keys", ref obj))
 			{
 				List<object> list = obj as List<object>;
-				for (int i = 0; i < list.get_Count(); i++)
+				for (int i = 0; i < list.Count; i++)
 				{
 					List<object> list2 = list.get_Item(i) as List<object>;
 					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2.get_Item(0), typeof(float)), (float)Convert.ChangeType(list2.get_Item(1), typeof(float)), (float)Convert.ChangeType(list2.get_Item(2), typeof(float)), (float)Convert.ChangeType(list2.get_Item(3), typeof(float)));
-					keyframe.set_tangentMode((int)Convert.ChangeType(list2.get_Item(4), typeof(int)));
+					keyframe.tangentMode=(int)Convert.ChangeType(list2.get_Item(4), typeof(int));
 					animationCurve.AddKey(keyframe);
 				}
 			}
 			if (value.TryGetValue("PreWrapMode", ref obj))
 			{
-				animationCurve.set_preWrapMode((int)Enum.Parse(typeof(WrapMode), (string)obj));
+				animationCurve.preWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
 			if (value.TryGetValue("PostWrapMode", ref obj))
 			{
-				animationCurve.set_postWrapMode((int)Enum.Parse(typeof(WrapMode), (string)obj));
+				animationCurve.postWrapMode=(int)Enum.Parse(typeof(WrapMode), (string)obj);
 			}
 			return animationCurve;
 		}
 
 		private static Object IndexToUnityObject(int index, List<Object> unityObjects)
 		{
-			if (index < 0 || index >= unityObjects.get_Count())
+			if (index < 0 || index >= unityObjects.Count)
 			{
 				return null;
 			}

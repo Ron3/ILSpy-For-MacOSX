@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -20,7 +20,7 @@ namespace BehaviorDesigner.Runtime
 
 		public static object CreateInstance(Type t)
 		{
-			if (t.get_IsGenericType() && t.GetGenericTypeDefinition() == typeof(Nullable))
+			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable))
 			{
 				t = Nullable.GetUnderlyingType(t);
 			}
@@ -70,7 +70,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				fieldList.Add(fields[i]);
 			}
-			TaskUtility.GetFields(t.get_BaseType(), ref fieldList, flags);
+			TaskUtility.GetFields(t.BaseType, ref fieldList, flags);
 		}
 
 		public static Type GetTypeWithinAssembly(string typeName)
@@ -86,13 +86,13 @@ namespace BehaviorDesigner.Runtime
 				if (TaskUtility.loadedAssemblies == null)
 				{
 					TaskUtility.loadedAssemblies = new List<string>();
-					Assembly[] assemblies = AppDomain.get_CurrentDomain().GetAssemblies();
+					Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 					for (int i = 0; i < assemblies.Length; i++)
 					{
-						TaskUtility.loadedAssemblies.Add(assemblies[i].get_FullName());
+						TaskUtility.loadedAssemblies.Add(assemblies[i].FullName);
 					}
 				}
-				for (int j = 0; j < TaskUtility.loadedAssemblies.get_Count(); j++)
+				for (int j = 0; j < TaskUtility.loadedAssemblies.Count; j++)
 				{
 					type = Type.GetType(typeName + "," + TaskUtility.loadedAssemblies.get_Item(j));
 					if (type != null)

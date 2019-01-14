@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -125,7 +125,7 @@ namespace BehaviorDesigner.Runtime
 			set
 			{
 				this.synchronizedVariables = value;
-				base.set_enabled(true);
+				base.enabled=true;
 			}
 		}
 
@@ -134,26 +134,26 @@ namespace BehaviorDesigner.Runtime
 			base.StopCoroutine("CoroutineUpdate");
 			if (this.updateInterval == UpdateIntervalType.EveryFrame)
 			{
-				base.set_enabled(true);
+				base.enabled=true;
 			}
 			else if (this.updateInterval == UpdateIntervalType.SpecifySeconds)
 			{
-				if (Application.get_isPlaying())
+				if (Application.isPlaying)
 				{
 					this.updateWait = new WaitForSeconds(this.updateIntervalSeconds);
 					base.StartCoroutine("CoroutineUpdate");
 				}
-				base.set_enabled(false);
+				base.enabled=false;
 			}
 			else
 			{
-				base.set_enabled(false);
+				base.enabled=false;
 			}
 		}
 
 		public void Awake()
 		{
-			for (int i = this.synchronizedVariables.get_Count() - 1; i > -1; i--)
+			for (int i = this.synchronizedVariables.Count - 1; i > -1; i--)
 			{
 				VariableSynchronizer.SynchronizedVariable synchronizedVariable = this.synchronizedVariables.get_Item(i);
 				if (synchronizedVariable.global)
@@ -239,7 +239,7 @@ namespace BehaviorDesigner.Runtime
 						else
 						{
 							synchronizedVariable.targetID = Animator.StringToHash(synchronizedVariable.targetName);
-							Type propertyType = synchronizedVariable.sharedVariable.GetType().GetProperty("Value").get_PropertyType();
+							Type propertyType = synchronizedVariable.sharedVariable.GetType().GetProperty("Value").PropertyType;
 							if (propertyType.Equals(typeof(bool)))
 							{
 								synchronizedVariable.animatorParameterType = VariableSynchronizer.AnimatorParameterType.Bool;
@@ -338,9 +338,9 @@ namespace BehaviorDesigner.Runtime
 					this.synchronizedVariables.RemoveAt(i);
 				}
 			}
-			if (this.synchronizedVariables.get_Count() == 0)
+			if (this.synchronizedVariables.Count == 0)
 			{
-				base.set_enabled(false);
+				base.enabled=false;
 				return;
 			}
 			this.UpdateIntervalChanged();
@@ -364,7 +364,7 @@ namespace BehaviorDesigner.Runtime
 
 		public void Tick()
 		{
-			for (int i = 0; i < this.synchronizedVariables.get_Count(); i++)
+			for (int i = 0; i < this.synchronizedVariables.Count; i++)
 			{
 				VariableSynchronizer.SynchronizedVariable synchronizedVariable = this.synchronizedVariables.get_Item(i);
 				switch (synchronizedVariable.synchronizationType)
@@ -440,7 +440,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			ConstantExpression constantExpression = Expression.Constant(instance);
 			ParameterExpression parameterExpression = Expression.Parameter(typeof(object), "p");
-			UnaryExpression unaryExpression = Expression.Convert(parameterExpression, method.GetParameters()[0].get_ParameterType());
+			UnaryExpression unaryExpression = Expression.Convert(parameterExpression, method.GetParameters()[0].ParameterType);
 			MethodCallExpression methodCallExpression = Expression.Call(constantExpression, method, new Expression[]
 			{
 				unaryExpression

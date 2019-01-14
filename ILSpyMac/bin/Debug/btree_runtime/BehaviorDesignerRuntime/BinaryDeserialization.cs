@@ -1,4 +1,4 @@
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System;
 using System.Collections;
@@ -67,7 +67,7 @@ public static class BinaryDeserialization
 		behaviorSource.DetachedTasks = null;
 		behaviorSource.Variables = null;
 		FieldSerializationData fieldSerializationData;
-		if (taskData == null || (fieldSerializationData = taskData.fieldSerializationData).byteData == null || fieldSerializationData.byteData.get_Count() == 0)
+		if (taskData == null || (fieldSerializationData = taskData.fieldSerializationData).byteData == null || fieldSerializationData.byteData.Count == 0)
 		{
 			return;
 		}
@@ -88,21 +88,21 @@ public static class BinaryDeserialization
 		{
 			List<SharedVariable> list = new List<SharedVariable>();
 			Dictionary<int, int> dictionary = ObjectPool.Get<Dictionary<int, int>>();
-			for (int i = 0; i < taskData.variableStartIndex.get_Count(); i++)
+			for (int i = 0; i < taskData.variableStartIndex.Count; i++)
 			{
 				int num = taskData.variableStartIndex.get_Item(i);
 				int num2;
-				if (i + 1 < taskData.variableStartIndex.get_Count())
+				if (i + 1 < taskData.variableStartIndex.Count)
 				{
 					num2 = taskData.variableStartIndex.get_Item(i + 1);
 				}
-				else if (taskData.startIndex != null && taskData.startIndex.get_Count() > 0)
+				else if (taskData.startIndex != null && taskData.startIndex.Count > 0)
 				{
 					num2 = taskData.startIndex.get_Item(0);
 				}
 				else
 				{
-					num2 = fieldSerializationData.startIndex.get_Count();
+					num2 = fieldSerializationData.startIndex.Count;
 				}
 				dictionary.Clear();
 				for (int j = num; j < num2; j++)
@@ -121,17 +121,17 @@ public static class BinaryDeserialization
 		List<Task> list2 = new List<Task>();
 		if (taskData.types != null)
 		{
-			for (int k = 0; k < taskData.types.get_Count(); k++)
+			for (int k = 0; k < taskData.types.Count; k++)
 			{
 				BinaryDeserialization.LoadTask(taskData, fieldSerializationData, ref list2, ref behaviorSource);
 			}
 		}
-		if (taskData.parentIndex.get_Count() != list2.get_Count())
+		if (taskData.parentIndex.Count != list2.Count)
 		{
 			Debug.LogError("Deserialization Error: parent index count does not match task list count");
 			return;
 		}
-		for (int l = 0; l < taskData.parentIndex.get_Count(); l++)
+		for (int l = 0; l < taskData.parentIndex.Count; l++)
 		{
 			if (taskData.parentIndex.get_Item(l) == -1)
 			{
@@ -157,27 +157,27 @@ public static class BinaryDeserialization
 				ParentTask parentTask = list2.get_Item(taskData.parentIndex.get_Item(l)) as ParentTask;
 				if (parentTask != null)
 				{
-					int index = (parentTask.Children != null) ? parentTask.Children.get_Count() : 0;
+					int index = (parentTask.Children != null) ? parentTask.Children.Count : 0;
 					parentTask.AddChild(list2.get_Item(l), index);
 				}
 			}
 		}
 		if (BinaryDeserialization.taskIDs != null)
 		{
-			using (Dictionary<BinaryDeserialization.ObjectFieldMap, List<int>>.KeyCollection.Enumerator enumerator = BinaryDeserialization.taskIDs.get_Keys().GetEnumerator())
+			using (Dictionary<BinaryDeserialization.ObjectFieldMap, List<int>>.KeyCollection.Enumerator enumerator = BinaryDeserialization.taskIDs.Keys.GetEnumerator())
 			{
 				while (enumerator.MoveNext())
 				{
-					BinaryDeserialization.ObjectFieldMap current = enumerator.get_Current();
+					BinaryDeserialization.ObjectFieldMap current = enumerator.Current;
 					List<int> list3 = BinaryDeserialization.taskIDs.get_Item(current);
-					Type fieldType = current.fieldInfo.get_FieldType();
+					Type fieldType = current.fieldInfo.FieldType;
 					if (typeof(IList).IsAssignableFrom(fieldType))
 					{
-						if (fieldType.get_IsArray())
+						if (fieldType.IsArray)
 						{
 							Type elementType = fieldType.GetElementType();
 							int num3 = 0;
-							for (int m = 0; m < list3.get_Count(); m++)
+							for (int m = 0; m < list3.Count; m++)
 							{
 								Task task = list2.get_Item(list3.get_Item(m));
 								if (elementType.IsAssignableFrom(task.GetType()))
@@ -187,7 +187,7 @@ public static class BinaryDeserialization
 							}
 							int num4 = 0;
 							Array array = Array.CreateInstance(elementType, num3);
-							for (int n = 0; n < array.get_Length(); n++)
+							for (int n = 0; n < array.Length; n++)
 							{
 								Task task2 = list2.get_Item(list3.get_Item(n));
 								if (elementType.IsAssignableFrom(task2.GetType()))
@@ -205,7 +205,7 @@ public static class BinaryDeserialization
 							{
 								type
 							})) as IList;
-							for (int num5 = 0; num5 < list3.get_Count(); num5++)
+							for (int num5 = 0; num5 < list3.Count; num5++)
 							{
 								Task task3 = list2.get_Item(list3.get_Item(num5));
 								if (type.IsAssignableFrom(task3.GetType()))
@@ -238,11 +238,11 @@ public static class BinaryDeserialization
 		}
 		globalVariables.Variables = null;
 		FieldSerializationData fieldSerializationData;
-		if (globalVariables.VariableData == null || (fieldSerializationData = globalVariables.VariableData.fieldSerializationData).byteData == null || fieldSerializationData.byteData.get_Count() == 0)
+		if (globalVariables.VariableData == null || (fieldSerializationData = globalVariables.VariableData.fieldSerializationData).byteData == null || fieldSerializationData.byteData.Count == 0)
 		{
 			return;
 		}
-		if (fieldSerializationData.typeName.get_Count() > 0)
+		if (fieldSerializationData.typeName.Count > 0)
 		{
 			BinaryDeserializationDeprecated.Load(globalVariables);
 			return;
@@ -264,17 +264,17 @@ public static class BinaryDeserialization
 		{
 			List<SharedVariable> list = new List<SharedVariable>();
 			Dictionary<int, int> dictionary = ObjectPool.Get<Dictionary<int, int>>();
-			for (int i = 0; i < variableData.variableStartIndex.get_Count(); i++)
+			for (int i = 0; i < variableData.variableStartIndex.Count; i++)
 			{
 				int num = variableData.variableStartIndex.get_Item(i);
 				int num2;
-				if (i + 1 < variableData.variableStartIndex.get_Count())
+				if (i + 1 < variableData.variableStartIndex.Count)
 				{
 					num2 = variableData.variableStartIndex.get_Item(i + 1);
 				}
 				else
 				{
-					num2 = fieldSerializationData.startIndex.get_Count();
+					num2 = fieldSerializationData.startIndex.Count;
 				}
 				dictionary.Clear();
 				for (int j = num; j < num2; j++)
@@ -294,16 +294,16 @@ public static class BinaryDeserialization
 
 	public static void LoadTask(TaskSerializationData taskSerializationData, FieldSerializationData fieldSerializationData, ref List<Task> taskList, ref BehaviorSource behaviorSource)
 	{
-		int count = taskList.get_Count();
+		int count = taskList.Count;
 		int num = taskSerializationData.startIndex.get_Item(count);
 		int num2;
-		if (count + 1 < taskSerializationData.startIndex.get_Count())
+		if (count + 1 < taskSerializationData.startIndex.Count)
 		{
 			num2 = taskSerializationData.startIndex.get_Item(count + 1);
 		}
 		else
 		{
-			num2 = fieldSerializationData.startIndex.get_Count();
+			num2 = fieldSerializationData.startIndex.Count;
 		}
 		Dictionary<int, int> dictionary = ObjectPool.Get<Dictionary<int, int>>();
 		dictionary.Clear();
@@ -318,7 +318,7 @@ public static class BinaryDeserialization
 		if (type == null)
 		{
 			bool flag = false;
-			for (int j = 0; j < taskSerializationData.parentIndex.get_Count(); j++)
+			for (int j = 0; j < taskSerializationData.parentIndex.Count; j++)
 			{
 				if (count == taskSerializationData.parentIndex.get_Item(j))
 				{
@@ -348,13 +348,13 @@ public static class BinaryDeserialization
 			{
 				unknownTask.dataPosition.Add(fieldSerializationData.dataPosition.get_Item(l) - fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex.get_Item(num)));
 			}
-			if (count + 1 < taskSerializationData.startIndex.get_Count() && taskSerializationData.startIndex.get_Item(count + 1) < fieldSerializationData.dataPosition.get_Count())
+			if (count + 1 < taskSerializationData.startIndex.Count && taskSerializationData.startIndex.get_Item(count + 1) < fieldSerializationData.dataPosition.Count)
 			{
 				num2 = fieldSerializationData.dataPosition.get_Item(taskSerializationData.startIndex.get_Item(count + 1));
 			}
 			else
 			{
-				num2 = fieldSerializationData.byteData.get_Count();
+				num2 = fieldSerializationData.byteData.Count;
 			}
 			for (int m = fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex.get_Item(num)); m < num2; m++)
 			{
@@ -403,12 +403,12 @@ public static class BinaryDeserialization
 			nodeData.WatchedFieldNames = new List<string>();
 			nodeData.WatchedFields = new List<FieldInfo>();
 			IList list = obj as IList;
-			for (int i = 0; i < list.get_Count(); i++)
+			for (int i = 0; i < list.Count; i++)
 			{
 				FieldInfo field = task.GetType().GetField((string)list.get_Item(i), 52);
 				if (field != null)
 				{
-					nodeData.WatchedFieldNames.Add(field.get_Name());
+					nodeData.WatchedFieldNames.Add(field.Name);
 					nodeData.WatchedFields.Add(field);
 				}
 			}
@@ -421,9 +421,9 @@ public static class BinaryDeserialization
 		FieldInfo[] allFields = TaskUtility.GetAllFields(obj.GetType());
 		for (int i = 0; i < allFields.Length; i++)
 		{
-			if (!TaskUtility.HasAttribute(allFields[i], typeof(NonSerializedAttribute)) && ((!allFields[i].get_IsPrivate() && !allFields[i].get_IsFamily()) || TaskUtility.HasAttribute(allFields[i], typeof(SerializeField))) && (!(obj is ParentTask) || !allFields[i].get_Name().Equals("children")))
+			if (!TaskUtility.HasAttribute(allFields[i], typeof(NonSerializedAttribute)) && ((!allFields[i].IsPrivate && !allFields[i].IsFamily) || TaskUtility.HasAttribute(allFields[i], typeof(SerializeField))) && (!(obj is ParentTask) || !allFields[i].Name.Equals("children")))
 			{
-				object obj2 = BinaryDeserialization.LoadField(fieldSerializationData, fieldIndexMap, allFields[i].get_FieldType(), allFields[i].get_Name(), hashPrefix, variableSource, obj, allFields[i]);
+				object obj2 = BinaryDeserialization.LoadField(fieldSerializationData, fieldIndexMap, allFields[i].FieldType, allFields[i].Name, hashPrefix, variableSource, obj, allFields[i]);
 				if (obj2 != null && !object.ReferenceEquals(obj2, null) && !obj2.Equals(null))
 				{
 					allFields[i].SetValue(obj, obj2);
@@ -437,11 +437,11 @@ public static class BinaryDeserialization
 		int num;
 		if (BinaryDeserialization.shaHashSerialization)
 		{
-			num = hashPrefix + (BinaryDeserialization.StringHash(fieldType.get_Name().ToString(), BinaryDeserialization.strHashSerialization) + BinaryDeserialization.StringHash(fieldName, BinaryDeserialization.strHashSerialization));
+			num = hashPrefix + (BinaryDeserialization.StringHash(fieldType.Name.ToString(), BinaryDeserialization.strHashSerialization) + BinaryDeserialization.StringHash(fieldName, BinaryDeserialization.strHashSerialization));
 		}
 		else
 		{
-			num = hashPrefix + (fieldType.get_Name().GetHashCode() + fieldName.GetHashCode());
+			num = hashPrefix + (fieldType.Name.GetHashCode() + fieldName.GetHashCode());
 		}
 		int num2;
 		if (fieldIndexMap.TryGetValue(num, ref num2))
@@ -450,7 +450,7 @@ public static class BinaryDeserialization
 			if (typeof(IList).IsAssignableFrom(fieldType))
 			{
 				int num3 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
-				if (fieldType.get_IsArray())
+				if (fieldType.IsArray)
 				{
 					Type elementType = fieldType.GetElementType();
 					if (elementType == null)
@@ -468,13 +468,13 @@ public static class BinaryDeserialization
 				else
 				{
 					Type type = fieldType;
-					while (!type.get_IsGenericType())
+					while (!type.IsGenericType)
 					{
-						type = type.get_BaseType();
+						type = type.BaseType;
 					}
 					Type type2 = type.GetGenericArguments()[0];
 					IList list;
-					if (fieldType.get_IsGenericType())
+					if (fieldType.IsGenericType)
 					{
 						list = (TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
 						{
@@ -537,7 +537,7 @@ public static class BinaryDeserialization
 				int index = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
 				obj2 = BinaryDeserialization.IndexToUnityObject(index, fieldSerializationData);
 			}
-			else if (fieldType.Equals(typeof(int)) || fieldType.get_IsEnum())
+			else if (fieldType.Equals(typeof(int)) || fieldType.IsEnum)
 			{
 				obj2 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
 			}
@@ -605,7 +605,7 @@ public static class BinaryDeserialization
 			{
 				obj2 = BinaryDeserialization.BytesToLayerMask(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
 			}
-			else if (fieldType.get_IsClass() || (fieldType.get_IsValueType() && !fieldType.get_IsPrimitive()))
+			else if (fieldType.IsClass || (fieldType.IsValueType && !fieldType.IsPrimitive))
 			{
 				obj2 = TaskUtility.CreateInstance(fieldType);
 				BinaryDeserialization.LoadFields(fieldSerializationData, fieldIndexMap, obj2, num, variableSource);
@@ -613,7 +613,7 @@ public static class BinaryDeserialization
 			}
 			return obj2;
 		}
-		if (fieldType.get_IsAbstract())
+		if (fieldType.IsAbstract)
 		{
 			return null;
 		}
@@ -639,14 +639,14 @@ public static class BinaryDeserialization
 		if (fastHash)
 		{
 			int num = 23;
-			int length = value.get_Length();
+			int length = value.Length;
 			for (int i = 0; i < length; i++)
 			{
 				num = num * 31 + (int)value.get_Chars(i);
 			}
 			return num;
 		}
-		byte[] bytes = Encoding.get_UTF8().GetBytes(value);
+		byte[] bytes = Encoding.UTF8.GetBytes(value);
 		if (BinaryDeserialization.shaHash == null)
 		{
 			BinaryDeserialization.shaHash = new SHA1Managed();
@@ -657,7 +657,7 @@ public static class BinaryDeserialization
 
 	private static int GetFieldSize(FieldSerializationData fieldSerializationData, int fieldIndex)
 	{
-		return ((fieldIndex + 1 >= fieldSerializationData.dataPosition.get_Count()) ? fieldSerializationData.byteData.get_Count() : fieldSerializationData.dataPosition.get_Item(fieldIndex + 1)) - fieldSerializationData.dataPosition.get_Item(fieldIndex);
+		return ((fieldIndex + 1 >= fieldSerializationData.dataPosition.Count) ? fieldSerializationData.byteData.Count : fieldSerializationData.dataPosition.get_Item(fieldIndex + 1)) - fieldSerializationData.dataPosition.get_Item(fieldIndex);
 	}
 
 	private static int BytesToInt(byte[] bytes, int dataPosition)
@@ -696,7 +696,7 @@ public static class BinaryDeserialization
 		{
 			return string.Empty;
 		}
-		return Encoding.get_UTF8().GetString(bytes, dataPosition, dataSize);
+		return Encoding.UTF8.GetString(bytes, dataPosition, dataSize);
 	}
 
 	private static byte BytesToByte(byte[] bytes, int dataPosition)
@@ -706,7 +706,7 @@ public static class BinaryDeserialization
 
 	private static Color BytesToColor(byte[] bytes, int dataPosition)
 	{
-		Color black = Color.get_black();
+		Color black = Color.black;
 		black.r = BitConverter.ToSingle(bytes, dataPosition);
 		black.g = BitConverter.ToSingle(bytes, dataPosition + 4);
 		black.b = BitConverter.ToSingle(bytes, dataPosition + 8);
@@ -716,7 +716,7 @@ public static class BinaryDeserialization
 
 	private static Vector2 BytesToVector2(byte[] bytes, int dataPosition)
 	{
-		Vector2 zero = Vector2.get_zero();
+		Vector2 zero = Vector2.zero;
 		zero.x = BitConverter.ToSingle(bytes, dataPosition);
 		zero.y = BitConverter.ToSingle(bytes, dataPosition + 4);
 		return zero;
@@ -724,7 +724,7 @@ public static class BinaryDeserialization
 
 	private static Vector3 BytesToVector3(byte[] bytes, int dataPosition)
 	{
-		Vector3 zero = Vector3.get_zero();
+		Vector3 zero = Vector3.zero;
 		zero.x = BitConverter.ToSingle(bytes, dataPosition);
 		zero.y = BitConverter.ToSingle(bytes, dataPosition + 4);
 		zero.z = BitConverter.ToSingle(bytes, dataPosition + 8);
@@ -733,7 +733,7 @@ public static class BinaryDeserialization
 
 	private static Vector4 BytesToVector4(byte[] bytes, int dataPosition)
 	{
-		Vector4 zero = Vector4.get_zero();
+		Vector4 zero = Vector4.zero;
 		zero.x = BitConverter.ToSingle(bytes, dataPosition);
 		zero.y = BitConverter.ToSingle(bytes, dataPosition + 4);
 		zero.z = BitConverter.ToSingle(bytes, dataPosition + 8);
@@ -743,7 +743,7 @@ public static class BinaryDeserialization
 
 	private static Quaternion BytesToQuaternion(byte[] bytes, int dataPosition)
 	{
-		Quaternion identity = Quaternion.get_identity();
+		Quaternion identity = Quaternion.identity;
 		identity.x = BitConverter.ToSingle(bytes, dataPosition);
 		identity.y = BitConverter.ToSingle(bytes, dataPosition + 4);
 		identity.z = BitConverter.ToSingle(bytes, dataPosition + 8);
@@ -754,16 +754,16 @@ public static class BinaryDeserialization
 	private static Rect BytesToRect(byte[] bytes, int dataPosition)
 	{
 		Rect result = default(Rect);
-		result.set_x(BitConverter.ToSingle(bytes, dataPosition));
-		result.set_y(BitConverter.ToSingle(bytes, dataPosition + 4));
-		result.set_width(BitConverter.ToSingle(bytes, dataPosition + 8));
-		result.set_height(BitConverter.ToSingle(bytes, dataPosition + 12));
+		result.x=BitConverter.ToSingle(bytes, dataPosition);
+		result.y=BitConverter.ToSingle(bytes, dataPosition + 4);
+		result.width=BitConverter.ToSingle(bytes, dataPosition + 8);
+		result.height=BitConverter.ToSingle(bytes, dataPosition + 12);
 		return result;
 	}
 
 	private static Matrix4x4 BytesToMatrix4x4(byte[] bytes, int dataPosition)
 	{
-		Matrix4x4 identity = Matrix4x4.get_identity();
+		Matrix4x4 identity = Matrix4x4.identity;
 		identity.m00 = BitConverter.ToSingle(bytes, dataPosition);
 		identity.m01 = BitConverter.ToSingle(bytes, dataPosition + 4);
 		identity.m02 = BitConverter.ToSingle(bytes, dataPosition + 8);
@@ -790,29 +790,29 @@ public static class BinaryDeserialization
 		for (int i = 0; i < num; i++)
 		{
 			Keyframe keyframe = default(Keyframe);
-			keyframe.set_time(BitConverter.ToSingle(bytes, dataPosition + 4));
-			keyframe.set_value(BitConverter.ToSingle(bytes, dataPosition + 8));
-			keyframe.set_inTangent(BitConverter.ToSingle(bytes, dataPosition + 12));
-			keyframe.set_outTangent(BitConverter.ToSingle(bytes, dataPosition + 16));
-			keyframe.set_tangentMode(BitConverter.ToInt32(bytes, dataPosition + 20));
+			keyframe.time=BitConverter.ToSingle(bytes, dataPosition + 4);
+			keyframe.value=BitConverter.ToSingle(bytes, dataPosition + 8);
+			keyframe.inTangent=BitConverter.ToSingle(bytes, dataPosition + 12);
+			keyframe.outTangent=BitConverter.ToSingle(bytes, dataPosition + 16);
+			keyframe.tangentMode=BitConverter.ToInt32(bytes, dataPosition + 20);
 			animationCurve.AddKey(keyframe);
 			dataPosition += 20;
 		}
-		animationCurve.set_preWrapMode(BitConverter.ToInt32(bytes, dataPosition + 4));
-		animationCurve.set_postWrapMode(BitConverter.ToInt32(bytes, dataPosition + 8));
+		animationCurve.preWrapMode=BitConverter.ToInt32(bytes, dataPosition + 4);
+		animationCurve.postWrapMode=BitConverter.ToInt32(bytes, dataPosition + 8);
 		return animationCurve;
 	}
 
 	private static LayerMask BytesToLayerMask(byte[] bytes, int dataPosition)
 	{
 		LayerMask result = default(LayerMask);
-		result.set_value(BinaryDeserialization.BytesToInt(bytes, dataPosition));
+		result.value=BinaryDeserialization.BytesToInt(bytes, dataPosition);
 		return result;
 	}
 
 	private static Object IndexToUnityObject(int index, FieldSerializationData activeFieldSerializationData)
 	{
-		if (index < 0 || index >= activeFieldSerializationData.unityObjects.get_Count())
+		if (index < 0 || index >= activeFieldSerializationData.unityObjects.Count)
 		{
 			return null;
 		}

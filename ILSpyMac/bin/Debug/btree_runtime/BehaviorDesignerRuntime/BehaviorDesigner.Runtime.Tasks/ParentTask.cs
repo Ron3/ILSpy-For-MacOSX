@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -95,7 +95,7 @@ namespace BehaviorDesigner.Runtime.Tasks
 			float num = 0f;
 			if (this.children != null)
 			{
-				for (int i = 0; i < this.children.get_Count(); i++)
+				for (int i = 0; i < this.children.Count; i++)
 				{
 					if (this.children.get_Item(i) != null && !this.children.get_Item(i).Disabled)
 					{
@@ -110,7 +110,7 @@ namespace BehaviorDesigner.Runtime.Tasks
 		{
 			if (this.children != null)
 			{
-				for (int i = 0; i < this.children.get_Count(); i++)
+				for (int i = 0; i < this.children.Count; i++)
 				{
 					if (this.children.get_Item(i) != null && !this.children.get_Item(i).Disabled)
 					{
@@ -131,9 +131,10 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 		public void ReplaceAddChild(Task child, int index)
 		{
-			if (this.children != null && index < this.children.get_Count())
+			if (this.children != null && index < this.children.Count)
 			{
-				this.children.set_Item(index, child);
+				//this.children.Item=index, child;
+				this.children[index] = child;
 			}
 			else
 			{
