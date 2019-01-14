@@ -90,7 +90,7 @@ public static class BinaryDeserialization
 			Dictionary<int, int> dictionary = ObjectPool.Get<Dictionary<int, int>>();
 			for (int i = 0; i < taskData.variableStartIndex.Count; i++)
 			{
-				int num = taskData.variableStartIndex.get_Item(i);
+				int num = taskData.variableStartIndex[i];
 				int num2;
 				if (i + 1 < taskData.variableStartIndex.Count)
 				{
@@ -109,7 +109,7 @@ public static class BinaryDeserialization
 				{
 					dictionary.Add(fieldSerializationData.fieldNameHash.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
 				}
-				SharedVariable sharedVariable = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, taskData.variableStartIndex.get_Item(i), behaviorSource, false, 0);
+				SharedVariable sharedVariable = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, taskData.variableStartIndex[i], behaviorSource, false, 0);
 				if (sharedVariable != null)
 				{
 					list.Add(sharedVariable);
@@ -266,7 +266,7 @@ public static class BinaryDeserialization
 			Dictionary<int, int> dictionary = ObjectPool.Get<Dictionary<int, int>>();
 			for (int i = 0; i < variableData.variableStartIndex.Count; i++)
 			{
-				int num = variableData.variableStartIndex.get_Item(i);
+				int num = variableData.variableStartIndex[i];
 				int num2;
 				if (i + 1 < variableData.variableStartIndex.Count)
 				{
@@ -281,7 +281,7 @@ public static class BinaryDeserialization
 				{
 					dictionary.Add(fieldSerializationData.fieldNameHash.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
 				}
-				SharedVariable sharedVariable = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, variableData.variableStartIndex.get_Item(i), globalVariables, false, 0);
+				SharedVariable sharedVariable = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, variableData.variableStartIndex[i], globalVariables, false, 0);
 				if (sharedVariable != null)
 				{
 					list.Add(sharedVariable);
@@ -309,9 +309,9 @@ public static class BinaryDeserialization
 		dictionary.Clear();
 		for (int i = num; i < num2; i++)
 		{
-			if (!dictionary.ContainsKey(fieldSerializationData.fieldNameHash.get_Item(i)))
+			if (!dictionary.ContainsKey(fieldSerializationData.fieldNameHash[i]))
 			{
-				dictionary.Add(fieldSerializationData.fieldNameHash.get_Item(i), fieldSerializationData.startIndex.get_Item(i));
+				dictionary.Add(fieldSerializationData.fieldNameHash[i], fieldSerializationData.startIndex[i]);
 			}
 		}
 		Type type = TaskUtility.GetTypeWithinAssembly(taskSerializationData.types.get_Item(count));
@@ -405,7 +405,7 @@ public static class BinaryDeserialization
 			IList list = obj as IList;
 			for (int i = 0; i < list.Count; i++)
 			{
-				FieldInfo field = task.GetType().GetField((string)list.get_Item(i), 52);
+				FieldInfo field = task.GetType().GetField((string)list[i], 52);
 				if (field != null)
 				{
 					nodeData.WatchedFieldNames.Add(field.Name);

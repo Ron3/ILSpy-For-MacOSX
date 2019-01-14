@@ -189,9 +189,9 @@ namespace BehaviorDesigner.Runtime
 			}
 			for (int i = 0; i < this.mVariables.Count; i++)
 			{
-				if (this.mVariables.get_Item(i) != null)
+				if (this.mVariables[i] != null)
 				{
-					this.mSharedVariableIndex.Add(this.mVariables.get_Item(i).Name, i);
+					this.mSharedVariableIndex.Add(this.mVariables[i].Name, i);
 				}
 			}
 		}

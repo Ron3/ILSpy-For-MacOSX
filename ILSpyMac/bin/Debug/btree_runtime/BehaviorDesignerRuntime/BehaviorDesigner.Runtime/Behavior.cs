@@ -187,9 +187,9 @@ namespace BehaviorDesigner.Runtime
 					{
 						for (int i = 0; i < allVariables.Count; i++)
 						{
-							if (allVariables.get_Item(i) != null)
+							if (allVariables[i] != null)
 							{
-								this.mBehaviorSource.SetVariable(allVariables.get_Item(i).Name, allVariables.get_Item(i));
+								this.mBehaviorSource.SetVariable(allVariables[i].Name, allVariables[i]);
 							}
 						}
 					}
@@ -314,7 +314,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						if (this.TaskContainsMethod(methodName, parentTask.Children.get_Item(i)))
+						if (this.TaskContainsMethod(methodName, parentTask.Children[i]))
 						{
 							return true;
 						}
@@ -473,9 +473,9 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int i = 0; i < list.Count; i++)
 					{
-						if (list.get_Item(i) != null)
+						if (list[i] != null)
 						{
-							this.mBehaviorSource.SetVariable(list.get_Item(i).Name, list.get_Item(i));
+							this.mBehaviorSource.SetVariable(list[i].Name, list[i]);
 						}
 					}
 				}
@@ -595,7 +595,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int i = 0; i < detachedTasks.Count; i++)
 					{
-						this.DrawTaskGizmos(detachedTasks.get_Item(i));
+						this.DrawTaskGizmos(detachedTasks[i]);
 					}
 				}
 			}
@@ -619,7 +619,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						this.DrawTaskGizmos(parentTask.Children.get_Item(i));
+						this.DrawTaskGizmos(parentTask.Children[i]);
 					}
 				}
 			}
@@ -642,7 +642,7 @@ namespace BehaviorDesigner.Runtime
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					T result = (T)((object)null);
-					if ((result = this.FindTask<T>(parentTask.Children.get_Item(i))) != null)
+					if ((result = this.FindTask<T>(parentTask.Children[i])) != null)
 					{
 						return result;
 					}
@@ -670,7 +670,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					this.FindTasks<T>(parentTask.Children.get_Item(i), ref taskList);
+					this.FindTasks<T>(parentTask.Children[i], ref taskList);
 				}
 			}
 		}
@@ -693,7 +693,7 @@ namespace BehaviorDesigner.Runtime
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					Task result;
-					if ((result = this.FindTaskWithName(taskName, parentTask.Children.get_Item(i))) != null)
+					if ((result = this.FindTaskWithName(taskName, parentTask.Children[i])) != null)
 					{
 						return result;
 					}
@@ -721,7 +721,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					this.FindTasksWithName(taskName, parentTask.Children.get_Item(i), ref taskList);
+					this.FindTasksWithName(taskName, parentTask.Children[i], ref taskList);
 				}
 			}
 		}
@@ -803,7 +803,7 @@ namespace BehaviorDesigner.Runtime
 			List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(methodName);
 			for (int i = 0; i < list.Count; i++)
 			{
-				list.get_Item(i).Stop();
+				list[i].Stop();
 			}
 		}
 
@@ -818,7 +818,7 @@ namespace BehaviorDesigner.Runtime
 					List<TaskCoroutine> value = current.Value;
 					for (int i = 0; i < value.Count; i++)
 					{
-						value.get_Item(i).Stop();
+						value[i].Stop();
 					}
 				}
 			}
@@ -1011,7 +1011,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				for (int i = 0; i < allVariables.Count; i++)
 				{
-					this.defaultVariableValues.Add(allVariables.get_Item(i).Name, allVariables.get_Item(i).GetValue());
+					this.defaultVariableValues.Add(allVariables[i].Name, allVariables[i].GetValue());
 				}
 			}
 			this.SaveValue(this.mBehaviorSource.RootTask);
@@ -1102,7 +1102,7 @@ namespace BehaviorDesigner.Runtime
 				{
 					for (int i = 0; i < parentTask.Children.Count; i++)
 					{
-						this.ResetValue(parentTask.Children.get_Item(i));
+						this.ResetValue(parentTask.Children[i]);
 					}
 				}
 			}

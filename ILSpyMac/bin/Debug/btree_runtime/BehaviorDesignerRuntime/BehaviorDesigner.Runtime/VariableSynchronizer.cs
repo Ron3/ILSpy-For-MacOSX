@@ -155,7 +155,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			for (int i = this.synchronizedVariables.Count - 1; i > -1; i--)
 			{
-				VariableSynchronizer.SynchronizedVariable synchronizedVariable = this.synchronizedVariables.get_Item(i);
+				VariableSynchronizer.SynchronizedVariable synchronizedVariable = this.synchronizedVariables[i];
 				if (synchronizedVariable.global)
 				{
 					synchronizedVariable.sharedVariable = GlobalVariables.Instance.GetVariable(synchronizedVariable.variableName);
@@ -366,7 +366,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			for (int i = 0; i < this.synchronizedVariables.Count; i++)
 			{
-				VariableSynchronizer.SynchronizedVariable synchronizedVariable = this.synchronizedVariables.get_Item(i);
+				VariableSynchronizer.SynchronizedVariable synchronizedVariable = this.synchronizedVariables[i];
 				switch (synchronizedVariable.synchronizationType)
 				{
 				case VariableSynchronizer.SynchronizationType.BehaviorDesigner:

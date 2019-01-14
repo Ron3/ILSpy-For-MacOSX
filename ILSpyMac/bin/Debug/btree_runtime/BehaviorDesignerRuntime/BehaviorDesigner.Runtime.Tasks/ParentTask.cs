@@ -97,9 +97,9 @@ namespace BehaviorDesigner.Runtime.Tasks
 			{
 				for (int i = 0; i < this.children.Count; i++)
 				{
-					if (this.children.get_Item(i) != null && !this.children.get_Item(i).Disabled)
+					if (this.children[i] != null && !this.children[i].Disabled)
 					{
-						num += this.children.get_Item(i).GetUtility();
+						num += this.children[i].GetUtility();
 					}
 				}
 			}
@@ -112,9 +112,9 @@ namespace BehaviorDesigner.Runtime.Tasks
 			{
 				for (int i = 0; i < this.children.Count; i++)
 				{
-					if (this.children.get_Item(i) != null && !this.children.get_Item(i).Disabled)
+					if (this.children[i] != null && !this.children[i].Disabled)
 					{
-						this.children.get_Item(i).OnDrawGizmos();
+						this.children[i].OnDrawGizmos();
 					}
 				}
 			}

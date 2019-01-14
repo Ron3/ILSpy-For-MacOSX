@@ -30,7 +30,7 @@ namespace BehaviorDesigner.Runtime
 			List<BehaviorManager.BehaviorTree> behaviorTrees = this.behaviorManager.BehaviorTrees;
 			for (int i = 0; i < behaviorTrees.Count; i++)
 			{
-				BehaviorManager.BehaviorTree behaviorTree = behaviorTrees.get_Item(i);
+				BehaviorManager.BehaviorTree behaviorTree = behaviorTrees[i];
 				string text = string.Empty;
 				for (int j = 0; j < behaviorTree.activeStack.Count; j++)
 				{

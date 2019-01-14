@@ -515,7 +515,7 @@ namespace BehaviorDesigner.Runtime
 				bool flag = true;
 				for (int i = 0; i < anArray.Count; i++)
 				{
-					object value = anArray.get_Item(i);
+					object value = anArray[i];
 					if (!flag)
 					{
 						this.builder.Append(',');

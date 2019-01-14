@@ -101,7 +101,7 @@ namespace BehaviorDesigner.Runtime
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					T result = (T)((object)null);
-					if ((result = this.FindTask<T>(parentTask.Children.get_Item(i))) != null)
+					if ((result = this.FindTask<T>(parentTask.Children[i])) != null)
 					{
 						return result;
 					}
@@ -129,7 +129,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					this.FindTasks<T>(parentTask.Children.get_Item(i), ref taskList);
+					this.FindTasks<T>(parentTask.Children[i], ref taskList);
 				}
 			}
 		}
@@ -158,7 +158,7 @@ namespace BehaviorDesigner.Runtime
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					Task result;
-					if ((result = this.FindTaskWithName(taskName, parentTask.Children.get_Item(i))) != null)
+					if ((result = this.FindTaskWithName(taskName, parentTask.Children[i])) != null)
 					{
 						return result;
 					}
@@ -185,7 +185,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					this.FindTasksWithName(taskName, parentTask.Children.get_Item(i), ref taskList);
+					this.FindTasksWithName(taskName, parentTask.Children[i], ref taskList);
 				}
 			}
 		}

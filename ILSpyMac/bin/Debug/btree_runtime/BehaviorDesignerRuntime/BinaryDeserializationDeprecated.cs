@@ -65,7 +65,7 @@ public static class BinaryDeserializationDeprecated
 			Dictionary<string, int> dictionary = ObjectPool.Get<Dictionary<string, int>>();
 			for (int i = 0; i < taskData.variableStartIndex.Count; i++)
 			{
-				int num = taskData.variableStartIndex.get_Item(i);
+				int num = taskData.variableStartIndex[i];
 				int num2;
 				if (i + 1 < taskData.variableStartIndex.Count)
 				{
@@ -84,7 +84,7 @@ public static class BinaryDeserializationDeprecated
 				{
 					dictionary.Add(fieldSerializationData.typeName.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
 				}
-				SharedVariable sharedVariable = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, taskData.variableStartIndex.get_Item(i), behaviorSource, false, string.Empty);
+				SharedVariable sharedVariable = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, taskData.variableStartIndex[i], behaviorSource, false, string.Empty);
 				if (sharedVariable != null)
 				{
 					list.Add(sharedVariable);
@@ -201,7 +201,7 @@ public static class BinaryDeserializationDeprecated
 			Dictionary<string, int> dictionary = ObjectPool.Get<Dictionary<string, int>>();
 			for (int i = 0; i < variableData.variableStartIndex.Count; i++)
 			{
-				int num = variableData.variableStartIndex.get_Item(i);
+				int num = variableData.variableStartIndex[i];
 				int num2;
 				if (i + 1 < variableData.variableStartIndex.Count)
 				{
@@ -216,7 +216,7 @@ public static class BinaryDeserializationDeprecated
 				{
 					dictionary.Add(fieldSerializationData.typeName.get_Item(j), fieldSerializationData.startIndex.get_Item(j));
 				}
-				SharedVariable sharedVariable = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, variableData.variableStartIndex.get_Item(i), globalVariables, false, string.Empty);
+				SharedVariable sharedVariable = BinaryDeserializationDeprecated.BytesToSharedVariable(fieldSerializationData, dictionary, fieldSerializationData.byteDataArray, variableData.variableStartIndex[i], globalVariables, false, string.Empty);
 				if (sharedVariable != null)
 				{
 					list.Add(sharedVariable);
@@ -236,7 +236,7 @@ public static class BinaryDeserializationDeprecated
 			bool flag = false;
 			for (int i = 0; i < taskSerializationData.parentIndex.Count; i++)
 			{
-				if (count == taskSerializationData.parentIndex.get_Item(i))
+				if (count == taskSerializationData.parentIndex[i])
 				{
 					flag = true;
 					break;
@@ -317,7 +317,7 @@ public static class BinaryDeserializationDeprecated
 			IList list = obj as IList;
 			for (int i = 0; i < list.Count; i++)
 			{
-				FieldInfo field = task.GetType().GetField((string)list.get_Item(i), 52);
+				FieldInfo field = task.GetType().GetField((string)list[i], 52);
 				if (field != null)
 				{
 					nodeData.WatchedFieldNames.Add(field.Name);

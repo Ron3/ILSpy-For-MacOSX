@@ -94,7 +94,7 @@ namespace BehaviorDesigner.Runtime
 							int num = 0;
 							for (int i = 0; i < list2.Count; i++)
 							{
-								Task task = dictionary2.get_Item(list2.get_Item(i));
+								Task task = dictionary2.get_Item(list2[i]);
 								if (task.GetType().Equals(fieldType.GetElementType()) || task.GetType().IsSubclassOf(fieldType.GetElementType()))
 								{
 									num++;
@@ -155,7 +155,7 @@ namespace BehaviorDesigner.Runtime
 				IList list2 = obj as IList;
 				for (int i = 0; i < list2.Count; i++)
 				{
-					SharedVariable sharedVariable = JSONDeserializationDeprecated.DeserializeSharedVariable(list2.get_Item(i) as Dictionary<string, object>, variableSource, true, unityObjects);
+					SharedVariable sharedVariable = JSONDeserializationDeprecated.DeserializeSharedVariable(list2[i] as Dictionary<string, object>, variableSource, true, unityObjects);
 					list.Add(sharedVariable);
 				}
 				variableSource.SetAllVariables(list);
@@ -281,7 +281,7 @@ namespace BehaviorDesigner.Runtime
 				IList list = obj as IList;
 				for (int i = 0; i < list.Count; i++)
 				{
-					FieldInfo field = task.GetType().GetField((string)list.get_Item(i), 52);
+					FieldInfo field = task.GetType().GetField((string)list[i], 52);
 					if (field != null)
 					{
 						nodeData.WatchedFieldNames.Add(field.Name);
@@ -663,7 +663,7 @@ namespace BehaviorDesigner.Runtime
 				List<object> list = obj as List<object>;
 				for (int i = 0; i < list.Count; i++)
 				{
-					List<object> list2 = list.get_Item(i) as List<object>;
+					List<object> list2 = list[i] as List<object>;
 					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2.get_Item(0), typeof(float)), (float)Convert.ChangeType(list2.get_Item(1), typeof(float)), (float)Convert.ChangeType(list2.get_Item(2), typeof(float)), (float)Convert.ChangeType(list2.get_Item(3), typeof(float)));
 					keyframe.tangentMode=(int)Convert.ChangeType(list2.get_Item(4), typeof(int));
 					animationCurve.AddKey(keyframe);
