@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
+
 namespace BehaviorDesigner.Runtime
 {
 	[AddComponentMenu("Behavior Designer/Behavior Game GUI")]

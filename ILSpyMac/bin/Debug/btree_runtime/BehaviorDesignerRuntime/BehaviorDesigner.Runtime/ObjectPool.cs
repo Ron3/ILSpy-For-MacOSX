@@ -11,7 +11,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			if (ObjectPool.poolDictionary.ContainsKey(typeof(T)))
 			{
-				Stack<T> stack = ObjectPool.poolDictionary.get_Item(typeof(T)) as Stack<T>;
+				Stack<T> stack = ObjectPool.poolDictionary[typeof(T)] as Stack<T>;
 				if (stack.Count > 0)
 				{
 					return stack.Pop();
@@ -27,7 +27,7 @@ namespace BehaviorDesigner.Runtime
 				return;
 			}
 			object obj2;
-			if (ObjectPool.poolDictionary.TryGetValue(typeof(T), ref obj2))
+			if (ObjectPool.poolDictionary.TryGetValue(typeof(T), out obj2))
 			{
 				Stack<T> stack = obj2 as Stack<T>;
 				stack.Push(obj);

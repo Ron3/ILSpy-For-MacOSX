@@ -94,7 +94,7 @@ namespace BehaviorDesigner.Runtime
 							int num = 0;
 							for (int i = 0; i < list2.Count; i++)
 							{
-								Task task = dictionary2.get_Item(list2[i]);
+								Task task = dictionary2[list2[i]];
 								if (task.GetType().Equals(fieldType.GetElementType()) || task.GetType().IsSubclassOf(fieldType.GetElementType()))
 								{
 									num++;
@@ -104,7 +104,7 @@ namespace BehaviorDesigner.Runtime
 							int num2 = 0;
 							for (int j = 0; j < list2.Count; j++)
 							{
-								Task task2 = dictionary2.get_Item(list2[j]);
+								Task task2 = dictionary2[list2[j]];
 								if (task2.GetType().Equals(fieldType.GetElementType()) || task2.GetType().IsSubclassOf(fieldType.GetElementType()))
 								{
 									array.SetValue(task2, num2);
@@ -115,7 +115,7 @@ namespace BehaviorDesigner.Runtime
 						}
 						else
 						{
-							Task task3 = dictionary2.get_Item(list2[0]);
+							Task task3 = dictionary2[list2[0]];
 							if (task3.GetType().Equals(current.fieldInfo.FieldType) || task3.GetType().IsSubclassOf(current.fieldInfo.FieldType))
 							{
 								current.fieldInfo.SetValue(current.task, task3);

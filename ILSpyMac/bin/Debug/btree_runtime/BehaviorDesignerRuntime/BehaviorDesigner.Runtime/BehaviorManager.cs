@@ -779,7 +779,7 @@ namespace BehaviorDesigner.Runtime
 						behaviorTree.parentIndex.Add(data.parentIndex);
 						behaviorTree.relativeChildIndex.Add(data.parentTask.Children.Count);
 						behaviorTree.parentCompositeIndex.Add(data.compositeParentIndex);
-						behaviorTree.childrenIndex.get_Item(data.parentIndex).Add(behaviorTree.taskList.Count);
+						behaviorTree.childrenIndex[data.parentIndex].Add(behaviorTree.taskList.Count);
 						data.parentTask.AddChild(rootTask, data.parentTask.Children.Count);
 					}
 					hasExternalBehavior = true;
@@ -832,7 +832,7 @@ namespace BehaviorDesigner.Runtime
 					}
 					else
 					{
-						int index = behaviorTree.relativeChildIndex.get_Item(behaviorTree.relativeChildIndex.Count - 1);
+						int index = behaviorTree.relativeChildIndex[behaviorTree.relativeChildIndex.Count - 1];
 						data.parentTask.ReplaceAddChild(task, index);
 						if (data.offset != Vector2.zero)
 						{
@@ -1220,7 +1220,7 @@ namespace BehaviorDesigner.Runtime
 							break;
 						}
 					}
-					if (i < behaviorTree.activeStack.Count && behaviorTree.activeStack[i].Count > 0 && behaviorTree.taskList[num] == behaviorTree.taskList.get_Item(behaviorTree.activeStack[i].Peek()))
+					if (i < behaviorTree.activeStack.Count && behaviorTree.activeStack[i].Count > 0 && behaviorTree.taskList[num] == behaviorTree.taskList[behaviorTree.activeStack[i].Peek()])
 					{
 						if (behaviorTree.taskList[num] is ParentTask)
 						{
@@ -1294,13 +1294,13 @@ namespace BehaviorDesigner.Runtime
 							BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate = behaviorTree.conditionalReevaluate[k];
 							if (this.FindLCA(behaviorTree, compositeIndex, conditionalReevaluate.index) == compositeIndex)
 							{
-								behaviorTree.taskList.get_Item(behaviorTree.conditionalReevaluate[k].index).NodeData.IsReevaluating = false;
+								behaviorTree.taskList[behaviorTree.conditionalReevaluate[k].index].NodeData.IsReevaluating = false;
 								ObjectPool.Return<BehaviorManager.BehaviorTree.ConditionalReevaluate>(behaviorTree.conditionalReevaluate[k]);
 								behaviorTree.conditionalReevaluateMap.Remove(behaviorTree.conditionalReevaluate[k].index);
 								behaviorTree.conditionalReevaluate.RemoveAt(k);
 							}
 						}
-						Composite composite = behaviorTree.taskList.get_Item(behaviorTree.parentCompositeIndex[index]) as Composite;
+						Composite composite = behaviorTree.taskList[behaviorTree.parentCompositeIndex[index]] as Composite;
 						for (int l = i - 1; l > -1; l--)
 						{
 							BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate2 = behaviorTree.conditionalReevaluate[l];
@@ -1343,17 +1343,17 @@ namespace BehaviorDesigner.Runtime
 							this.conditionalParentIndexes.Add(behaviorTree.parentIndex[index]);
 						}
 						ParentTask parentTask = behaviorTree.taskList[compositeIndex] as ParentTask;
-						parentTask.OnConditionalAbort(behaviorTree.relativeChildIndex.get_Item(this.conditionalParentIndexes.get_Item(this.conditionalParentIndexes.Count - 1)));
+						parentTask.OnConditionalAbort(behaviorTree.relativeChildIndex[this.conditionalParentIndexes[this.conditionalParentIndexes.Count - 1]));
 						for (int n = this.conditionalParentIndexes.Count - 1; n > -1; n--)
 						{
-							parentTask = (behaviorTree.taskList.get_Item(this.conditionalParentIndexes[n]) as ParentTask);
+							parentTask = (behaviorTree.taskList[this.conditionalParentIndexes[n]] as ParentTask);
 							if (n == 0)
 							{
 								parentTask.OnConditionalAbort(behaviorTree.relativeChildIndex[index]);
 							}
 							else
 							{
-								parentTask.OnConditionalAbort(behaviorTree.relativeChildIndex.get_Item(this.conditionalParentIndexes.get_Item(n - 1)));
+								parentTask.OnConditionalAbort(behaviorTree.relativeChildIndex[this.conditionalParentIndexes[n - 1)));
 							}
 						}
 						behaviorTree.taskList[index].NodeData.InterruptTime = Time.realtimeSinceStartup;
@@ -1410,7 +1410,7 @@ namespace BehaviorDesigner.Runtime
 				}
 				if (behaviorTree.parentIndex[taskIndex] != -1)
 				{
-					ParentTask parentTask = behaviorTree.taskList.get_Item(behaviorTree.parentIndex[taskIndex]) as ParentTask;
+					ParentTask parentTask = behaviorTree.taskList[behaviorTree.parentIndex[taskIndex]] as ParentTask;
 					if (!parentTask.CanRunParallelChildren())
 					{
 						parentTask.OnChildExecuted(TaskStatus.Inactive);
@@ -1649,7 +1649,7 @@ namespace BehaviorDesigner.Runtime
 								{
 									int num4 = behaviorTree.childConditionalIndex[taskIndex][j];
 									BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate3;
-									if (behaviorTree.conditionalReevaluateMap.TryGetValue(num4, ref conditionalReevaluate3))
+									if (behaviorTree.conditionalReevaluateMap.TryGetValue(num4, out conditionalReevaluate3))
 									{
 										if (!(behaviorTree.taskList[num3] as ParentTask).CanRunParallelChildren())
 										{
@@ -1663,7 +1663,7 @@ namespace BehaviorDesigner.Runtime
 												BehaviorManager.BehaviorTree.ConditionalReevaluate conditionalReevaluate4 = behaviorTree.conditionalReevaluate[k];
 												if (this.FindLCA(behaviorTree, num3, conditionalReevaluate4.index) == num3)
 												{
-													behaviorTree.taskList.get_Item(behaviorTree.conditionalReevaluate[k].index).NodeData.IsReevaluating = false;
+													behaviorTree.taskList[behaviorTree.conditionalReevaluate[k].index].NodeData.IsReevaluating = false;
 													ObjectPool.Return<BehaviorManager.BehaviorTree.ConditionalReevaluate>(behaviorTree.conditionalReevaluate[k]);
 													behaviorTree.conditionalReevaluateMap.Remove(behaviorTree.conditionalReevaluate[k].index);
 													behaviorTree.conditionalReevaluate.RemoveAt(k);
@@ -1832,9 +1832,9 @@ namespace BehaviorDesigner.Runtime
 		{
 			this.thirdPartyTaskCompare.Task = behaviorTree.taskList[taskIndex];
 			object obj;
-			if (this.taskObjectMap.TryGetValue(this.thirdPartyTaskCompare, ref obj))
+			if (this.taskObjectMap.TryGetValue(this.thirdPartyTaskCompare, out obj))
 			{
-				BehaviorManager.ThirdPartyObjectType thirdPartyObjectType = this.objectTaskMap.get_Item(obj).ThirdPartyObjectType;
+				BehaviorManager.ThirdPartyObjectType thirdPartyObjectType = this.objectTaskMap[obj].ThirdPartyObjectType;
 				if (BehaviorManager.invokeParameters == null)
 				{
 					BehaviorManager.invokeParameters = new object[1];
@@ -1924,7 +1924,7 @@ namespace BehaviorDesigner.Runtime
 			BehaviorManager.BehaviorTree behaviorTree = this.behaviorTreeMap[behavior];
 			for (int i = 0; i < behaviorTree.activeStack.Count; i++)
 			{
-				Task task = behaviorTree.taskList.get_Item(behaviorTree.activeStack[i].Peek());
+				Task task = behaviorTree.taskList[behaviorTree.activeStack[i].Peek()];
 				if (task is Action)
 				{
 					list.Add(task);

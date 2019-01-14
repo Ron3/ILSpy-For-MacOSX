@@ -154,7 +154,7 @@ public static class BinaryDeserialization
 			}
 			else if (taskData.parentIndex[l] != -1)
 			{
-				ParentTask parentTask = list2.get_Item(taskData.parentIndex[l]) as ParentTask;
+				ParentTask parentTask = list2[taskData.parentIndex[l]] as ParentTask;
 				if (parentTask != null)
 				{
 					int index = (parentTask.Children != null) ? parentTask.Children.Count : 0;
@@ -179,7 +179,7 @@ public static class BinaryDeserialization
 							int num3 = 0;
 							for (int m = 0; m < list3.Count; m++)
 							{
-								Task task = list2.get_Item(list3[m]);
+								Task task = list2[list3[m]];
 								if (elementType.IsAssignableFrom(task.GetType()))
 								{
 									num3++;
@@ -189,7 +189,7 @@ public static class BinaryDeserialization
 							Array array = Array.CreateInstance(elementType, num3);
 							for (int n = 0; n < array.Length; n++)
 							{
-								Task task2 = list2.get_Item(list3[n]);
+								Task task2 = list2[list3[n]];
 								if (elementType.IsAssignableFrom(task2.GetType()))
 								{
 									array.SetValue(task2, num4);
@@ -207,7 +207,7 @@ public static class BinaryDeserialization
 							})) as IList;
 							for (int num5 = 0; num5 < list3.Count; num5++)
 							{
-								Task task3 = list2.get_Item(list3[num5]);
+								Task task3 = list2[list3[num5]];
 								if (type.IsAssignableFrom(task3.GetType()))
 								{
 									list4.Add(task3);
@@ -218,7 +218,7 @@ public static class BinaryDeserialization
 					}
 					else
 					{
-						current.fieldInfo.SetValue(current.obj, list2.get_Item(list3[0]));
+						current.fieldInfo.SetValue(current.obj, list2[list3[0]]);
 					}
 				}
 			}
@@ -520,7 +520,7 @@ public static class BinaryDeserialization
 					BinaryDeserialization.ObjectFieldMap objectFieldMap = new BinaryDeserialization.ObjectFieldMap(obj, fieldInfo);
 					if (BinaryDeserialization.taskIDs.ContainsKey(objectFieldMap))
 					{
-						BinaryDeserialization.taskIDs.get_Item(objectFieldMap).Add(num4);
+						BinaryDeserialization.taskIDs[objectFieldMap].Add(num4);
 					}
 					else
 					{
@@ -659,7 +659,7 @@ public static class BinaryDeserialization
 
 	private static int GetFieldSize(FieldSerializationData fieldSerializationData, int fieldIndex)
 	{
-		return ((fieldIndex + 1 >= fieldSerializationData.dataPosition.Count) ? fieldSerializationData.byteData.Count : fieldSerializationData.dataPosition.get_Item(fieldIndex + 1)) - fieldSerializationData.dataPosition.get_Item(fieldIndex);
+		return ((fieldIndex + 1 >= fieldSerializationData.dataPosition.Count) ? fieldSerializationData.byteData.Count : fieldSerializationData.dataPosition[fieldIndex + 1)) - fieldSerializationData.dataPosition[fieldIndex);
 	}
 
 	private static int BytesToInt(byte[] bytes, int dataPosition)

@@ -129,7 +129,7 @@ public static class BinaryDeserializationDeprecated
 			}
 			else if (taskData.parentIndex[l] != -1)
 			{
-				ParentTask parentTask = list2.get_Item(taskData.parentIndex[l]) as ParentTask;
+				ParentTask parentTask = list2[taskData.parentIndex[l]] as ParentTask;
 				if (parentTask != null)
 				{
 					int index = (parentTask.Children != null) ? parentTask.Children.Count : 0;
@@ -154,7 +154,7 @@ public static class BinaryDeserializationDeprecated
 							Array array = Array.CreateInstance(elementType, list3.Count);
 							for (int m = 0; m < array.Length; m++)
 							{
-								array.SetValue(list2.get_Item(list3[m]), m);
+								array.SetValue(list2[list3[m]], m);
 							}
 							current.fieldInfo.SetValue(current.obj, array);
 						}
@@ -167,14 +167,14 @@ public static class BinaryDeserializationDeprecated
 							})) as IList;
 							for (int n = 0; n < list3.Count; n++)
 							{
-								list4.Add(list2.get_Item(list3[n]));
+								list4.Add(list2[list3[n]]);
 							}
 							current.fieldInfo.SetValue(current.obj, list4);
 						}
 					}
 					else
 					{
-						current.fieldInfo.SetValue(current.obj, list2.get_Item(list3[0]));
+						current.fieldInfo.SetValue(current.obj, list2[list3[0]]);
 					}
 				}
 			}
@@ -422,7 +422,7 @@ public static class BinaryDeserializationDeprecated
 					BinaryDeserializationDeprecated.ObjectFieldMap objectFieldMap = new BinaryDeserializationDeprecated.ObjectFieldMap(obj, fieldInfo);
 					if (BinaryDeserializationDeprecated.taskIDs.ContainsKey(objectFieldMap))
 					{
-						BinaryDeserializationDeprecated.taskIDs.get_Item(objectFieldMap).Add(num3);
+						BinaryDeserializationDeprecated.taskIDs[objectFieldMap].Add(num3);
 					}
 					else
 					{
@@ -530,7 +530,7 @@ public static class BinaryDeserializationDeprecated
 
 	private static int GetFieldSize(FieldSerializationData fieldSerializationData, int fieldIndex)
 	{
-		return ((fieldIndex + 1 >= fieldSerializationData.dataPosition.Count) ? fieldSerializationData.byteData.Count : fieldSerializationData.dataPosition.get_Item(fieldIndex + 1)) - fieldSerializationData.dataPosition.get_Item(fieldIndex);
+		return ((fieldIndex + 1 >= fieldSerializationData.dataPosition.Count) ? fieldSerializationData.byteData.Count : fieldSerializationData.dataPosition[fieldIndex + 1]) - fieldSerializationData.dataPosition[fieldIndex];
 	}
 
 	private static int BytesToInt(byte[] bytes, int dataPosition)
