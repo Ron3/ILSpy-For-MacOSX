@@ -644,7 +644,7 @@ public static class BinaryDeserialization
 			int length = value.Length;
 			for (int i = 0; i < length; i++)
 			{
-				num = num * 31 + (int)value.get_Chars(i);
+				num = num * 31 + (int)value[i];
 			}
 			return num;
 		}

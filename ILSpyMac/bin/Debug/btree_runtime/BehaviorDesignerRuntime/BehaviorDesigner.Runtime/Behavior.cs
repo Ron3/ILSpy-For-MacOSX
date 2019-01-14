@@ -1,12 +1,13 @@
-﻿using BehaviorDesigner.Runtime.Tasks;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
+//using Action = BehaviorDesigner.Runtime.Tasks.Action;
+using Action = System.Action;
 using Object = UnityEngine.Object;
-using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace BehaviorDesigner.Runtime
 {

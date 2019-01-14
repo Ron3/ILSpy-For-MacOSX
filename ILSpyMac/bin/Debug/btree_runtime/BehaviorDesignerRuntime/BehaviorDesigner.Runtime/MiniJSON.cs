@@ -32,6 +32,8 @@ namespace BehaviorDesigner.Runtime
 
 			private const string WORD_BREAK = "{}[],:\"";
 
+			private static Dictionary<string, int> fswitchMap0{ get; set;}
+
 			private StringReader json;
 
 			private char PeekChar
@@ -92,61 +94,64 @@ namespace BehaviorDesigner.Runtime
 					case '+':
 					case '.':
 					case '/':
-						IL_8D:
+						// IL_8D:
 						switch (peekChar)
 						{
-						case '[':
-							return MiniJSON.Parser.TOKEN.SQUARED_OPEN;
-						case '\\':
-						{
-							IL_A2:
-							switch (peekChar)
+							case '[':
+								return MiniJSON.Parser.TOKEN.SQUARED_OPEN;
+							case '\\':
 							{
-							case '{':
-								return MiniJSON.Parser.TOKEN.CURLY_OPEN;
-							case '}':
-								this.json.Read();
-								return MiniJSON.Parser.TOKEN.CURLY_CLOSE;
-							}
-							string nextWord = this.NextWord;
-							if (nextWord != null)
-							{
-								//if (MiniJSON.Parser.<>f__switch$map0 == null)
-								if (MiniJSON.Parser.fswitchMap0 == null)
+								// IL_A2:
+								switch (peekChar)
 								{
-									Dictionary<string, int> dictionary = new Dictionary<string, int>(5);
-									dictionary.Add("false", 0);
-									dictionary.Add("true", 1);
-									dictionary.Add("null", 2);
-									dictionary.Add("Infinity", 3);
-									dictionary.Add("-Infinity", 4);
-									MiniJSON.Parser.fswitchMap0 = dictionary;
+								case '{':
+									return MiniJSON.Parser.TOKEN.CURLY_OPEN;
+								case '}':
+									this.json.Read();
+									return MiniJSON.Parser.TOKEN.CURLY_CLOSE;
 								}
-								int num;
-								if (MiniJSON.Parser.fswitchMap0.TryGetValue(nextWord, out num))
+								string nextWord = this.NextWord;
+								if (nextWord != null)
 								{
-									switch (num)
+									//if (MiniJSON.Parser.<>f__switch$map0 == null)
+									 if ( MiniJSON.Parser.fswitchMap0 == null)
 									{
-									case 0:
-										return MiniJSON.Parser.TOKEN.FALSE;
-									case 1:
-										return MiniJSON.Parser.TOKEN.TRUE;
-									case 2:
-										return MiniJSON.Parser.TOKEN.NULL;
-									case 3:
-										return MiniJSON.Parser.TOKEN.INFINITY;
-									case 4:
-										return MiniJSON.Parser.TOKEN.NEGINFINITY;
+										Dictionary<string, int> dictionary = new Dictionary<string, int>(5);
+										dictionary.Add("false", 0);
+										dictionary.Add("true", 1);
+										dictionary.Add("null", 2);
+										dictionary.Add("Infinity", 3);
+										dictionary.Add("-Infinity", 4);
+										MiniJSON.Parser.fswitchMap0 = dictionary;
+									}
+									int num;
+									if (MiniJSON.Parser.fswitchMap0.TryGetValue(nextWord, out num))
+									{
+										switch (num)
+										{
+										case 0:
+											return MiniJSON.Parser.TOKEN.FALSE;
+										case 1:
+											return MiniJSON.Parser.TOKEN.TRUE;
+										case 2:
+											return MiniJSON.Parser.TOKEN.NULL;
+										case 3:
+											return MiniJSON.Parser.TOKEN.INFINITY;
+										case 4:
+											return MiniJSON.Parser.TOKEN.NEGINFINITY;
+										}
 									}
 								}
+								return MiniJSON.Parser.TOKEN.NONE;
 							}
-							return MiniJSON.Parser.TOKEN.NONE;
+							case ']':
+								this.json.Read();
+								return MiniJSON.Parser.TOKEN.SQUARED_CLOSE;
+
+							default:
+								goto case '\\';
 						}
-						case ']':
-							this.json.Read();
-							return MiniJSON.Parser.TOKEN.SQUARED_CLOSE;
-						}
-						goto IL_A2;
+						// goto IL_A2;
 					case ',':
 						this.json.Read();
 						return MiniJSON.Parser.TOKEN.COMMA;
@@ -164,8 +169,11 @@ namespace BehaviorDesigner.Runtime
 						return MiniJSON.Parser.TOKEN.NUMBER;
 					case ':':
 						return MiniJSON.Parser.TOKEN.COLON;
+
+					default:
+						goto case '/';
 					}
-					goto IL_8D;
+					// goto IL_8D;
 				}
 			}
 
@@ -204,32 +212,36 @@ namespace BehaviorDesigner.Runtime
 					MiniJSON.Parser.TOKEN nextToken = this.NextToken;
 					switch (nextToken)
 					{
-					case MiniJSON.Parser.TOKEN.NONE:
-						goto IL_37;
-					case MiniJSON.Parser.TOKEN.CURLY_OPEN:
-					{
-						IL_2B:
-						if (nextToken == MiniJSON.Parser.TOKEN.COMMA)
+						case MiniJSON.Parser.TOKEN.NONE:
+							goto IL_37;
+						case MiniJSON.Parser.TOKEN.CURLY_OPEN:
 						{
+							// IL_2B:
+							if (nextToken == MiniJSON.Parser.TOKEN.COMMA)
+							{
+								continue;
+							}
+							string text = this.ParseString();
+							if (text == null)
+							{
+								goto Block_2;
+							}
+							if (this.NextToken != MiniJSON.Parser.TOKEN.COLON)
+							{
+								goto Block_3;
+							}
+							this.json.Read();
+							dictionary[text] = this.ParseValue();
 							continue;
 						}
-						string text = this.ParseString();
-						if (text == null)
-						{
-							goto Block_2;
-						}
-						if (this.NextToken != MiniJSON.Parser.TOKEN.COLON)
-						{
-							goto Block_3;
-						}
-						this.json.Read();
-						dictionary[text] = this.ParseValue();
-						continue;
+						case MiniJSON.Parser.TOKEN.CURLY_CLOSE:
+							return dictionary;
+
+						default:
+							goto case MiniJSON.Parser.TOKEN.CURLY_OPEN;
 					}
-					case MiniJSON.Parser.TOKEN.CURLY_CLOSE:
-						return dictionary;
-					}
-					goto IL_2B;
+					
+					// goto IL_2B;
 				}
 				IL_37:
 				return null;
@@ -254,7 +266,7 @@ namespace BehaviorDesigner.Runtime
 						flag = false;
 						continue;
 					case MiniJSON.Parser.TOKEN.COLON:
-						IL_38:
+						// IL_38:
 						if (tOKEN != MiniJSON.Parser.TOKEN.NONE)
 						{
 							object obj = this.ParseByToken(nextToken);
@@ -264,8 +276,11 @@ namespace BehaviorDesigner.Runtime
 						return null;
 					case MiniJSON.Parser.TOKEN.COMMA:
 						continue;
+					
+					default:
+						goto case MiniJSON.Parser.TOKEN.COLON;
 					}
-					goto IL_38;
+					// goto IL_38;
 				}
 				return list;
 			}
