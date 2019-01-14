@@ -98,7 +98,7 @@ public static class BinaryDeserialization
 				}
 				else if (taskData.startIndex != null && taskData.startIndex.Count > 0)
 				{
-					num2 = taskData.startIndex.get_Item(0);
+					num2 = taskData.startIndex[0];
 				}
 				else
 				{
@@ -133,11 +133,11 @@ public static class BinaryDeserialization
 		}
 		for (int l = 0; l < taskData.parentIndex.Count; l++)
 		{
-			if (taskData.parentIndex.get_Item(l) == -1)
+			if (taskData.parentIndex[l] == -1)
 			{
 				if (behaviorSource.EntryTask == null)
 				{
-					behaviorSource.EntryTask = list2.get_Item(l);
+					behaviorSource.EntryTask = list2[l];
 				}
 				else
 				{
@@ -145,20 +145,20 @@ public static class BinaryDeserialization
 					{
 						behaviorSource.DetachedTasks = new List<Task>();
 					}
-					behaviorSource.DetachedTasks.Add(list2.get_Item(l));
+					behaviorSource.DetachedTasks.Add(list2[l]);
 				}
 			}
-			else if (taskData.parentIndex.get_Item(l) == 0)
+			else if (taskData.parentIndex[l] == 0)
 			{
-				behaviorSource.RootTask = list2.get_Item(l);
+				behaviorSource.RootTask = list2[l];
 			}
-			else if (taskData.parentIndex.get_Item(l) != -1)
+			else if (taskData.parentIndex[l] != -1)
 			{
-				ParentTask parentTask = list2.get_Item(taskData.parentIndex.get_Item(l)) as ParentTask;
+				ParentTask parentTask = list2.get_Item(taskData.parentIndex[l]) as ParentTask;
 				if (parentTask != null)
 				{
 					int index = (parentTask.Children != null) ? parentTask.Children.Count : 0;
-					parentTask.AddChild(list2.get_Item(l), index);
+					parentTask.AddChild(list2[l], index);
 				}
 			}
 		}
@@ -179,7 +179,7 @@ public static class BinaryDeserialization
 							int num3 = 0;
 							for (int m = 0; m < list3.Count; m++)
 							{
-								Task task = list2.get_Item(list3.get_Item(m));
+								Task task = list2.get_Item(list3[m]);
 								if (elementType.IsAssignableFrom(task.GetType()))
 								{
 									num3++;
@@ -189,7 +189,7 @@ public static class BinaryDeserialization
 							Array array = Array.CreateInstance(elementType, num3);
 							for (int n = 0; n < array.Length; n++)
 							{
-								Task task2 = list2.get_Item(list3.get_Item(n));
+								Task task2 = list2.get_Item(list3[n]);
 								if (elementType.IsAssignableFrom(task2.GetType()))
 								{
 									array.SetValue(task2, num4);
@@ -201,13 +201,13 @@ public static class BinaryDeserialization
 						else
 						{
 							Type type = fieldType.GetGenericArguments()[0];
-							IList list4 = TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
+							IList list4 = TaskUtility.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 							{
 								type
 							})) as IList;
 							for (int num5 = 0; num5 < list3.Count; num5++)
 							{
-								Task task3 = list2.get_Item(list3.get_Item(num5));
+								Task task3 = list2.get_Item(list3[num5]);
 								if (type.IsAssignableFrom(task3.GetType()))
 								{
 									list4.Add(task3);
@@ -218,7 +218,7 @@ public static class BinaryDeserialization
 					}
 					else
 					{
-						current.fieldInfo.SetValue(current.obj, list2.get_Item(list3.get_Item(0)));
+						current.fieldInfo.SetValue(current.obj, list2.get_Item(list3[0]));
 					}
 				}
 			}
@@ -346,7 +346,7 @@ public static class BinaryDeserialization
 			}
 			for (int l = fieldSerializationData.startIndex[num]; l <= fieldSerializationData.startIndex.get_Item(num2 - 1); l++)
 			{
-				unknownTask.dataPosition.Add(fieldSerializationData.dataPosition.get_Item(l) - fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex[num]));
+				unknownTask.dataPosition.Add(fieldSerializationData.dataPosition[l] - fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex[num]));
 			}
 			if (count + 1 < taskSerializationData.startIndex.Count && taskSerializationData.startIndex.get_Item(count + 1) < fieldSerializationData.dataPosition.Count)
 			{
@@ -358,7 +358,7 @@ public static class BinaryDeserialization
 			}
 			for (int m = fieldSerializationData.dataPosition.get_Item(fieldSerializationData.startIndex[num]); m < num2; m++)
 			{
-				unknownTask.byteData.Add(fieldSerializationData.byteData.get_Item(m));
+				unknownTask.byteData.Add(fieldSerializationData.byteData[m]);
 			}
 			unknownTask.unityObjects = fieldSerializationData.unityObjects;
 		}
@@ -449,7 +449,7 @@ public static class BinaryDeserialization
 			object obj2 = null;
 			if (typeof(IList).IsAssignableFrom(fieldType))
 			{
-				int num3 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				int num3 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 				if (fieldType.IsArray)
 				{
 					Type elementType = fieldType.GetElementType();
@@ -497,7 +497,7 @@ public static class BinaryDeserialization
 			{
 				if (fieldInfo != null && TaskUtility.HasAttribute(fieldInfo, typeof(InspectTaskAttribute)))
 				{
-					string text = BinaryDeserialization.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2), BinaryDeserialization.GetFieldSize(fieldSerializationData, num2));
+					string text = BinaryDeserialization.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2], BinaryDeserialization.GetFieldSize(fieldSerializationData, num2));
 					if (!string.IsNullOrEmpty(text))
 					{
 						Type typeWithinAssembly = TaskUtility.GetTypeWithinAssembly(text);
@@ -514,7 +514,7 @@ public static class BinaryDeserialization
 					{
 						BinaryDeserialization.taskIDs = new Dictionary<BinaryDeserialization.ObjectFieldMap, List<int>>(new BinaryDeserialization.ObjectFieldMapComparer());
 					}
-					int num4 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+					int num4 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 					BinaryDeserialization.ObjectFieldMap objectFieldMap = new BinaryDeserialization.ObjectFieldMap(obj, fieldInfo);
 					if (BinaryDeserialization.taskIDs.ContainsKey(objectFieldMap))
 					{
@@ -530,80 +530,80 @@ public static class BinaryDeserialization
 			}
 			else if (typeof(SharedVariable).IsAssignableFrom(fieldType))
 			{
-				obj2 = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, fieldIndexMap, fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2), variableSource, true, num);
+				obj2 = BinaryDeserialization.BytesToSharedVariable(fieldSerializationData, fieldIndexMap, fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2], variableSource, true, num);
 			}
 			else if (typeof(Object).IsAssignableFrom(fieldType))
 			{
-				int index = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				int index = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 				obj2 = BinaryDeserialization.IndexToUnityObject(index, fieldSerializationData);
 			}
 			else if (fieldType.Equals(typeof(int)) || fieldType.IsEnum)
 			{
-				obj2 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(uint)))
 			{
-				obj2 = BinaryDeserialization.BytesToUInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToUInt(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(float)))
 			{
-				obj2 = BinaryDeserialization.BytesToFloat(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToFloat(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(double)))
 			{
-				obj2 = BinaryDeserialization.BytesToDouble(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToDouble(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(long)))
 			{
-				obj2 = BinaryDeserialization.BytesToLong(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToLong(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(bool)))
 			{
-				obj2 = BinaryDeserialization.BytesToBool(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToBool(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(string)))
 			{
-				obj2 = BinaryDeserialization.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2), BinaryDeserialization.GetFieldSize(fieldSerializationData, num2));
+				obj2 = BinaryDeserialization.BytesToString(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2], BinaryDeserialization.GetFieldSize(fieldSerializationData, num2));
 			}
 			else if (fieldType.Equals(typeof(byte)))
 			{
-				obj2 = BinaryDeserialization.BytesToByte(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToByte(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(Vector2)))
 			{
-				obj2 = BinaryDeserialization.BytesToVector2(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToVector2(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(Vector3)))
 			{
-				obj2 = BinaryDeserialization.BytesToVector3(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToVector3(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(Vector4)))
 			{
-				obj2 = BinaryDeserialization.BytesToVector4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToVector4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(Quaternion)))
 			{
-				obj2 = BinaryDeserialization.BytesToQuaternion(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToQuaternion(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(Color)))
 			{
-				obj2 = BinaryDeserialization.BytesToColor(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToColor(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(Rect)))
 			{
-				obj2 = BinaryDeserialization.BytesToRect(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToRect(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(Matrix4x4)))
 			{
-				obj2 = BinaryDeserialization.BytesToMatrix4x4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToMatrix4x4(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(AnimationCurve)))
 			{
-				obj2 = BinaryDeserialization.BytesToAnimationCurve(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToAnimationCurve(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.Equals(typeof(LayerMask)))
 			{
-				obj2 = BinaryDeserialization.BytesToLayerMask(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition.get_Item(num2));
+				obj2 = BinaryDeserialization.BytesToLayerMask(fieldSerializationData.byteDataArray, fieldSerializationData.dataPosition[num2]);
 			}
 			else if (fieldType.IsClass || (fieldType.IsValueType && !fieldType.IsPrimitive))
 			{
@@ -816,7 +816,7 @@ public static class BinaryDeserialization
 		{
 			return null;
 		}
-		return activeFieldSerializationData.unityObjects.get_Item(index);
+		return activeFieldSerializationData.unityObjects[index];
 	}
 
 	private static SharedVariable BytesToSharedVariable(FieldSerializationData fieldSerializationData, Dictionary<int, int> fieldIndexMap, byte[] bytes, int dataPosition, IVariableSource variableSource, bool fromField, int hashPrefix)

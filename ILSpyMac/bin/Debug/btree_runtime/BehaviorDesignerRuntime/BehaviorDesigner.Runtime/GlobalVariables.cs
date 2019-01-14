@@ -74,7 +74,7 @@ namespace BehaviorDesigner.Runtime
 
 		public void CheckForSerialization(bool force)
 		{
-			if (force || this.mVariables == null || (this.mVariables.Count > 0 && this.mVariables.get_Item(0) == null))
+			if (force || this.mVariables == null || (this.mVariables.Count > 0 && this.mVariables[0] == null))
 			{
 				if (this.VariableData != null && !string.IsNullOrEmpty(this.VariableData.JSONSerialization))
 				{

@@ -750,7 +750,7 @@ namespace BehaviorDesigner.Runtime
 			TaskCoroutine taskCoroutine = new TaskCoroutine(this, (IEnumerator)method.Invoke(task, new object[0]), methodName);
 			if (this.activeTaskCoroutines.ContainsKey(methodName))
 			{
-				List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(methodName);
+				List<TaskCoroutine> list = this.activeTaskCoroutines[methodName];
 				list.Add(taskCoroutine);
 				this.activeTaskCoroutines.Item=methodName, list;
 			}
@@ -781,7 +781,7 @@ namespace BehaviorDesigner.Runtime
 			}), methodName);
 			if (this.activeTaskCoroutines.ContainsKey(methodName))
 			{
-				List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(methodName);
+				List<TaskCoroutine> list = this.activeTaskCoroutines[methodName];
 				list.Add(taskCoroutine);
 				this.activeTaskCoroutines.Item=methodName, list;
 			}
@@ -800,7 +800,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				return;
 			}
-			List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(methodName);
+			List<TaskCoroutine> list = this.activeTaskCoroutines[methodName];
 			for (int i = 0; i < list.Count; i++)
 			{
 				list[i].Stop();
@@ -828,7 +828,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			if (this.activeTaskCoroutines.ContainsKey(coroutineName))
 			{
-				List<TaskCoroutine> list = this.activeTaskCoroutines.get_Item(coroutineName);
+				List<TaskCoroutine> list = this.activeTaskCoroutines[coroutineName];
 				if (list.Count == 1)
 				{
 					this.activeTaskCoroutines.Remove(coroutineName);

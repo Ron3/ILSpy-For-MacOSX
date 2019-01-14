@@ -115,7 +115,7 @@ namespace BehaviorDesigner.Runtime
 						}
 						else
 						{
-							Task task3 = dictionary2.get_Item(list2.get_Item(0));
+							Task task3 = dictionary2.get_Item(list2[0]);
 							if (task3.GetType().Equals(current.fieldInfo.FieldType) || task3.GetType().IsSubclassOf(current.fieldInfo.FieldType))
 							{
 								current.fieldInfo.SetValue(current.task, task3);
@@ -430,7 +430,7 @@ namespace BehaviorDesigner.Runtime
 								}
 								for (int l = 0; l < list.Count; l++)
 								{
-									list3.Add(JSONDeserializationDeprecated.ValueToObject(task, type, list.get_Item(l), variableSource, unityObjects));
+									list3.Add(JSONDeserializationDeprecated.ValueToObject(task, type, list[l], variableSource, unityObjects));
 								}
 								allFields[i].SetValue(obj, list3);
 							}
@@ -664,7 +664,7 @@ namespace BehaviorDesigner.Runtime
 				for (int i = 0; i < list.Count; i++)
 				{
 					List<object> list2 = list[i] as List<object>;
-					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2.get_Item(0), typeof(float)), (float)Convert.ChangeType(list2.get_Item(1), typeof(float)), (float)Convert.ChangeType(list2.get_Item(2), typeof(float)), (float)Convert.ChangeType(list2.get_Item(3), typeof(float)));
+					Keyframe keyframe = new Keyframe((float)Convert.ChangeType(list2[0], typeof(float)), (float)Convert.ChangeType(list2.get_Item(1), typeof(float)), (float)Convert.ChangeType(list2.get_Item(2), typeof(float)), (float)Convert.ChangeType(list2.get_Item(3), typeof(float)));
 					keyframe.tangentMode=(int)Convert.ChangeType(list2.get_Item(4), typeof(int));
 					animationCurve.AddKey(keyframe);
 				}
@@ -686,7 +686,7 @@ namespace BehaviorDesigner.Runtime
 			{
 				return null;
 			}
-			return unityObjects.get_Item(index);
+			return unityObjects[index];
 		}
 	}
 }

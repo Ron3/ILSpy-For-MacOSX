@@ -73,7 +73,7 @@ public static class BinaryDeserializationDeprecated
 				}
 				else if (taskData.startIndex != null && taskData.startIndex.Count > 0)
 				{
-					num2 = taskData.startIndex.get_Item(0);
+					num2 = taskData.startIndex[0];
 				}
 				else
 				{
@@ -108,11 +108,11 @@ public static class BinaryDeserializationDeprecated
 		}
 		for (int l = 0; l < taskData.parentIndex.Count; l++)
 		{
-			if (taskData.parentIndex.get_Item(l) == -1)
+			if (taskData.parentIndex[l] == -1)
 			{
 				if (behaviorSource.EntryTask == null)
 				{
-					behaviorSource.EntryTask = list2.get_Item(l);
+					behaviorSource.EntryTask = list2[l];
 				}
 				else
 				{
@@ -120,20 +120,20 @@ public static class BinaryDeserializationDeprecated
 					{
 						behaviorSource.DetachedTasks = new List<Task>();
 					}
-					behaviorSource.DetachedTasks.Add(list2.get_Item(l));
+					behaviorSource.DetachedTasks.Add(list2[l]);
 				}
 			}
-			else if (taskData.parentIndex.get_Item(l) == 0)
+			else if (taskData.parentIndex[l] == 0)
 			{
-				behaviorSource.RootTask = list2.get_Item(l);
+				behaviorSource.RootTask = list2[l];
 			}
-			else if (taskData.parentIndex.get_Item(l) != -1)
+			else if (taskData.parentIndex[l] != -1)
 			{
-				ParentTask parentTask = list2.get_Item(taskData.parentIndex.get_Item(l)) as ParentTask;
+				ParentTask parentTask = list2.get_Item(taskData.parentIndex[l]) as ParentTask;
 				if (parentTask != null)
 				{
 					int index = (parentTask.Children != null) ? parentTask.Children.Count : 0;
-					parentTask.AddChild(list2.get_Item(l), index);
+					parentTask.AddChild(list2[l], index);
 				}
 			}
 		}
@@ -154,27 +154,27 @@ public static class BinaryDeserializationDeprecated
 							Array array = Array.CreateInstance(elementType, list3.Count);
 							for (int m = 0; m < array.Length; m++)
 							{
-								array.SetValue(list2.get_Item(list3.get_Item(m)), m);
+								array.SetValue(list2.get_Item(list3[m]), m);
 							}
 							current.fieldInfo.SetValue(current.obj, array);
 						}
 						else
 						{
 							Type type = fieldType.GetGenericArguments()[0];
-							IList list4 = TaskUtility.CreateInstance(typeof(List).MakeGenericType(new Type[]
+							IList list4 = TaskUtility.CreateInstance(typeof(List<>).MakeGenericType(new Type[]
 							{
 								type
 							})) as IList;
 							for (int n = 0; n < list3.Count; n++)
 							{
-								list4.Add(list2.get_Item(list3.get_Item(n)));
+								list4.Add(list2.get_Item(list3[n]));
 							}
 							current.fieldInfo.SetValue(current.obj, list4);
 						}
 					}
 					else
 					{
-						current.fieldInfo.SetValue(current.obj, list2.get_Item(list3.get_Item(0)));
+						current.fieldInfo.SetValue(current.obj, list2.get_Item(list3[0]));
 					}
 				}
 			}
@@ -709,7 +709,7 @@ public static class BinaryDeserializationDeprecated
 		{
 			return null;
 		}
-		return activeFieldSerializationData.unityObjects.get_Item(index);
+		return activeFieldSerializationData.unityObjects[index];
 	}
 
 	private static SharedVariable BytesToSharedVariable(FieldSerializationData fieldSerializationData, Dictionary<string, int> fieldIndexMap, byte[] bytes, int dataPosition, IVariableSource variableSource, bool fromField, string namePrefix)
